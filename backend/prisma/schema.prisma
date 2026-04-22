@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String     @id @default(cuid())
+  email                String     @unique
+  passwordHash         String
+  name                 String
+  crp                  String?
+  phone                String?
+  specialty            String?
+  role                 String     @default("PSYCHOLOGIST")
+  plan                 String     @default("FREE")
+  planStatus           String     @default("TRIAL")
+  trialEndsAt          DateTime?
+  planExpiresAt        DateTime?
+  stripeCustomerId     String?    @unique
+  stripeSubscriptionId String?    @unique
+  emailVerified        Boolean    @default(false)
+  emailVerifyToken     String?
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  lastLoginAt          DateTime?
+  patients     Patient[]
+  appointments Appointment[]
+  records      Record[]
+  financials   Financial[]
+  convenios    Convenio[]
+  @@index([email])
+}
+
+model Patient {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String    @default("ADULT")
+  name          String
+  birthDate     DateTime?
+  gender        String?
+  cpf           String?
+  rg            String?
+  phone         String?
+  email         String?
+  address       String?
+  status        String    @default("ACTIVE")
+  emergName     String?
+  emergPhone    String?
+  emergRelation String?
+  resp1Name     String?
+  resp1Phone    String?
+  resp1Relation String?
+  resp1Cpf      String?
+  resp2Name     String?
+  resp2Phone    String?
+  anamneseData  String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  appointments  Appointment[]
+  records       Record[]
+  financials    Financial[]
+  @@index([userId])
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  title       String   @default("Consulta")
+  date        DateTime
+  duration    Int      @default(50)
+  type        String   @default("ONLINE")
+  status      String   @default("SCHEDULED")
+  value       Float    @default(0)
+  meetLink    String?
+  convenioId  String?
+  paymentType String   @default("particular")
+  reminderSent Boolean @default(false)
+  confirmedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([userId, date])
+}
+
+model Record {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  patientId        String
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  sessionDate      DateTime @default(now())
+  sessionNum       Int      @default(1)
+  contentEncrypted String
+  aiGenerated      Boolean  @default(false)
+  techniques       String?
+  evolution        String?
+  goals            String?
+  risks            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  @@index([userId, patientId])
+}
+
+model Financial {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  patientId   String?
+  patient     Patient? @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  type        String   @default("INCOME")
+  category    String   @default("particular")
+  description String
+  value       Float
+  date        DateTime @default(now())
+  status      String   @default("PENDING")
+  method      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([userId, date])
+}
+
+model Convenio {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      String   @default("plano")
+  value     Float
+  code      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+}
