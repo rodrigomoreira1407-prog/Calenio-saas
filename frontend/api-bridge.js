@@ -4,7 +4,7 @@
 // ============================================================
 
 // ── CONFIG ──────────────────────────────────────────────────
-const API_URL = "https://calenio-api.onrender.com/api"; // produção
+const API_URL = "https://calenio-saas-production.up.railway.app/api"; // produção
 // const API_URL = "http://localhost:3001/api"; // desenvolvimento local
 
 // ── ESTADO GLOBAL ───────────────────────────────────────────
