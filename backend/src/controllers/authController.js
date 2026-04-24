@@ -42,15 +42,20 @@ exports.register = async (req, res) => {
       },
     });
 
+    let emailSent = true;
     try {
       await sendVerificationEmail(user.email, user.name, emailVerifyToken);
     } catch (emailErr) {
+      emailSent = false;
       console.error("Falha ao enviar e-mail de verificação:", emailErr.message);
     }
 
     res.status(201).json({
-      message: "Conta criada! Verifique seu e-mail para confirmar o cadastro.",
+      message: emailSent
+        ? "Conta criada! Verifique seu e-mail para confirmar o cadastro."
+        : "Conta criada! Não foi possível enviar o e-mail de confirmação. Use a opção de reenvio.",
       userId: user.id,
+      emailSent,
     });
   } catch (err) {
     console.error("Register error:", err);

@@ -2692,7 +2692,7 @@ function doLogin(){
     btn.disabled=true;btn.textContent='Entrando...';
     fetch(API_BASE+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})})
     .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
-    .then(function(res){btn.disabled=false;btn.textContent='Entrar';if(!res.ok){aMsg('msg-login',res.d.error||'E-mail ou senha incorretos','e');return;}
+    .then(function(res){btn.disabled=false;btn.textContent='Entrar';if(!res.ok){if(res.d.code==='EMAIL_NOT_VERIFIED'){var ml=document.getElementById('msg-login');if(ml)ml.innerHTML='<div class="a-err">&#10007; '+res.d.error+' <span style="cursor:pointer;text-decoration:underline;margin-left:6px;font-weight:700" onclick="doResendVerification(\''+email.replace(/'/g,"\\'")+'\',' +'\'msg-login\')">Reenviar e-mail</span></div>';return;}aMsg('msg-login',res.d.error||'E-mail ou senha incorretos','e');return;}
       localStorage.setItem('cal_token',res.d.token);localStorage.setItem('cal_user',JSON.stringify(res.d.user));localStorage.setItem('cal_plan',res.d.user.plan||'');
       _curUser=res.d.user;_curPlan=res.d.user.plan||'';afterLogin();})
     .catch(function(){btn.disabled=false;btn.textContent='Entrar';aMsg('msg-login','Sem conex\u00e3o','e');});
@@ -2716,7 +2716,7 @@ function doRegister(){
     btn.disabled=true;btn.textContent='Criando...';
     fetch(API_BASE+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pass,crp:crp})})
     .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
-    .then(function(res){btn.disabled=false;btn.textContent='Criar conta gr\u00e1tis';if(!res.ok){aMsg('msg-reg',res.d.error||'Erro ao criar conta','e');return;}aMsg('msg-reg','Conta criada! Verifique seu e-mail.','o');setTimeout(function(){showSc('login');},3000);})
+    .then(function(res){btn.disabled=false;btn.textContent='Criar conta gr\u00e1tis';if(!res.ok){aMsg('msg-reg',res.d.error||'Erro ao criar conta','e');return;}if(!res.d.emailSent){var mr=document.getElementById('msg-reg');if(mr)mr.innerHTML='<div class="a-err">&#10007; Conta criada, mas n\u00e3o foi poss\u00edvel enviar o e-mail de confirma\u00e7\u00e3o. <span style="cursor:pointer;text-decoration:underline;font-weight:700" onclick="doResendVerification(\''+email.replace(/'/g,"\\'")+'\',' +'\'msg-reg\')">Reenviar agora</span></div>';return;}aMsg('msg-reg','Conta criada! Verifique seu e-mail.','o');setTimeout(function(){showSc('login');},3000);})
     .catch(function(){btn.disabled=false;btn.textContent='Criar conta gr\u00e1tis';aMsg('msg-reg','Sem conex\u00e3o','e');});
     return;
   }
@@ -2724,6 +2724,15 @@ function doRegister(){
   localStorage.setItem('cal_token','demo');localStorage.setItem('cal_user',JSON.stringify(_curUser));
   aMsg('msg-reg','Conta criada! Agora escolha seu plano.','o');
   setTimeout(function(){showSc('plans');},1000);
+}
+function doResendVerification(email,msgId){
+  var id=msgId||'msg-login';
+  var el=document.getElementById(id);
+  if(el)el.innerHTML='<div class="a-ok">Reenviando...</div>';
+  fetch(API_BASE+'/auth/resend-verification',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
+  .then(function(r){return r.json();})
+  .then(function(d){if(el)el.innerHTML='<div class="a-ok">&#10003; '+d.message+'</div>';})
+  .catch(function(){if(el)el.innerHTML='<div class="a-err">&#10007; Falha ao reenviar. Tente novamente.</div>';});
 }
 function doForgot(){
   var email=(document.getElementById('f-email').value||'').trim();
