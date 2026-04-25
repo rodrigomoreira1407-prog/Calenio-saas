@@ -29,11 +29,15 @@ app.use(compression());
 const allowedOrigins = (process.env.CORS_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === "development") {
-      cb(null, true);
-    } else {
-      cb(new Error("CORS bloqueado: " + origin));
-    }
+    // Permite requisições sem origin (mobile, Postman, etc)
+    if (!origin) return cb(null, true);
+    // Permite origens configuradas
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) return cb(null, true);
+    // Permite qualquer vercel.app em desenvolvimento
+    if (origin.endsWith(".vercel.app")) return cb(null, true);
+    // Permite localhost para testes
+    if (origin.includes("localhost") || origin.includes("127.0.0.1")) return cb(null, true);
+    cb(new Error("CORS bloqueado: " + origin));
   },
   credentials: true,
 }));
