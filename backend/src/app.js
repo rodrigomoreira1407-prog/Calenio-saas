@@ -16,6 +16,9 @@ const adminRoutes        = require("./routes/admin");
 
 const app = express();
 
+// ── Trust proxy (Railway, Render, Heroku) ──────────────────
+app.set("trust proxy", 1);
+
 // ── Segurança ──────────────────────────────────────────────
 app.use(helmet({
   contentSecurityPolicy: false, // ajuste conforme necessário
