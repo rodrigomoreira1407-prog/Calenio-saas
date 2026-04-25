@@ -37,11 +37,13 @@ exports.register = async (req, res) => {
         passwordHash,
         crp: crp || null,
         emailVerifyToken,
+        emailVerified: true, // auto-verificado
         planStatus: "TRIAL",
         trialEndsAt,
       },
     });
 
+    // Tenta enviar e-mail mas não bloqueia o cadastro se falhar
     try {
       await sendVerificationEmail(user.email, user.name, emailVerifyToken);
     } catch (emailErr) {
@@ -49,7 +51,7 @@ exports.register = async (req, res) => {
     }
 
     res.status(201).json({
-      message: "Conta criada! Verifique seu e-mail para confirmar o cadastro.",
+      message: "Conta criada com sucesso! Você já pode fazer login.",
       userId: user.id,
     });
   } catch (err) {
@@ -90,13 +92,6 @@ exports.login = async (req, res) => {
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: "E-mail ou senha incorretos" });
-
-    if (!user.emailVerified) {
-      return res.status(403).json({
-        error: "E-mail não confirmado. Verifique sua caixa de entrada.",
-        code: "EMAIL_NOT_VERIFIED",
-      });
-    }
 
     // Atualiza lastLogin
     await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
