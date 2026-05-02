@@ -9,13 +9,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --ac:#1ECEC4;--ac2:#2B2A45;--ac3:#9B8EC9;--ac4:#5DD8D2;
-  --acg:linear-gradient(135deg,#1ECEC4,#2B2A45);
-  --bg:#F5F3FF;--w:#fff;--bd:#dde8ea;
-  --tx:#1A1830;--mt:#5C5B7A;--dm:#A09EC0;
-  --gn:#1ABFA0;--gn2:#E0F8F5;
-  --rd:#E8405A;--rd2:#FDE8EC;
-  --am:#F5A623;--am2:#FEF5E0;
+  --ac:#2563EB;--ac2:#1E3A8A;--ac3:#9B8EC9;--ac4:#3B82F6;
+  --acg:linear-gradient(135deg,#2563EB,#1E3A8A);
+  --bg:#F0F2F5;--w:#fff;--bd:#E5E7EB;
+  --tx:#111827;--mt:#6B7280;--dm:#9CA3AF;
+  --gn:#16A34A;--gn2:#DCFCE7;
+  --rd:#DC2626;--rd2:#FEE2E2;
+  --am:#D97706;--am2:#FEF3C7;
+  /* Calendar event colors */
+  --ev-online-bg:#DBEAFE;--ev-online-tx:#1D4ED8;--ev-online-br:#93C5FD;
+  --ev-pres-bg:#EDE9FE;--ev-pres-tx:#6D28D9;--ev-pres-br:#C4B5FD;
+  --ev-conf-bg:#FEF9C3;--ev-conf-tx:#854D0E;--ev-conf-br:#FDE047;
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);overflow:hidden;-webkit-font-smoothing:antialiased}
 
@@ -339,7 +343,19 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
 <!-- ── SIDEBAR ───────────────────────────────────── -->
 <div id="sb">
-  <div class="sb-logo" onclick="toggleSB()"><div class="sb-logo-sub" style="letter-spacing:.08em;font-size:8px">GESTÃO CLÍNICA</div></div>
+  <div class="sb-logo" onclick="toggleSB()">
+    <svg width="34" height="34" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1ECEC4"/><stop offset="100%" stop-color="#9B8EC9"/></linearGradient></defs>
+  <rect width="200" height="200" rx="44" fill="white"/>
+  <path d="M 155 55 A 72 72 0 1 0 155 145" fill="none" stroke="url(#sg)" stroke-width="22" stroke-linecap="round"/>
+  <rect x="82" y="80" width="52" height="46" rx="5" fill="#F5F3FF" stroke="#9B8EC9" stroke-width="2"/>
+  <rect x="82" y="80" width="52" height="14" rx="5" fill="#9B8EC9"/>
+  <rect x="82" y="86" width="52" height="8" fill="#9B8EC9"/>
+  <circle cx="98" cy="80" r="3" fill="white"/>
+  <circle cx="118" cy="80" r="3" fill="white"/>
+  <rect x="97" y="109" width="8" height="6" rx="1.5" fill="#F5CF3C"/>
+</svg>
+    <div class="sb-logo-txt"><div class="sb-logo-name">calenio</div><div class="sb-logo-sub" style="letter-spacing:.08em;font-size:8px">GESTÃO CLÍNICA</div></div>
   </div>
   <nav class="sb-nav">
     <div class="ni on" id="ni-dash"    onclick="go('dash',this)"><span class="ni-ico">&#9889;</span><span>Dashboard</span></div>
@@ -483,7 +499,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
   <div id="pg-dash" class="page on">
     <div class="al alt" id="dash-welcome"><span>&#128075;</span><div><div style="font-size:13px;font-weight:700;color:var(--ac)">Bom dia!</div><div style="font-size:11px;color:var(--ac2);margin-top:1px">Bem-vindo ao Calenio</div></div></div>
     <div class="g4" style="margin-bottom:10px">
-      <div class="sc" style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ac)" id="d-pats">0</div><div style="font-size:10px;color:rgba(255,255,255,.6)">Pacientes</div></div>
+      <div class="sc" style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ac)" id="d-pats">0</div><div style="font-size:10px;color:var(--mt)">Pacientes</div></div>
       <div class="sc" style="text-align:center"><div style="font-size:20px;font-weight:800" id="d-hoje">0</div><div style="font-size:10px;color:var(--mt)">Hoje</div></div>
       <div class="sc" style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--gn)" id="d-rec">R$0</div><div style="font-size:10px;color:var(--mt)">Receita</div></div>
       <div class="sc" style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--am)" id="d-pend">0</div><div style="font-size:10px;color:var(--mt)">Pendentes</div></div>
@@ -574,15 +590,9 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
       <div class="ag-tab" id="agt-pend" onclick="setAgTab('pend',this)" style="padding:10px 16px;cursor:pointer;font-size:14px;font-weight:500;color:#6B7280;border-bottom:2px solid transparent;margin-bottom:-2px">Pendentes <span id="cnt-pend" style="background:#F3F4F6;color:#6B7280;border-radius:100px;padding:1px 8px;font-size:11px;font-weight:700"></span></div>
     </div>
 
-    <div style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #EDE9FF;box-shadow:0 2px 8px rgba(91,75,219,.06)">
-      <div id="ag-hoje"></div>
-    </div>
-    <div style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #EDE9FF;box-shadow:0 2px 8px rgba(91,75,219,.06)">
-      <div id="ag-semana" class="hidden"></div>
-    </div>
-    <div style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #EDE9FF;box-shadow:0 2px 8px rgba(91,75,219,.06)">
-      <div id="ag-pend" class="hidden"></div>
-    </div>
+    <div id="ag-hoje"></div>
+    <div id="ag-semana" class="hidden"></div>
+    <div id="ag-pend" class="hidden"></div>
 
   </div>
 
