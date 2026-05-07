@@ -1260,8 +1260,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
           <!-- Evento remunerado (evento only) -->
           <div class="appt-expand-section hidden" id="ap-evento-remunerado-row">
-            <div class="appt-expand-row" onclick="toggleEventoSection('remunerado')">
-              <input type="checkbox" id="ap-evento-remunerado-toggle" class="appt-rec-toggle" checked onclick="event.stopPropagation()" onchange="toggleEventoSection('remunerado')"/>
+            <div class="appt-expand-row" onclick="toggleEventoSection('remunerado',false)">
+              <input type="checkbox" id="ap-evento-remunerado-toggle" class="appt-rec-toggle" checked aria-label="Evento remunerado" onclick="event.stopPropagation()" onchange="toggleEventoSection('remunerado',true)"/>
               <span class="appt-expand-label">Evento remunerado</span>
               <span class="appt-expand-chevron" id="ap-evento-remunerado-chevron">&#8964;</span>
             </div>
@@ -1275,8 +1275,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
           <!-- Configurar recorrência expandable (evento only) -->
           <div class="appt-expand-section hidden" id="ap-evento-recur-row">
-            <div class="appt-expand-row" onclick="toggleEventoSection('recur')">
-              <input type="checkbox" id="ap-evento-recur-toggle" class="appt-rec-toggle" onclick="event.stopPropagation()" onchange="toggleEventoSection('recur')"/>
+            <div class="appt-expand-row" onclick="toggleEventoSection('recur',false)">
+              <input type="checkbox" id="ap-evento-recur-toggle" class="appt-rec-toggle" aria-label="Configurar recorr&#234;ncia" onclick="event.stopPropagation()" onchange="toggleEventoSection('recur',true)"/>
               <span class="appt-expand-label">Configurar recorr&#234;ncia</span>
               <span class="appt-expand-chevron" id="ap-evento-recur-chevron">&#8964;</span>
             </div>
@@ -1284,7 +1284,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
               <div class="appt-form-row">
                 <label class="appt-form-label">Frequ&#234;ncia</label>
                 <select id="ap-evento-recur-freq" class="appt-field">
-                  <option value="">Todos os dias</option>
+                  <option value="1">Todos os dias</option>
                   <option value="7" selected>Semanal</option>
                   <option value="14">Quinzenal</option>
                   <option value="30">Mensal</option>
@@ -5497,14 +5497,22 @@ function selectEventoMod(mod, el){
   if(presBtn)   presBtn.classList.toggle('on', mod === 'PRESENTIAL');
 }
 
-function toggleEventoSection(section){
+function toggleEventoSection(section, fromToggle){
   var toggle  = document.getElementById('ap-evento-'+section+'-toggle');
   var content = document.getElementById('ap-evento-'+section+'-content');
   var chevron = document.getElementById('ap-evento-'+section+'-chevron');
   if(!toggle || !content) return;
-  var open = toggle.checked;
-  content.classList.toggle('hidden', !open);
-  if(chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
+  var isOpen;
+  if(fromToggle){
+    // Toggle changed: expand when ON, collapse when OFF
+    isOpen = toggle.checked;
+  } else {
+    // Row click: only expand/collapse when toggle is ON
+    if(!toggle.checked) return;
+    isOpen = content.classList.contains('hidden');
+  }
+  content.classList.toggle('hidden', !isOpen);
+  if(chevron) chevron.style.transform = isOpen ? 'rotate(180deg)' : '';
 }
 
 function updateEventoObsCount(el){
@@ -6272,32 +6280,51 @@ function salvarSessaoWizard(){
     var evPartic = parseInt((document.getElementById('ap-evento-partic')||{}).value)||0;
     var evObs    = ((document.getElementById('ap-evento-obs')||{}).value||'').trim();
     var evColor  = window._apptSelectedColor || '#FFFFFF';
-    var evDurEl  = document.getElementById('ap-grupo-dur');
-    var evDur    = parseInt((evDurEl||{value:'50'}).value)||50;
-    var evValEl  = document.getElementById('ap-evento-valor');
-    var evVal    = parseFloat((evValEl||{value:'0'}).value)||0;
+    var evDur    = parseInt(((document.getElementById('ap-grupo-dur')||{}).value)||'50')||50;
+    var evVal    = parseFloat(((document.getElementById('ap-evento-valor')||{}).value)||'0')||0;
+    var evRecurEl  = document.getElementById('ap-evento-recur-toggle');
+    var evRecurOn  = evRecurEl && evRecurEl.checked;
+    var evRecurStep = evRecurOn ? parseInt(((document.getElementById('ap-evento-recur-freq')||{}).value)||'7')||7 : 0;
+    var evEndDate   = evRecurOn ? ((document.getElementById('ap-evento-recur-end')||{}).value||'') : '';
 
-    SESSIONS.push({
-      id: 'ev-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),
-      patId: '_evento_',
-      patName: evNome,
-      _isEvento: true,
-      title: evNome,
-      date: new Date(date+'T'+time+':00'),
-      _rawIso: date+'T'+time+':00.000Z',
-      time: time, dur: evDur,
-      type: modal,
-      value: evVal,
-      status: 'SCHEDULED',
-      color: evColor,
-      obs: evObs,
-      participantes: evPartic
+    var evDates = [date];
+    if(evRecurStep > 0 && evEndDate){
+      var evEnd = new Date(evEndDate+'T00:00:00');
+      var evCur = new Date(date+'T00:00:00');
+      evCur.setDate(evCur.getDate() + evRecurStep);
+      while(evCur <= evEnd){
+        var ey=evCur.getFullYear(),em2=String(evCur.getMonth()+1).padStart(2,'0'),ed2=String(evCur.getDate()).padStart(2,'0');
+        evDates.push(ey+'-'+em2+'-'+ed2);
+        evCur.setDate(evCur.getDate() + evRecurStep);
+      }
+    }
+
+    evDates.forEach(function(dt){
+      SESSIONS.push({
+        id: 'ev-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),
+        patId: '_evento_',
+        patName: evNome,
+        _isEvento: true,
+        title: evNome,
+        date: new Date(dt+'T'+time+':00'),
+        _rawIso: dt+'T'+time+':00.000Z',
+        time: time, dur: evDur,
+        type: modal,
+        value: evVal,
+        status: 'SCHEDULED',
+        color: evColor,
+        obs: evObs,
+        participantes: evPartic
+      });
     });
 
     saveState();
     closeM('m-appt-new');
     renderCal(); renderAgToday(); renderAgSemana(); renderAgPend(); updateAgCounts(); renderDash();
-    toast('\u2713 Evento "'+evNome+'" agendado!');
+    var evMsg = evDates.length > 1
+      ? '\u2713 Evento "'+evNome+'" agendado em '+evDates.length+' datas!'
+      : '\u2713 Evento "'+evNome+'" agendado!';
+    toast(evMsg);
     return;
   }
 
