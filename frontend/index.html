@@ -1611,7 +1611,7 @@ function renderCal(){
     var nu=document.createElement('div');nu.className='ncal-day-num'+(isToday?' today':'');nu.textContent=d.getDate();
     hdr.appendChild(nm);hdr.appendChild(nu);col.appendChild(hdr);
 
-    // Slots (08-20 = 13 slots)
+    // Slots (START_H até END_H)
     var slotsWrap=document.createElement('div');slotsWrap.style.position='relative';
     for(var h2=START_H;h2<=END_H;h2++){
       var slot=document.createElement('div');slot.className='ncal-slot';
