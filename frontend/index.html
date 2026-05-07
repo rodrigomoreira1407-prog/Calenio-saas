@@ -638,7 +638,37 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div style="display:flex;gap:4px;flex-shrink:0">
           <button class="ag-view-btn on" id="ag-semana-btn" onclick="switchCalView('semana',this)">Semana</button>
           <button class="ag-view-btn" id="ag-lista-btn" onclick="switchCalView('lista',this)">Lista</button>
+          <button class="ag-view-btn" id="ag-filter-toggle-btn" onclick="toggleAgFilter()" style="display:flex;align-items:center;gap:4px">&#128269; Filtros</button>
         </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div id="ag-filter-bar" class="hidden" style="background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+          <span>&#128269; Filtros do calend&#225;rio</span>
+          <button onclick="clearCalendarFilter()" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--rd);font-weight:600;font-family:inherit">Limpar tudo</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;flex-wrap:wrap">
+          <div>
+            <label class="lbl">Dia</label>
+            <input type="date" class="inp" id="ag-f-date" style="font-size:12px" onchange="applyCalendarFilter()"/>
+          </div>
+          <div>
+            <label class="lbl">Das</label>
+            <input type="time" class="inp" id="ag-f-from" style="font-size:12px" onchange="applyCalendarFilter()"/>
+          </div>
+          <div>
+            <label class="lbl">At&#233;</label>
+            <input type="time" class="inp" id="ag-f-to" style="font-size:12px" onchange="applyCalendarFilter()"/>
+          </div>
+          <div>
+            <label class="lbl">Tipo de servi&#231;o</label>
+            <select class="sel" id="ag-f-tipo" style="font-size:12px" onchange="applyCalendarFilter()">
+              <option value="">Todos</option>
+            </select>
+          </div>
+        </div>
+        <div id="ag-filter-active-hint" style="font-size:11px;color:var(--ac);font-weight:600;margin-top:8px;display:none">&#9679; Filtro ativo</div>
       </div>
 
       <!-- Calendar grid (existing, keep IDs) -->
@@ -965,11 +995,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
 <div id="pg-cfg" class="page">
     <div style="font-size:17px;font-weight:800;margin-bottom:12px">Configura&#231;&#245;es</div>
-    <div class="tabs">
+    <div class="tabs" style="flex-wrap:wrap">
       <div class="tab on" onclick="setCfgTab('perfil',this)">Perfil</div>
       <div class="tab" onclick="setCfgTab('senha',this)">Senha</div>
       <div class="tab" onclick="setCfgTab('integ',this)">Integra&#231;&#245;es</div>
       <div class="tab" onclick="setCfgTab('plano',this)">Plano</div>
+      <div class="tab" onclick="setCfgTab('servicos',this)">Servi&#231;os</div>
+      <div class="tab" onclick="setCfgTab('agenda-cfg',this)">Agenda</div>
+      <div class="tab" onclick="setCfgTab('preferencias',this)">Prefer&#234;ncias</div>
     </div>
     <div id="cfg-perfil">
       <div class="card">
@@ -998,6 +1031,88 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
       <button class="btn bs fw" style="margin-bottom:8px" onclick="toast('Abrindo portal...')">Gerenciar assinatura</button>
       <button class="btn" style="background:var(--rd2);color:var(--rd);border:1px solid #fecaca;width:100%" onclick="authLogout()">Sair da conta</button>
     </div>
+
+    <!-- ── SERVIÇOS ───────────────────────────────────────── -->
+    <div id="cfg-servicos" class="hidden">
+      <div class="card">
+        <div style="font-size:15px;font-weight:800;color:var(--tx);margin-bottom:4px">&#127920; Tipos de Servi&#231;o</div>
+        <div style="font-size:12px;color:var(--mt);margin-bottom:14px">Cadastre os servi&#231;os que voc&#234; realiza. Eles aparecer&#227;o no agendamento com dura&#231;&#227;o e valor pr&#233;-definidos.</div>
+        <div id="cfg-tipos-section" style="margin-bottom:10px"></div>
+        <button onclick="addTipoRow()" class="btn bs" style="width:100%;margin-bottom:8px;font-size:13px">&#43; Adicionar tipo</button>
+        <button onclick="saveTiposConfig()" class="btn bp" style="width:100%;font-size:13px">&#10003; Salvar tipos</button>
+      </div>
+    </div>
+
+    <!-- ── AGENDA / CALENDÁRIO ───────────────────────────── -->
+    <div id="cfg-agenda-cfg" class="hidden">
+      <div class="card">
+        <div style="font-size:15px;font-weight:800;color:var(--tx);margin-bottom:4px">&#128197; Filtros do Calend&#225;rio</div>
+        <div style="font-size:12px;color:var(--mt);margin-bottom:14px">Filtre o que aparece no calend&#225;rio por data, hor&#225;rio ou tipo de servi&#231;o.</div>
+        <div class="fr">
+          <label class="lbl">Filtrar por dia</label>
+          <input type="date" class="inp" id="cfg-filter-date" onchange="applyCalendarFilter()"/>
+        </div>
+        <div class="fg">
+          <div>
+            <label class="lbl">Hor&#225;rio de (filtro)</label>
+            <input type="time" class="inp" id="cfg-filter-from" onchange="applyCalendarFilter()"/>
+          </div>
+          <div>
+            <label class="lbl">Hor&#225;rio at&#233; (filtro)</label>
+            <input type="time" class="inp" id="cfg-filter-to" onchange="applyCalendarFilter()"/>
+          </div>
+        </div>
+        <div class="fr">
+          <label class="lbl">Tipo de servi&#231;o</label>
+          <select class="sel" id="cfg-filter-tipo" onchange="applyCalendarFilter()">
+            <option value="">Todos os tipos</option>
+          </select>
+        </div>
+        <button onclick="clearCalendarFilter()" class="btn bs" style="width:100%;margin-bottom:8px">Limpar filtros</button>
+        <div id="cfg-filter-status" style="font-size:11px;color:var(--mt);text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- ── PREFERÊNCIAS DE EXIBIÇÃO ──────────────────────── -->
+    <div id="cfg-preferencias" class="hidden">
+      <div class="card" id="cfg-prefs-content">
+        <div style="font-size:15px;font-weight:800;color:var(--tx);margin-bottom:4px">&#9201; Prefer&#234;ncias de Exibi&#231;&#227;o</div>
+        <div style="font-size:12px;color:var(--mt);margin-bottom:14px">Configure o hor&#225;rio de funcionamento e a visualiza&#231;&#227;o padr&#227;o do calend&#225;rio.</div>
+        <div class="fg">
+          <div>
+            <label class="lbl">Hor&#225;rio de in&#237;cio</label>
+            <select class="sel" id="cfg-pref-start">
+              <option value="6">06:00</option><option value="7">07:00</option>
+              <option value="8" selected>08:00</option><option value="9">09:00</option>
+              <option value="10">10:00</option><option value="11">11:00</option>
+              <option value="12">12:00</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">Hor&#225;rio de encerramento</label>
+            <select class="sel" id="cfg-pref-end">
+              <option value="17">17:00</option><option value="18">18:00</option>
+              <option value="19">19:00</option><option value="20">20:00</option>
+              <option value="21">21:00</option><option value="22" selected>22:00</option>
+              <option value="23">23:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="fr">
+          <label class="lbl">Visualiza&#231;&#227;o padr&#227;o</label>
+          <select class="sel" id="cfg-pref-view">
+            <option value="semana">Semana</option>
+            <option value="lista">Lista</option>
+          </select>
+        </div>
+        <div class="fr" style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="cfg-pref-hide-off" style="width:18px;height:18px;accent-color:var(--ac);flex-shrink:0"/>
+          <label for="cfg-pref-hide-off" style="font-size:13px;font-weight:600;color:var(--tx);cursor:pointer">Ocultar hor&#225;rios fora do expediente</label>
+        </div>
+        <button onclick="saveCfgPrefs()" class="btn bp" style="width:100%;margin-top:12px">&#10003; Salvar prefer&#234;ncias</button>
+      </div>
+    </div>
+
   </div>
 
   </div><!-- /content -->
@@ -1045,13 +1160,11 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
       <button class="btn bp" style="flex:1" onclick="savePat()">Salvar</button>
     </div>
 
-    <!-- ── Tipos de Atendimento ──────────────────── -->
+    <!-- ── Tipos de Atendimento — acesse em Configurações > Serviços ──────────────────── -->
     <div class="card" style="margin-top:12px">
-      <div style="font-size:15px;font-weight:800;color:var(--tx);margin-bottom:4px">&#127920; Tipos de Atendimento</div>
-      <div style="font-size:12px;color:var(--mt);margin-bottom:14px">Crie suas pr&#243;prias categorias de atendimento. Elas aparecer&#227;o no agendamento e nos relat&#243;rios.</div>
-      <div id="cfg-tipos-section" style="margin-bottom:10px"></div>
-      <button onclick="addTipoRow()" class="btn bs" style="width:100%;margin-bottom:8px;font-size:13px">+ Adicionar tipo</button>
-      <button onclick="saveTiposConfig()" class="btn bp" style="width:100%;font-size:13px">&#10003; Salvar tipos</button>
+      <div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px">&#127920; Tipos de Servi&#231;o</div>
+      <div style="font-size:12px;color:var(--mt);margin-bottom:10px">Gerencie os tipos de servi&#231;o em <b>Configura&#231;&#245;es &rsaquo; Servi&#231;os</b>.</div>
+      <button onclick="closeM('m-pat-new');go('cfg',document.getElementById('ni-cfg'));setCfgTab('servicos',document.querySelector('#pg-cfg .tabs .tab:nth-child(5)'));" class="btn bs" style="width:100%;font-size:13px">&#9881;&#65039; Abrir Configura&#231;&#245;es &rsaquo; Servi&#231;os</button>
     </div>
 
   </div>
@@ -1199,6 +1312,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <label class="appt-form-label" for="ap-pat">Participante</label>
             <select id="ap-pat" class="appt-field">
               <option value="">Selecione o paciente...</option>
+            </select>
+          </div>
+
+          <!-- Tipo de serviço (individual only) -->
+          <div class="appt-form-row" id="ap-tipo-servico-row">
+            <label class="appt-form-label">Tipo de servi&#231;o</label>
+            <select id="ap-tipo-servico" class="appt-field" onchange="onTipoServicoChange(this.value)">
+              <option value="">Selecione o tipo de servi&#231;o...</option>
             </select>
           </div>
 
@@ -1616,7 +1737,9 @@ var CONVS    = [];   // { id, name, type, value }
 var FINS     = [];   // { id, type, cat, desc, value, date, status, method }
 var EVOS     = {};   // patId -> [ {id, date, txt, tech, evol, goal, risk, ai} ]
 var GROUPS   = [];   // grupos terapêuticos
-var TIPOS_ATEND = []; // tipos de serviço personalizados
+var TIPOS_ATEND = []; // tipos de serviço personalizados { id, nome, emoji, duracao, valor, ativo }
+var _calFilter  = { date: '', timeFrom: '', timeTo: '', tipo: '' };
+var _calPrefs   = { startH: 8, endH: 22, hideOffHours: false, defaultView: 'semana' };
 var _curPlan = '';
 var _curUser = null;
 var _sidOpen = window.innerWidth >= 768;
@@ -1661,7 +1784,12 @@ function go(pg, el){
   document.getElementById('content').scrollTop=0;
   if(pg==='pront')refreshProntSel();
   if(pg==='portal')setTimeout(renderPortalPage,50);
-  if(pg==='agenda'){renderCal();renderAgToday();renderAgSemana();renderAgPend();updateAgCounts();}
+  if(pg==='agenda'){
+    // Apply default view preference
+    if(_calPrefs && _calPrefs.defaultView) switchCalView(_calPrefs.defaultView, null);
+    populateTipoFilterSelect();
+    renderCal();renderAgToday();renderAgSemana();renderAgPend();updateAgCounts();
+  }
   if(pg==='sess')renderSess();
   if(pg==='fin')renderFin();
   if(pg==='dash')renderDash();
@@ -1714,7 +1842,21 @@ function setRelTab(t,el){
 }
 function setCfgTab(t,el){
   setTab(el);
-  ['perfil','senha','integ','plano'].forEach(function(x){document.getElementById('cfg-'+x).classList.toggle('hidden',x!==t);});
+  ['perfil','senha','integ','plano','servicos','agenda-cfg','preferencias'].forEach(function(x){
+    var panel=document.getElementById('cfg-'+x);
+    if(panel) panel.classList.toggle('hidden',x!==t);
+  });
+  if(t==='servicos') renderTiposConfigSection();
+  if(t==='agenda-cfg') {
+    populateTipoFilterSelect();
+    // Sync current filter values into cfg inputs
+    var fd=document.getElementById('cfg-filter-date'); if(fd) fd.value=_calFilter.date||'';
+    var ff=document.getElementById('cfg-filter-from'); if(ff) ff.value=_calFilter.timeFrom||'';
+    var ft=document.getElementById('cfg-filter-to');   if(ft) ft.value=_calFilter.timeTo||'';
+    var ftp=document.getElementById('cfg-filter-tipo'); if(ftp) ftp.value=_calFilter.tipo||'';
+    var cs=document.getElementById('cfg-filter-status'); if(cs) cs.textContent='';
+  }
+  if(t==='preferencias') renderCfgPrefs();
 }
 function setFinMTab(t,el){setTab(el);document.getElementById('fin-m-type').value=t;}
 
@@ -1737,12 +1879,14 @@ function renderCal(){
   document.getElementById('cal-period').textContent=s+' \u2013 '+e;
   document.getElementById('agenda-sub').textContent='Semana de '+s+' a '+e+' '+wend.getFullYear();
   var SLOT_H=44; // px per hour
-  var START_H=8;
-  var END_H=23;
+  var START_H = _calPrefs.startH||8;
+  var END_H   = _calPrefs.endH||22;
+  if(START_H >= END_H){ START_H = 8; END_H = 22; _calPrefs.startH=8; _calPrefs.endH=22; saveState(); }
 
-  // Build time slots column (once)
+  // Build time slots column (rebuild when prefs change)
   var tsCol=document.getElementById('cal-time-slots');
-  if(tsCol&&tsCol.children.length===0){
+  if(tsCol){
+    tsCol.innerHTML='';
     for(var h=START_H;h<=END_H;h++){
       var lbl=document.createElement('div');lbl.className='ncal-time-lbl';
       lbl.textContent=String(h).padStart(2,'0')+':00';
@@ -1758,6 +1902,25 @@ function renderCal(){
     var d=new Date(base);d.setDate(d.getDate()+i);
     var isToday=(d.getTime()===today.getTime());
     var dn=['DOM','SEG','TER','QUA','QUI','SEX','S\u00c1B'][d.getDay()];
+
+    // Date filter: skip days that don't match
+    if(_calFilter.date){
+      var filterDate=new Date(_calFilter.date+'T00:00:00');
+      if(d.getFullYear()!==filterDate.getFullYear()||d.getMonth()!==filterDate.getMonth()||d.getDate()!==filterDate.getDate()){
+        // Still show column header, just grey out
+        var col=document.createElement('div');col.className='ncal-day';col.style.opacity='0.3';
+        var hdr=document.createElement('div');hdr.className='ncal-day-hdr';
+        var nm=document.createElement('div');nm.className='ncal-day-name';nm.textContent=dn;
+        var nu=document.createElement('div');nu.className='ncal-day-num'+(isToday?' today':'');nu.textContent=d.getDate();
+        hdr.appendChild(nm);hdr.appendChild(nu);col.appendChild(hdr);
+        var slotsWrap2=document.createElement('div');slotsWrap2.style.position='relative';
+        for(var hs=START_H;hs<=END_H;hs++){
+          var slot2=document.createElement('div');slot2.className='ncal-slot';slotsWrap2.appendChild(slot2);
+        }
+        col.appendChild(slotsWrap2);container.appendChild(col);
+        continue;
+      }
+    }
 
     var col=document.createElement('div');col.className='ncal-day';
 
@@ -1781,17 +1944,21 @@ function renderCal(){
       slotsWrap.appendChild(slot);
     }
 
-    // Events for this day
+    // Events for this day (with filter)
     var dayDate=d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
     SESSIONS.forEach(function(sess){
       var sd=new Date(sess.date);
       var sdDay=sd.getUTCDate()+'-'+(sd.getUTCMonth()+1)+'-'+sd.getUTCFullYear();
       if(sdDay!==dayDate)return;
       if(sess.status==='CANCELLED')return;
+      // Apply calendar filters (time, tipo)
+      if(!matchesCalFilter(sess))return;
 
       var timeParts=(sess.time||'09:00').split(':');
       var hour=parseInt(timeParts[0],10);
       var min=parseInt(timeParts[1]||0,10);
+      // Clamp to visible range
+      if(hour < START_H || hour > END_H) return;
       var topPx=(hour-START_H+min/60)*SLOT_H;
       var heightPx=Math.max(36,(sess.dur||50)/60*SLOT_H);
 
@@ -2035,10 +2202,14 @@ function renderAgToday(){
   var el=document.getElementById('ag-hoje');if(!el)return;
   var now=new Date();
   var todaySess=SESSIONS.filter(function(s){
-    var sd=new Date(s.date);
     var sIso=(s._rawIso||'').slice(0,10);
     var nowIso=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-    return sIso===nowIso&&s.status!=='CANCELLED';
+    if(sIso!==nowIso||s.status==='CANCELLED') return false;
+    // For today filter, only apply time/tipo filters (not date filter since we're already scoped to today)
+    if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
+    if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
+    if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
+    return true;
   }).sort(function(a,b){return (a.time||'').localeCompare(b.time||'');});
   el.innerHTML='';
   if(todaySess.length===0){
@@ -2052,11 +2223,10 @@ function renderAgToday(){
 function renderAgSemana(){
   var el=document.getElementById('ag-semana');if(!el)return;
   var now=new Date();
-  var base=new Date(now);base.setDate(base.getDate()-base.getDay());base.setHours(0,0,0,0);
-  var nextWeek=new Date(base);nextWeek.setDate(nextWeek.getDate()+30);
   var nextSess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);
-    return sd>now&&s.status==='SCHEDULED';
+    if(sd<=now||s.status!=='SCHEDULED') return false;
+    return matchesCalFilter(s);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(nextSess.length===0){
@@ -2069,8 +2239,10 @@ function renderAgSemana(){
 
 function renderAgPend(){
   var el=document.getElementById('ag-pend');if(!el)return;
-  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED';})
-    .sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  var pendSess=SESSIONS.filter(function(s){
+    if(s.status!=='SCHEDULED') return false;
+    return matchesCalFilter(s);
+  }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(pendSess.length===0){
     el.innerHTML='<div class="empty"><div class="empty-ico">&#10003;</div><div class="empty-t" style="color:var(--gn)">Nenhuma pend\u00eancia</div></div>';
@@ -2621,6 +2793,7 @@ function saveAppt(){
   var val=parseFloat(document.getElementById('ap-val').value)||0;
   var type=(window._apptModalidade)||(document.getElementById('ap-type')||{value:'ONLINE'}).value||'ONLINE';
   var pagto=document.getElementById('ap-pagto').value||'particular';
+  var tipoId=((document.getElementById('ap-tipo-servico')||{}).value||'').trim();
   if(!patId){toast('Selecione o paciente');return;}
   if(!date){toast('Informe a data');return;}
   var pat=PATS.find(function(p){return p.id===patId;});
@@ -2634,6 +2807,7 @@ function saveAppt(){
     return {id:'sess-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),
       patId:patId,patName:pat?pat.name:'Paciente',
       title:atividadeNome||'',
+      _tipoId:tipoId||undefined,
       date:new Date(dt+'T'+time+':00'),time:time,
       dur:parseInt(document.getElementById('ap-dur').value)||50,
       type:type,value:val,status:'SCHEDULED',pagto:pagto,
@@ -4048,7 +4222,8 @@ function saveState() {
       PATS:PATS, SESSIONS:SESSIONS, FINS:FINS, EVOS:EVOS,
       CONVS:CONVS, _teleHistory:_teleHistory,
       _remindersSent:_remindersSent,
-      GROUPS:GROUPS, TIPOS_ATEND:TIPOS_ATEND
+      GROUPS:GROUPS, TIPOS_ATEND:TIPOS_ATEND,
+      _calFilter:_calFilter, _calPrefs:_calPrefs
     }));
   } catch(e) { console.warn('Save state error:', e); }
 }
@@ -4071,6 +4246,8 @@ function loadState() {
     if (d._remindersSent) _remindersSent = d._remindersSent;
     if (d.GROUPS) GROUPS = d.GROUPS;
     if (d.TIPOS_ATEND) TIPOS_ATEND = d.TIPOS_ATEND;
+    if (d._calFilter) _calFilter = Object.assign(_calFilter, d._calFilter);
+    if (d._calPrefs)  _calPrefs  = Object.assign(_calPrefs,  d._calPrefs);
     console.log('State loaded:', PATS.length, 'pats,', SESSIONS.length, 'sessions');
   } catch(e) { console.warn('Load state error:', e); }
 }
@@ -5887,6 +6064,7 @@ openM = function(id){
     var firstCard=document.querySelector('.appt-option[data-appt-option="individual"]')||document.querySelector('.appt-option');
     if(firstCard) selectAgendamentoLayout(firstCard,'individual','psicoterapia');
     setTimeout(renderTipoGrid, 30);
+    setTimeout(populateTipoServiceSelect, 30);
   }
   _origOpenM(id);
 };
@@ -6020,7 +6198,8 @@ function renderAgLista(){
   var weekSess = SESSIONS.filter(function(s){
     if(s.status==='CANCELLED') return false;
     var sd = new Date(s.date);
-    return sd >= base && sd < weekEnd;
+    if(sd < base || sd >= weekEnd) return false;
+    return matchesCalFilter(s);
   }).sort(function(a,b){ return new Date(a.date)-new Date(b.date) || (a.time||'').localeCompare(b.time||''); });
 
   if(weekSess.length===0){
@@ -6179,13 +6358,17 @@ function saveTiposConfig(){
   var list = document.querySelectorAll('.tipo-cfg-row');
   TIPOS_ATEND = [];
   list.forEach(function(row){
-    var nome = (row.querySelector('.tipo-nome-inp')||{}).value.trim();
+    var nome  = (row.querySelector('.tipo-nome-inp')||{}).value.trim();
     var emoji = (row.querySelector('.tipo-emoji-inp')||{}).value.trim()||'📋';
-    if(nome) TIPOS_ATEND.push({id:'tipo-'+nome.toLowerCase().replace(/\s+/g,'-'), nome:nome, emoji:emoji});
+    var dur   = parseInt((row.querySelector('.tipo-dur-inp')||{}).value)||50;
+    var valor = parseFloat((row.querySelector('.tipo-valor-inp')||{}).value)||0;
+    var ativo = (row.querySelector('.tipo-ativo-chk')||{checked:true}).checked;
+    if(nome) TIPOS_ATEND.push({id:'tipo-'+nome.toLowerCase().replace(/\s+/g,'-'), nome:nome, emoji:emoji, duracao:dur, valor:valor, ativo:ativo});
   });
   saveState();
   toast('\u2713 Tipos de atendimento salvos!');
   renderTipoGrid();
+  populateTipoFilterSelect();
 }
 
 function renderTiposConfigSection(){
@@ -6200,7 +6383,11 @@ function renderTiposConfigSection(){
 function buildTipoRow(t){
   var row = document.createElement('div');
   row.className = 'tipo-cfg-row';
-  row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:8px';
+  row.style.cssText = 'border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:#f8fafa';
+
+  // Row 1: emoji + name + delete
+  var r1 = document.createElement('div');
+  r1.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:8px';
   var eInp = document.createElement('input');
   eInp.className = 'tipo-emoji-inp inp';
   eInp.value = t.emoji||'📋';
@@ -6209,18 +6396,50 @@ function buildTipoRow(t){
   nInp.className = 'tipo-nome-inp inp';
   nInp.value = t.nome;
   nInp.style.cssText = 'flex:1;font-size:13px';
-  nInp.placeholder = 'Nome do tipo...';
+  nInp.placeholder = 'Nome do serviço...';
   var bDel = document.createElement('button');
   bDel.style.cssText = 'background:none;border:none;cursor:pointer;font-size:16px;color:var(--rd);padding:4px;flex-shrink:0';
   bDel.innerHTML = '&#128465;';
   bDel.onclick = function(){ row.remove(); };
-  row.appendChild(eInp); row.appendChild(nInp); row.appendChild(bDel);
+  r1.appendChild(eInp); r1.appendChild(nInp); r1.appendChild(bDel);
+
+  // Row 2: duration + value + ativo toggle
+  var r2 = document.createElement('div');
+  r2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center';
+
+  var dWrap = document.createElement('div');
+  var dLbl = document.createElement('label'); dLbl.className='lbl'; dLbl.textContent='Duração (min)';
+  var dInp = document.createElement('select'); dInp.className='tipo-dur-inp sel';
+  [30,45,50,60,90,120].forEach(function(v){
+    var o=document.createElement('option'); o.value=v;
+    o.textContent = v<60 ? v+' min' : (v/60)+'h';
+    if((t.duracao||50)==v) o.selected=true;
+    dInp.appendChild(o);
+  });
+  dWrap.appendChild(dLbl); dWrap.appendChild(dInp);
+
+  var vWrap = document.createElement('div');
+  var vLbl = document.createElement('label'); vLbl.className='lbl'; vLbl.textContent='Valor padrão (R$)';
+  var vInp = document.createElement('input'); vInp.className='tipo-valor-inp inp'; vInp.type='number';
+  vInp.value = t.valor||0; vInp.min=0; vInp.step=10; vInp.placeholder='0';
+  vWrap.appendChild(vLbl); vWrap.appendChild(vInp);
+
+  var aWrap = document.createElement('div');
+  aWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px';
+  var aLbl = document.createElement('div'); aLbl.className='lbl'; aLbl.style.marginBottom='0'; aLbl.textContent='Ativo';
+  var aChk = document.createElement('input'); aChk.type='checkbox'; aChk.className='tipo-ativo-chk';
+  aChk.checked = (t.ativo !== false);
+  aChk.style.cssText='width:20px;height:20px;accent-color:var(--ac);cursor:pointer';
+  aWrap.appendChild(aLbl); aWrap.appendChild(aChk);
+
+  r2.appendChild(dWrap); r2.appendChild(vWrap); r2.appendChild(aWrap);
+  row.appendChild(r1); row.appendChild(r2);
   return row;
 }
 
 function addTipoRow(){
   var el = document.getElementById('cfg-tipos-section'); if(!el) return;
-  el.appendChild(buildTipoRow({id:'', nome:'', emoji:'📋'}));
+  el.appendChild(buildTipoRow({id:'', nome:'', emoji:'📋', duracao:50, valor:0, ativo:true}));
 }
 
 
@@ -6363,7 +6582,7 @@ function addTipoInline(){
   var nome  = (document.getElementById('new-tipo-nome')||{}).value.trim();
   if(!nome){ toast('Digite o nome do tipo de serviço'); return; }
   var id = 'tipo-' + nome.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now();
-  TIPOS_ATEND.push({ id:id, nome:nome, emoji:emoji });
+  TIPOS_ATEND.push({ id:id, nome:nome, emoji:emoji, duracao:50, valor:0, ativo:true });
   saveState();
   // Clear inputs
   var ei=document.getElementById('new-tipo-emoji'); if(ei) ei.value='';
@@ -6372,12 +6591,168 @@ function addTipoInline(){
   var el=document.getElementById('add-tipo-inline'); if(el){ el.classList.add('hidden'); el.style.display='none'; }
   // Re-render grid and select new tipo
   renderTipoGrid();
+  populateTipoServiceSelect();
   // Select the newly created tipo
   setTimeout(function(){
     var btns = document.querySelectorAll('.appt-tipo-btn');
     btns.forEach(function(b){ if(b.dataset.tipo===id){ b.click(); } });
   }, 50);
   toast('\u2713 Tipo "'+nome+'" adicionado!');
+}
+
+// ═══════════════════════════════════════════════════════
+// TIPO DE SERVIÇO — Seletor no wizard de agendamento
+// ═══════════════════════════════════════════════════════
+function populateTipoServiceSelect(){
+  var sel = document.getElementById('ap-tipo-servico'); if(!sel) return;
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">Selecione o tipo de servi\u00e7o...</option>';
+  (TIPOS_ATEND||[]).filter(function(t){ return t.ativo !== false; }).forEach(function(t){
+    var o = document.createElement('option');
+    o.value = t.id; o.textContent = (t.emoji||'')+ ' ' + t.nome;
+    sel.appendChild(o);
+  });
+  if(cur) sel.value = cur;
+  // Also populate grupo espec
+  var gSel = document.getElementById('ap-grupo-espec'); if(gSel){
+    gSel.innerHTML='<option value="">Selecione um servi\u00e7o</option>';
+    (TIPOS_ATEND||[]).filter(function(t){ return t.ativo!==false; }).forEach(function(t){
+      var o=document.createElement('option'); o.value=t.id; o.textContent=(t.emoji||'')+' '+t.nome; gSel.appendChild(o);
+    });
+  }
+}
+
+function onTipoServicoChange(tipoId){
+  if(!tipoId) return;
+  var tipo = (TIPOS_ATEND||[]).find(function(t){ return t.id===tipoId; });
+  if(!tipo) return;
+  // Auto-fill duration
+  var durSel = document.getElementById('ap-dur');
+  if(durSel && tipo.duracao){
+    for(var i=0;i<durSel.options.length;i++){
+      if(parseInt(durSel.options[i].value)===tipo.duracao){ durSel.selectedIndex=i; break; }
+    }
+  }
+  // Auto-fill value
+  var valInp = document.getElementById('ap-val');
+  if(valInp && tipo.valor !== undefined) valInp.value = tipo.valor;
+  // Update recurrence summary
+  if(typeof updateApptRecurrenceInfo==='function') updateApptRecurrenceInfo();
+}
+
+// ═══════════════════════════════════════════════════════
+// CALENDAR FILTERS
+// ═══════════════════════════════════════════════════════
+function toggleAgFilter(){
+  var bar = document.getElementById('ag-filter-bar'); if(!bar) return;
+  var showing = !bar.classList.contains('hidden');
+  bar.classList.toggle('hidden', showing);
+  populateTipoFilterSelect();
+}
+
+function populateTipoFilterSelect(){
+  ['ag-f-tipo','cfg-filter-tipo'].forEach(function(sid){
+    var sel = document.getElementById(sid); if(!sel) return;
+    var cur = sel.value;
+    sel.innerHTML = '<option value="">Todos os tipos</option>';
+    (TIPOS_ATEND||[]).forEach(function(t){
+      var o = document.createElement('option'); o.value = t.id;
+      o.textContent = (t.emoji||'')+ ' ' + t.nome; sel.appendChild(o);
+    });
+    if(cur) sel.value = cur;
+  });
+}
+
+// Returns true if session passes the active _calFilter
+function matchesCalFilter(s){
+  if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
+  if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
+  if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
+  if(_calFilter.date){
+    var sd=new Date(s.date);
+    var fd=new Date(_calFilter.date+'T00:00:00');
+    if(sd.getFullYear()!==fd.getFullYear()||sd.getMonth()!==fd.getMonth()||sd.getDate()!==fd.getDate()) return false;
+  }
+  return true;
+}
+
+function applyCalendarFilter(){
+  // Read from agenda filter bar (primary)
+  var fDate  = (document.getElementById('ag-f-date')||{}).value   || (document.getElementById('cfg-filter-date')||{}).value || '';
+  var fFrom  = (document.getElementById('ag-f-from')||{}).value   || (document.getElementById('cfg-filter-from')||{}).value || '';
+  var fTo    = (document.getElementById('ag-f-to')||{}).value     || (document.getElementById('cfg-filter-to')||{}).value   || '';
+  var fTipo  = (document.getElementById('ag-f-tipo')||{}).value   || (document.getElementById('cfg-filter-tipo')||{}).value || '';
+  _calFilter.date     = fDate;
+  _calFilter.timeFrom = fFrom;
+  _calFilter.timeTo   = fTo;
+  _calFilter.tipo     = fTipo;
+  saveState();
+  // Update hint
+  var hint = document.getElementById('ag-filter-active-hint');
+  var cfgStatus = document.getElementById('cfg-filter-status');
+  var hasFilter = fDate||fFrom||fTo||fTipo;
+  if(hint) hint.style.display = hasFilter ? '' : 'none';
+  if(cfgStatus) cfgStatus.textContent = hasFilter ? '\u2714 Filtro ativo' : 'Nenhum filtro aplicado';
+  // Update filter button appearance
+  var btn = document.getElementById('ag-filter-toggle-btn');
+  if(btn) btn.classList.toggle('on', !!hasFilter);
+  // Re-render calendar and lists
+  renderCal();
+  renderAgToday(); renderAgSemana(); renderAgPend();
+  if(typeof renderAgLista==='function') renderAgLista();
+}
+
+function clearCalendarFilter(){
+  _calFilter = { date:'', timeFrom:'', timeTo:'', tipo:'' };
+  ['ag-f-date','ag-f-from','ag-f-to','cfg-filter-date','cfg-filter-from','cfg-filter-to'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  ['ag-f-tipo','cfg-filter-tipo'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  saveState();
+  var hint = document.getElementById('ag-filter-active-hint');
+  if(hint) hint.style.display='none';
+  var cfgStatus = document.getElementById('cfg-filter-status');
+  if(cfgStatus) cfgStatus.textContent = 'Filtros removidos.';
+  var btn = document.getElementById('ag-filter-toggle-btn');
+  if(btn) btn.classList.remove('on');
+  renderCal();
+  renderAgToday(); renderAgSemana(); renderAgPend();
+  if(typeof renderAgLista==='function') renderAgLista();
+  toast('Filtros removidos');
+}
+
+// ═══════════════════════════════════════════════════════
+// DISPLAY PREFERENCES
+// ═══════════════════════════════════════════════════════
+function renderCfgPrefs(){
+  var startSel = document.getElementById('cfg-pref-start');
+  var endSel   = document.getElementById('cfg-pref-end');
+  var viewSel  = document.getElementById('cfg-pref-view');
+  var hideChk  = document.getElementById('cfg-pref-hide-off');
+  if(startSel) startSel.value = _calPrefs.startH || 8;
+  if(endSel)   endSel.value   = _calPrefs.endH   || 22;
+  if(viewSel)  viewSel.value  = _calPrefs.defaultView || 'semana';
+  if(hideChk)  hideChk.checked = !!_calPrefs.hideOffHours;
+}
+
+function saveCfgPrefs(){
+  var startSel = document.getElementById('cfg-pref-start');
+  var endSel   = document.getElementById('cfg-pref-end');
+  var viewSel  = document.getElementById('cfg-pref-view');
+  var hideChk  = document.getElementById('cfg-pref-hide-off');
+  var startH = parseInt((startSel||{value:'8'}).value)||8;
+  var endH   = parseInt((endSel||{value:'22'}).value)||22;
+  if(startH>=endH){ toast('O hor\u00e1rio de in\u00edcio deve ser anterior ao hor\u00e1rio de encerramento'); return; }
+  _calPrefs.startH       = startH;
+  _calPrefs.endH         = endH;
+  _calPrefs.defaultView  = (viewSel||{value:'semana'}).value||'semana';
+  _calPrefs.hideOffHours = (hideChk||{checked:false}).checked;
+  saveState();
+  // Apply default view
+  if(typeof switchCalView==='function') switchCalView(_calPrefs.defaultView, null);
+  toast('\u2713 Prefer\u00eancias salvas!');
 }
 
 function authLogout(){
