@@ -1082,7 +1082,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           </div>
 
           <div class="appt-form-row">
-            <label class="appt-form-label">Nome da atividade</label>
+            <label class="appt-form-label" for="ap-atividade-nome">Nome da atividade</label>
             <input id="ap-atividade-nome" class="appt-field" type="text" placeholder="Digite o nome da atividade"/>
           </div>
 
@@ -1116,14 +1116,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           </div>
 
           <div id="ap-individual-section" class="appt-form-row">
-            <label class="appt-form-label">Participante</label>
+            <label class="appt-form-label" for="ap-pat">Participante</label>
             <select id="ap-pat" class="appt-field">
               <option value="">Selecione o paciente...</option>
             </select>
           </div>
 
           <div id="ap-grupo-section" class="hidden appt-form-row">
-            <label class="appt-form-label">Participantes</label>
+            <label class="appt-form-label" for="ap-grupo-search">Participantes</label>
             <input type="text" id="ap-grupo-search" class="appt-field" placeholder="Buscar por nome ou CPF..." oninput="renderGrupoPatList(this.value)"/>
             <div id="ap-grupo-pats" style="margin-top:10px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px;max-height:180px;overflow-y:auto">
               <div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>
@@ -1134,7 +1134,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <div class="appt-form-row">
             <label class="appt-form-label">Cor do agendamento</label>
             <div class="appt-color-row">
-              <span class="appt-color-dot on" style="background:#FFFFFF"></span>
+              <span class="appt-color-dot on" style="background:#FFFFFF;border-color:#CBD5E1"></span>
               <span class="appt-color-dot" style="background:#9F7AEA"></span>
               <span class="appt-color-dot" style="background:#F6AD55"></span>
               <span class="appt-color-dot" style="background:#F6E05E"></span>
@@ -1177,12 +1177,12 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
           <div class="appt-form-row">
             <label class="appt-right-label">Repetir até</label>
-            <label class="appt-radio-line"><input type="radio" checked/> Data específica</label>
+            <label class="appt-radio-line"><input type="radio" name="recurrence-type" checked/> Data específica</label>
             <input id="ap-recur-end-date" class="appt-field" type="date"/>
           </div>
 
           <div class="appt-form-row">
-            <label class="appt-radio-line"><input type="radio" disabled/> Por número de ocorrências</label>
+            <label class="appt-radio-line"><input type="radio" name="recurrence-type" disabled/> Por número de ocorrências</label>
             <select id="ap-recur-dur" class="appt-field">
               <option value="1">1 mês</option>
               <option value="3" selected>3 meses</option>
@@ -1193,7 +1193,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
           <div style="margin-top:22px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:12px;padding:14px">
             <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-size:13px;color:#6B7280" id="appt-resumo-desc">Psicoterapia • Individual • Online</div>
+              <div style="font-size:13px;color:#6B7280" id="appt-resumo-desc">Resumo da sessão</div>
               <div style="font-size:14px;font-weight:800;color:#111827" id="appt-resumo-val">R$ 0,00</div>
             </div>
             <div style="border-top:1px solid #E5E7EB;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between">
@@ -5341,7 +5341,7 @@ function updateApptRecurrenceInfo(){
   var info = document.getElementById('ap-recur-info');
   if(!info) return;
   var freq = ((document.getElementById('ap-recur')||{}).value||'').trim();
-  var map = {'':'todos os dias','1':'todos os dias','7':'toda semana','14':'a cada 2 semanas','30':'todo mês'};
+  var map = {'':'todos os dias','7':'toda semana','14':'a cada 2 semanas','30':'todo mês'};
   info.textContent = 'A sessão será repetida ' + (map[freq]||'toda semana') + '.';
 }
 
@@ -5409,7 +5409,12 @@ openM = function(id){
     updateApptRecurrenceInfo();
     var ai=document.getElementById('ap-atividade-nome');if(ai)ai.value='';
     var rd=document.getElementById('ap-recur-end-date');if(rd&&!rd.value){
-      var d=new Date();d.setMonth(d.getMonth()+3);
+      var now=new Date();
+      var y=now.getFullYear();
+      var m=now.getMonth()+3;
+      var lastDay=new Date(y,m+1,0).getDate();
+      var day=Math.min(now.getDate(),lastDay);
+      var d=new Date(y,m,day);
       rd.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     }
     var firstCard=document.querySelector('.appt-option[data-appt-option="atividade"]')||document.querySelector('.appt-option');
