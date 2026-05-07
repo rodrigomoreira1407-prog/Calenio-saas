@@ -5599,7 +5599,8 @@ function renderGrupoPatRows(){
     var p = PATS.find(function(x){ return x.id===pid; });
     if(!p) return;
     var isIsento = _grupoIsentos.has(pid);
-    var valStr   = isIsento ? 'Isento' : 'R\u00a0' + (_grupoValorPP||0).toFixed(2).replace('.',',');
+    var valNum   = parseFloat(_grupoPatValores[pid]);
+    if(isNaN(valNum)) valNum = parseFloat(_grupoValorPP) || 0;
     var row = document.createElement('div');
     row.className = 'gr-pat-row';
     row.dataset.patId = pid;
@@ -5607,7 +5608,13 @@ function renderGrupoPatRows(){
       '<span class="gr-pat-drag">&#8942;&#8942;</span>'+
       '<span class="gr-pat-ico">&#128100;</span>'+
       '<span class="gr-pat-name">'+_esc(p.name)+'</span>'+
-      '<span class="gr-pat-val-badge'+(isIsento?' isento-txt':'')+'">'+valStr+'</span>'+
+      (isIsento
+        ? '<span class="gr-pat-val-badge isento-txt">Isento</span>'
+        : '<span class="gr-pat-val-badge">'+
+            'R$ <input type="number" min="0" step="0.01" value="'+valNum.toFixed(2)+'" '+
+            'oninput="updateGrupoPatValor(\''+pid+'\',this.value)" '+
+            'style="width:68px;border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:#111827;font-family:inherit;padding:0;margin-left:2px"/>'+
+          '</span>')+
       '<span class="gr-pat-isento-lbl">Isento</span>'+
       '<input type="checkbox" class="gr-pat-toggle"'+(isIsento?' checked':'')+
         ' onchange="toggleGrupoIsento(\''+pid+'\',this.checked)" aria-label="Isento"/>'+
@@ -5628,6 +5635,14 @@ function toggleGrupoIsento(pid, isChecked){
   }
   window._grupoPatValores = _grupoPatValores;
   renderGrupoPatRows();
+  updateApptResumo();
+}
+
+function updateGrupoPatValor(pid, val){
+  if(_grupoIsentos.has(pid)) return;
+  var num = parseFloat(val);
+  _grupoPatValores[pid] = isNaN(num) ? 0 : num;
+  window._grupoPatValores = _grupoPatValores;
   updateApptResumo();
 }
 
