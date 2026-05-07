@@ -5623,7 +5623,7 @@ function selectFormato(fmt, el){
   if(gdRow)  gdRow.classList.toggle('hidden', !(isGrupo || isEvento));
   if(mvRow)  mvRow.classList.toggle('hidden', !isGrupo);
   if(recBox) recBox.classList.toggle('hidden', isEvento);
-  if(recPanel) recPanel.classList.toggle('hidden', isEvento);
+  if(recPanel) recPanel.classList.add('hidden');
   if(layout)   layout.classList.toggle('appt-layout--evento', isEvento);
 
   if(evNomeRow)    evNomeRow.classList.toggle('hidden', !isEvento);
@@ -5969,7 +5969,7 @@ function toggleApptRecurrence(enabled){
   var dur = document.getElementById('ap-recur-dur');
   var endDate = document.getElementById('ap-recur-end-date');
   var panel = document.getElementById('ap-recur-panel');
-  if(panel) panel.style.opacity = enabled ? '1' : '.72';
+  if(panel) panel.classList.toggle('hidden', !enabled);
   if(freq){
     freq.disabled = !enabled;
     if(!enabled) freq.value = '';
