@@ -1038,10 +1038,10 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div class="appt-col">
           <div class="appt-row-head">
             <div class="appt-title">Agendar</div>
-            <button class="appt-x" onclick="closeM('m-appt-new')">&#10005;</button>
+            <button class="appt-x" aria-label="Fechar modal de agendamento" onclick="closeM('m-appt-new')">&#10005;</button>
           </div>
           <div class="appt-left-desc">Escolha o formato do agendamento</div>
-          <div class="appt-option on" data-appt-option="atividade" onclick="selectAgendamentoLayout(this,'individual','atividade')">
+          <div class="appt-option on" data-appt-option="atividade" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','atividade')">
             <div class="appt-option-ico">&#9776;</div>
             <div>
               <div class="appt-option-title">Atividade</div>
@@ -1049,7 +1049,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </div>
             <div class="appt-option-arrow">&#8250;</div>
           </div>
-          <div class="appt-option" data-appt-option="individual" onclick="selectAgendamentoLayout(this,'individual','psicoterapia')">
+          <div class="appt-option" data-appt-option="individual" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','psicoterapia')">
             <div class="appt-option-ico">&#128100;</div>
             <div>
               <div class="appt-option-title">Individual</div>
@@ -1057,7 +1057,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </div>
             <div class="appt-option-arrow">&#8250;</div>
           </div>
-          <div class="appt-option" data-appt-option="grupo" onclick="selectAgendamentoLayout(this,'grupo','grupo')">
+          <div class="appt-option" data-appt-option="grupo" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'grupo','grupo')">
             <div class="appt-option-ico">&#128101;</div>
             <div>
               <div class="appt-option-title">Grupo</div>
@@ -1065,7 +1065,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </div>
             <div class="appt-option-arrow">&#8250;</div>
           </div>
-          <div class="appt-option" data-appt-option="evento" onclick="selectAgendamentoLayout(this,'individual','evento')">
+          <div class="appt-option" data-appt-option="evento" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','evento')">
             <div class="appt-option-ico">&#128197;</div>
             <div>
               <div class="appt-option-title">Evento</div>
@@ -1078,7 +1078,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div class="appt-col">
           <div class="appt-row-head">
             <div class="appt-subtitle">&#8592; Atividade</div>
-            <button class="appt-x" onclick="closeM('m-appt-new')">&#10005;</button>
+            <button class="appt-x" aria-label="Fechar modal de agendamento" onclick="closeM('m-appt-new')">&#10005;</button>
           </div>
 
           <div class="appt-form-row">
@@ -1158,7 +1158,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div class="appt-col" id="ap-recur-panel">
           <div class="appt-row-head">
             <div class="appt-right-title">Recorrência</div>
-            <button class="appt-x" onclick="closeM('m-appt-new')">&#10005;</button>
+            <button class="appt-x" aria-label="Fechar modal de agendamento" onclick="closeM('m-appt-new')">&#10005;</button>
           </div>
 
           <div class="appt-form-row">
