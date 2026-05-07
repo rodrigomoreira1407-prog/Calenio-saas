@@ -1107,7 +1107,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <label class="appt-form-label" for="ap-grupo-nome">Nome do grupo</label>
             <div style="position:relative">
               <input id="ap-grupo-nome" class="appt-field" type="text" placeholder="Nome do grupo..." style="padding-right:40px"/>
-              <button onclick="document.getElementById('ap-grupo-nome').value=''" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:#9CA3AF;padding:0;line-height:1" aria-label="Limpar nome">&#10005;</button>
+              <button onclick="document.getElementById('ap-grupo-nome').value=''" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('ap-grupo-nome').value='';}" tabindex="0" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:#9CA3AF;padding:0;line-height:1" aria-label="Limpar nome">&#10005;</button>
             </div>
           </div>
 
@@ -5519,10 +5519,11 @@ function renderAddPartList(filter){
   if(!el) return;
   el.innerHTML='';
   var q = (filter||'').toLowerCase().trim();
+  var qDigits = q.replace(/\D/g,'');
   var list = PATS.filter(function(p){
     if(_grupoSelectedPats.has(p.id)) return false;
     if(!q) return true;
-    return p.name.toLowerCase().includes(q) || (p.cpf||'').replace(/\D/g,'').includes(q.replace(/\D/g,''));
+    return p.name.toLowerCase().includes(q) || (qDigits && (p.cpf||'').replace(/\D/g,'').includes(qDigits));
   });
   if(PATS.length===0){
     el.innerHTML='<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>';
