@@ -618,7 +618,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
           <div style="display:flex;min-width:560px">
             <div style="width:56px;flex-shrink:0;border-right:1px solid var(--bd)">
-              <div style="height:52px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dm);font-weight:600">Hora</div>
+              <div style="height:48px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dm);font-weight:600">Hora</div>
               <div id="cal-time-slots"></div>
             </div>
             <div id="cal-days" style="flex:1;display:flex"></div>
@@ -1580,11 +1580,14 @@ function renderCal(){
   var e=wend.getDate()+' '+months[wend.getMonth()]+' '+wend.getFullYear();
   document.getElementById('cal-period').textContent=s+' \u2013 '+e;
   document.getElementById('agenda-sub').textContent='Semana de '+s+' a '+e+' '+wend.getFullYear();
+  var SLOT_H=44; // px per hour
+  var START_H=8;
+  var END_H=23;
 
   // Build time slots column (once)
   var tsCol=document.getElementById('cal-time-slots');
   if(tsCol&&tsCol.children.length===0){
-    for(var h=8;h<=20;h++){
+    for(var h=START_H;h<=END_H;h++){
       var lbl=document.createElement('div');lbl.className='ncal-time-lbl';
       lbl.textContent=String(h).padStart(2,'0')+':00';
       tsCol.appendChild(lbl);
@@ -1594,9 +1597,6 @@ function renderCal(){
   // Build day columns
   var container=document.getElementById('cal-days');
   container.innerHTML='';
-  var SLOT_H=44; // px per hour
-  var START_H=8;
-  var END_H=24;
 
   for(var i=0;i<7;i++){
     var d=new Date(base);d.setDate(d.getDate()+i);
@@ -1611,9 +1611,9 @@ function renderCal(){
     var nu=document.createElement('div');nu.className='ncal-day-num'+(isToday?' today':'');nu.textContent=d.getDate();
     hdr.appendChild(nm);hdr.appendChild(nu);col.appendChild(hdr);
 
-    // Slots (08-20 = 13 slots)
+    // Slots (START_H até END_H)
     var slotsWrap=document.createElement('div');slotsWrap.style.position='relative';
-    for(var h2=START_H;h2<=23;h2++){
+    for(var h2=START_H;h2<=END_H;h2++){
       var slot=document.createElement('div');slot.className='ncal-slot';
       (function(day,hour){slot.onclick=function(){
         var di=document.getElementById('ap-date');
