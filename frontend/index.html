@@ -343,6 +343,28 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .appt-hidden{display:none!important}
 .appt-tipo-btn{background:#F9FAFB;border:2px solid #E5E7EB;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:#374151;transition:all .15s;user-select:none}
 .appt-tipo-btn.on{border-color:#2563EB;background:#EFF6FF;color:#2563EB}
+/* ── GRUPO PARTICIPANT ROWS ─────────────────────────────── */
+.gr-pat-row{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid #E5E7EB;border-radius:12px;background:#fff;margin-bottom:8px}
+.gr-pat-drag{color:#C4C4CC;font-size:17px;cursor:grab;flex-shrink:0;user-select:none;line-height:1;letter-spacing:-2px}
+.gr-pat-ico{font-size:15px;flex-shrink:0}
+.gr-pat-name{flex:1;font-size:13px;font-weight:600;color:#111827;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gr-pat-val-badge{font-size:13px;font-weight:500;color:#111827;background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:5px 10px;white-space:nowrap;flex-shrink:0;min-width:90px;text-align:center}
+.gr-pat-val-badge.isento-txt{background:#F3F4F6;color:#6B7280;border-color:#E5E7EB}
+.gr-pat-isento-lbl{font-size:12px;color:#6B7280;font-weight:500;flex-shrink:0}
+.gr-pat-toggle{appearance:none;-webkit-appearance:none;width:42px;height:24px;border-radius:999px;background:#D1D5DB;position:relative;cursor:pointer;transition:.2s;flex-shrink:0;margin:0}
+.gr-pat-toggle:before{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.gr-pat-toggle:checked{background:#7C3AED}
+.gr-pat-toggle:checked:before{transform:translateX(18px)}
+.gr-pat-remove{background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:15px;padding:0 2px;flex-shrink:0;line-height:1;font-family:inherit}
+.gr-pat-remove:hover{color:#EF4444}
+.ap-add-part-btn{background:none;border:none;cursor:pointer;color:var(--ac);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:3px;padding:4px 0;font-family:inherit;white-space:nowrap}
+.ap-add-part-search-wrap{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:10px;margin-top:6px;margin-bottom:8px}
+.ap-add-part-search{width:100%;border:1px solid #D8DFEB;border-radius:10px;padding:9px 12px;font-size:13px;outline:none;font-family:inherit;background:#fff}
+.ap-add-part-search:focus{border-color:#2563EB}
+.ap-add-part-list-item{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer;font-size:13px;color:#111827;font-weight:500}
+.ap-add-part-list-item:hover{background:#EFF6FF}
+.gr-mod-btn{border:1px solid #E5E7EB;border-radius:12px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;background:#fff;color:#374151;font-family:inherit;transition:all .15s}
+.gr-mod-btn.on{border-color:#2563EB;background:#EFF6FF;color:#2563EB}
 .appt-fmt-btn,.appt-mod-btn,.mod-check{display:none!important}
 @media(max-width:1200px){
   .appt-layout{grid-template-columns:1fr}
@@ -1080,7 +1102,32 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <button class="appt-x" aria-label="Fechar modal de agendamento" onclick="closeM('m-appt-new')">&#10005;</button>
           </div>
 
-          <div class="appt-form-row">
+          <!-- Nome do grupo (grupo only) -->
+          <div class="appt-form-row hidden" id="ap-grupo-nome-row">
+            <label class="appt-form-label" for="ap-grupo-nome">Nome do grupo</label>
+            <div style="position:relative">
+              <input id="ap-grupo-nome" class="appt-field" type="text" placeholder="Nome do grupo..." style="padding-right:40px"/>
+              <button onclick="document.getElementById('ap-grupo-nome').value=''" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('ap-grupo-nome').value='';}" tabindex="0" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:#9CA3AF;padding:0;line-height:1" aria-label="Limpar nome">&#10005;</button>
+            </div>
+          </div>
+
+          <!-- Participantes – grupo only (new card design) -->
+          <div id="ap-grupo-section" class="hidden appt-form-row">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span class="appt-form-label" style="margin-bottom:0">Participantes</span>
+              <button class="ap-add-part-btn" onclick="toggleAdicionarParticipante()">&#43; Adicionar participante</button>
+            </div>
+            <div id="ap-add-part-search-box" class="ap-add-part-search-wrap hidden">
+              <input type="text" id="ap-add-part-q" class="ap-add-part-search" placeholder="Buscar paciente..." oninput="renderAddPartList(this.value)"/>
+              <div id="ap-add-part-results" style="margin-top:6px"></div>
+            </div>
+            <div id="ap-grupo-pats">
+              <div style="font-size:12px;color:#9CA3AF;text-align:center;padding:12px 0">Nenhum participante adicionado</div>
+            </div>
+          </div>
+
+          <!-- Nome da atividade (hidden for grupo) -->
+          <div class="appt-form-row" id="ap-atividade-nome-row">
             <label class="appt-form-label" for="ap-atividade-nome">Nome da atividade</label>
             <input id="ap-atividade-nome" class="appt-field" type="text" placeholder="Digite o nome da atividade"/>
           </div>
@@ -1096,9 +1143,10 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </div>
           </div>
 
-          <div class="appt-grid-2 appt-form-row">
+          <!-- Duração + Valor (hidden for grupo) -->
+          <div class="appt-grid-2 appt-form-row" id="ap-dur-val-row">
             <div>
-              <label class="appt-form-label">Duração</label>
+              <label class="appt-form-label">Dura&#231;&#227;o</label>
               <select id="ap-dur" class="appt-field">
                 <option value="30">30 minutos</option>
                 <option value="45">45 minutos</option>
@@ -1114,6 +1162,27 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </div>
           </div>
 
+          <!-- Duração + Especificação (grupo only) -->
+          <div class="appt-grid-2 appt-form-row hidden" id="ap-grupo-dur-espec-row">
+            <div>
+              <label class="appt-form-label">Dura&#231;&#227;o</label>
+              <select id="ap-grupo-dur" class="appt-field">
+                <option value="30">30 minutos</option>
+                <option value="45">45 minutos</option>
+                <option value="50" selected>50 minutos</option>
+                <option value="60">60 minutos</option>
+                <option value="90">90 minutos</option>
+                <option value="120">2 horas</option>
+              </select>
+            </div>
+            <div>
+              <label class="appt-form-label">Especifica&#231;&#227;o</label>
+              <select id="ap-grupo-espec" class="appt-field">
+                <option value="">Selecione um servi&#231;o</option>
+              </select>
+            </div>
+          </div>
+
           <div id="ap-individual-section" class="appt-form-row">
             <label class="appt-form-label" for="ap-pat">Participante</label>
             <select id="ap-pat" class="appt-field">
@@ -1121,13 +1190,22 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </select>
           </div>
 
-          <div id="ap-grupo-section" class="hidden appt-form-row">
-            <label class="appt-form-label" for="ap-grupo-search">Participantes</label>
-            <input type="text" id="ap-grupo-search" class="appt-field" placeholder="Buscar por nome ou CPF..." oninput="renderGrupoPatList(this.value)"/>
-            <div id="ap-grupo-pats" style="margin-top:10px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px;max-height:180px;overflow-y:auto">
-              <div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>
+          <!-- Modalidade + Valor por participante (grupo only) -->
+          <div class="appt-grid-2 appt-form-row hidden" id="ap-grupo-mod-val-row">
+            <div>
+              <label class="appt-form-label">Modalidade</label>
+              <div style="display:flex;gap:8px">
+                <button class="gr-mod-btn on" id="gr-mod-online" onclick="selectGrupoMod('ONLINE',this)">Online</button>
+                <button class="gr-mod-btn" id="gr-mod-pres" onclick="selectGrupoMod('PRESENTIAL',this)">Presencial</button>
+              </div>
             </div>
-            <div style="margin-top:8px;font-size:13px;color:#6B7280" id="ap-grupo-count">&#8505;&#65039; 0 participantes selecionados</div>
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <label class="appt-form-label" style="margin-bottom:0">Valor por participante</label>
+                <input type="checkbox" class="appt-rec-toggle" id="ap-grupo-val-toggle" onchange="toggleGrupoValPP(this.checked)"/>
+              </div>
+              <input type="number" id="ap-grupo-val-pp" class="appt-field" value="0" min="0" step="10" oninput="updateGrupoPatValores()" placeholder="0" disabled/>
+            </div>
           </div>
 
           <div class="appt-form-row">
@@ -1149,7 +1227,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <div class="appt-rec-box">
             <div class="appt-rec-inline">
               <input type="checkbox" id="ap-recur-enabled" class="appt-rec-toggle" onchange="toggleApptRecurrence(this.checked)"/>
-              <span>Configurar recorrência</span>
+              <span>Configurar recorr&#234;ncia</span>
             </div>
           </div>
         </div>
@@ -4920,6 +4998,8 @@ var _grupoSelectedPats = new Set(); // tracks selected patient IDs (survives DOM
 var _grupoPatValores = {}; // individual values per patient
 window._grupoSelectedPats = _grupoSelectedPats;
 window._grupoPatValores = _grupoPatValores;
+var _grupoIsentos = new Set(); // patients marked as isento
+var _grupoValorPP = 0;        // global value per participant
 
 var _tipoLabel = {
   terapeutico: 'Grupo Terapêutico',
@@ -5257,15 +5337,30 @@ function selectFormato(fmt, el){
     b.classList.toggle('on', b===el);
   });
   // Show/hide sections
-  var indiv = document.getElementById('ap-individual-section');
-  var grupo = document.getElementById('ap-grupo-section');
-  if(indiv) indiv.classList.toggle('hidden', fmt==='grupo');
-  if(grupo) grupo.classList.toggle('hidden', fmt!=='grupo');
-  // Populate group patient list
-  if(fmt==='grupo'){
-    var sr=document.getElementById('ap-grupo-search');if(sr)sr.value='';
-    _grupoSelectedPats=new Set();_grupoPatValores={};
-    renderGrupoPatList();
+  var indiv    = document.getElementById('ap-individual-section');
+  var grupo    = document.getElementById('ap-grupo-section');
+  var gnRow    = document.getElementById('ap-grupo-nome-row');
+  var atmRow   = document.getElementById('ap-atividade-nome-row');
+  var dvRow    = document.getElementById('ap-dur-val-row');
+  var gdRow    = document.getElementById('ap-grupo-dur-espec-row');
+  var mvRow    = document.getElementById('ap-grupo-mod-val-row');
+  var isGrupo  = fmt === 'grupo';
+  if(indiv)  indiv.classList.toggle('hidden', isGrupo);
+  if(grupo)  grupo.classList.toggle('hidden', !isGrupo);
+  if(gnRow)  gnRow.classList.toggle('hidden', !isGrupo);
+  if(atmRow) atmRow.classList.toggle('hidden', isGrupo);
+  if(dvRow)  dvRow.classList.toggle('hidden', isGrupo);
+  if(gdRow)  gdRow.classList.toggle('hidden', !isGrupo);
+  if(mvRow)  mvRow.classList.toggle('hidden', !isGrupo);
+  // Populate / reset group state
+  if(isGrupo){
+    _grupoSelectedPats = new Set(); window._grupoSelectedPats = _grupoSelectedPats;
+    _grupoPatValores   = {};        window._grupoPatValores   = _grupoPatValores;
+    _grupoIsentos      = new Set();
+    _grupoValorPP      = 0;
+    var ab = document.getElementById('ap-add-part-search-box'); if(ab) ab.classList.add('hidden');
+    renderGrupoPatRows();
+    populateGrupoEspec();
   }
   updateApptResumo();
 }
@@ -5350,6 +5445,166 @@ function selectModalidade(mod, el){
   if(presCheck)   presCheck.classList.toggle('hidden', mod!=='PRESENTIAL');
   updateApptResumo();
 }
+
+// ── GRUPO PARTICIPANT CARD HELPERS ──────────────────────────────────────────
+
+function renderGrupoPatRows(){
+  var el = document.getElementById('ap-grupo-pats');
+  if(!el) return;
+  var pats = Array.from(_grupoSelectedPats);
+  if(pats.length === 0){
+    el.innerHTML='<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:12px 0">Nenhum participante adicionado</div>';
+    return;
+  }
+  el.innerHTML='';
+  pats.forEach(function(pid){
+    var p = PATS.find(function(x){ return x.id===pid; });
+    if(!p) return;
+    var isIsento = _grupoIsentos.has(pid);
+    var valStr   = isIsento ? 'Isento' : 'R\u00a0' + (_grupoValorPP||0).toFixed(2).replace('.',',');
+    var row = document.createElement('div');
+    row.className = 'gr-pat-row';
+    row.dataset.patId = pid;
+    row.innerHTML =
+      '<span class="gr-pat-drag">&#8942;&#8942;</span>'+
+      '<span class="gr-pat-ico">&#128100;</span>'+
+      '<span class="gr-pat-name">'+_esc(p.name)+'</span>'+
+      '<span class="gr-pat-val-badge'+(isIsento?' isento-txt':'')+'">'+valStr+'</span>'+
+      '<span class="gr-pat-isento-lbl">Isento</span>'+
+      '<input type="checkbox" class="gr-pat-toggle"'+(isIsento?' checked':'')+
+        ' onchange="toggleGrupoIsento(\''+pid+'\',this.checked)" aria-label="Isento"/>'+
+      '<button class="gr-pat-remove" onclick="removeGrupoParticipante(\''+pid+'\')" aria-label="Remover participante">&#10005;</button>';
+    el.appendChild(row);
+  });
+}
+
+function _esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function toggleGrupoIsento(pid, isChecked){
+  if(isChecked){
+    _grupoIsentos.add(pid);
+    _grupoPatValores[pid] = 0;
+  } else {
+    _grupoIsentos.delete(pid);
+    _grupoPatValores[pid] = _grupoValorPP;
+  }
+  window._grupoPatValores = _grupoPatValores;
+  renderGrupoPatRows();
+  updateApptResumo();
+}
+
+function removeGrupoParticipante(pid){
+  _grupoSelectedPats.delete(pid);
+  _grupoIsentos.delete(pid);
+  delete _grupoPatValores[pid];
+  window._grupoSelectedPats = _grupoSelectedPats;
+  window._grupoPatValores   = _grupoPatValores;
+  renderGrupoPatRows();
+  updateApptResumo();
+}
+
+function toggleAdicionarParticipante(){
+  var box = document.getElementById('ap-add-part-search-box');
+  if(!box) return;
+  box.classList.toggle('hidden');
+  if(!box.classList.contains('hidden')){
+    var q = document.getElementById('ap-add-part-q');
+    if(q){ q.value=''; q.focus(); }
+    renderAddPartList('');
+  }
+}
+
+function renderAddPartList(filter){
+  var el = document.getElementById('ap-add-part-results');
+  if(!el) return;
+  el.innerHTML='';
+  var q = (filter||'').toLowerCase().trim();
+  var qDigits = q.replace(/\D/g,'');
+  var list = PATS.filter(function(p){
+    if(_grupoSelectedPats.has(p.id)) return false;
+    if(!q) return true;
+    return p.name.toLowerCase().includes(q) || (qDigits && (p.cpf||'').replace(/\D/g,'').includes(qDigits));
+  });
+  if(PATS.length===0){
+    el.innerHTML='<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>';
+    return;
+  }
+  if(list.length===0){
+    el.innerHTML='<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum resultado encontrado</div>';
+    return;
+  }
+  list.forEach(function(p){
+    var item = document.createElement('div');
+    item.className='ap-add-part-list-item';
+    item.innerHTML='<span style="font-size:14px">&#128100;</span><span>'+_esc(p.name)+'</span>';
+    item.onclick=function(){ addGrupoParticipante(p.id); };
+    el.appendChild(item);
+  });
+}
+
+function addGrupoParticipante(pid){
+  _grupoSelectedPats.add(pid);
+  window._grupoSelectedPats = _grupoSelectedPats;
+  _grupoPatValores[pid]     = _grupoValorPP;
+  window._grupoPatValores   = _grupoPatValores;
+  var box = document.getElementById('ap-add-part-search-box');
+  if(box) box.classList.add('hidden');
+  renderGrupoPatRows();
+  updateApptResumo();
+}
+
+function selectGrupoMod(mod, el){
+  _apptModalidade        = mod;
+  window._apptModalidade = mod;
+  document.querySelectorAll('.gr-mod-btn').forEach(function(b){ b.classList.remove('on'); });
+  if(el) el.classList.add('on');
+}
+
+function toggleGrupoValPP(checked){
+  var valEl = document.getElementById('ap-grupo-val-pp');
+  if(valEl) valEl.disabled = !checked;
+  if(!checked){
+    _grupoValorPP = 0;
+    Array.from(_grupoSelectedPats).forEach(function(pid){
+      if(!_grupoIsentos.has(pid)) _grupoPatValores[pid] = 0;
+    });
+    window._grupoPatValores = _grupoPatValores;
+    renderGrupoPatRows();
+    updateApptResumo();
+  } else {
+    if(valEl) valEl.focus();
+  }
+}
+
+function updateGrupoPatValores(){
+  var valEl = document.getElementById('ap-grupo-val-pp');
+  if(!valEl) return;
+  _grupoValorPP = parseFloat(valEl.value) || 0;
+  Array.from(_grupoSelectedPats).forEach(function(pid){
+    if(!_grupoIsentos.has(pid)) _grupoPatValores[pid] = _grupoValorPP;
+  });
+  window._grupoPatValores = _grupoPatValores;
+  renderGrupoPatRows();
+  updateApptResumo();
+}
+
+function populateGrupoEspec(){
+  var sel = document.getElementById('ap-grupo-espec');
+  if(!sel) return;
+  var tipos = (typeof getTipos === 'function') ? getTipos() : [];
+  sel.innerHTML = '<option value="">Selecione um servi\u00e7o</option>';
+  tipos.forEach(function(t){
+    var opt = document.createElement('option');
+    opt.value       = t.id;
+    opt.textContent = t.nome;
+    sel.appendChild(opt);
+  });
+  // Sync with current _apptTipo
+  if(sel.querySelector('option[value="'+_apptTipo+'"]')) sel.value = _apptTipo;
+  sel.onchange = function(){ _apptTipo = this.value; window._apptTipo = this.value; };
+}
+
+// ── END GRUPO HELPERS ───────────────────────────────────────────────────────
 
 function updateApptResumo(){
   var val;
@@ -5443,6 +5698,14 @@ openM = function(id){
     toggleApptRecurrence(false);
     updateApptRecurrenceInfo();
     var ai=document.getElementById('ap-atividade-nome');if(ai)ai.value='';
+    // Reset grupo-specific fields
+    var gn=document.getElementById('ap-grupo-nome');if(gn)gn.value='';
+    var gvt=document.getElementById('ap-grupo-val-toggle');if(gvt)gvt.checked=false;
+    var gvp=document.getElementById('ap-grupo-val-pp');if(gvp){gvp.value='0';gvp.disabled=true;}
+    _grupoIsentos=new Set();_grupoValorPP=0;
+    var gmo=document.getElementById('gr-mod-online');if(gmo)gmo.classList.add('on');
+    var gmp=document.getElementById('gr-mod-pres');if(gmp)gmp.classList.remove('on');
+    var ab=document.getElementById('ap-add-part-search-box');if(ab)ab.classList.add('hidden');
     var firstColor=document.querySelector('.appt-color-dot');
     if(firstColor) selectApptColor(firstColor.dataset.color||'#FFFFFF', firstColor);
     var rd=document.getElementById('ap-recur-end-date');if(rd&&!rd.value){
@@ -5814,13 +6077,20 @@ function salvarSessaoWizard(){
   if(fmt === 'grupo'){
     var gPats = window._grupoSelectedPats ? Array.from(window._grupoSelectedPats) : [];
     var gVals = window._grupoPatValores || {};
-    if(gPats.length === 0){ toast('Selecione ao menos um participante'); return; }
+    if(gPats.length === 0){ toast('Adicione ao menos um participante'); return; }
 
-    var tipoNomes = {}; getTipos().forEach(function(t){ tipoNomes[t.id] = t.nome; });
-    var gNome = tipoNomes[tipo] || tipo || 'Grupo';
+    // Use "Nome do grupo" input if filled; fall back to tipo name
+    var gNomeInput = ((document.getElementById('ap-grupo-nome')||{}).value||'').trim();
+    var tipoNomes  = {}; getTipos().forEach(function(t){ tipoNomes[t.id] = t.nome; });
+    var gNome = gNomeInput || tipoNomes[tipo] || tipo || 'Grupo';
+
+    // Use grupo-specific duration if available
+    var gDurEl = document.getElementById('ap-grupo-dur');
+    var gDur   = parseInt((gDurEl||{value:'50'}).value)||50;
+
     var partics = [];
     gPats.forEach(function(pid){
-      var p = PATS.find(function(x){ return x.id === pid; });
+      var p  = PATS.find(function(x){ return x.id === pid; });
       var pv = parseFloat(gVals[pid]) || 0;
       partics.push({ patId:pid, nome:p?p.name:'Participante', pago:false, presente:null, valor:pv });
     });
@@ -5828,7 +6098,7 @@ function salvarSessaoWizard(){
     var sid = 'gs-' + Date.now();
     var grp = GROUPS.find(function(g){ return g.nome === gNome; });
     if(!grp){
-      grp = { id:'grp-'+Date.now(), nome:gNome, tipo:tipo, valor:val, dia:'', hora:time, desc:'', sessoes:[] };
+      grp = { id:'grp-'+Date.now(), nome:gNome, tipo:tipo, valor:_grupoValorPP||val, dia:'', hora:time, desc:'', sessoes:[] };
       GROUPS.push(grp);
     }
     grp.sessoes.push({ id:sid, date:date, time:time, participantes:partics, obs:'' });
@@ -5840,7 +6110,7 @@ function salvarSessaoWizard(){
       _participantes: partics,
       date: new Date(date + 'T' + time + ':00'),
       _rawIso: date + 'T' + time + ':00.000Z',
-      time: time, dur: dur, type: modal,
+      time: time, dur: gDur, type: modal,
       value: partics.reduce(function(s,p){ return s + p.valor; }, 0),
       status: 'SCHEDULED', pagto:'particular', meetLink: null
     });
