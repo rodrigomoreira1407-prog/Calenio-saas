@@ -1040,15 +1040,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <button class="appt-x" aria-label="Fechar modal de agendamento" onclick="closeM('m-appt-new')">&#10005;</button>
           </div>
           <div class="appt-left-desc">Escolha o formato do agendamento</div>
-          <div class="appt-option on" data-appt-option="atividade" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','atividade')">
-            <div class="appt-option-ico">&#9776;</div>
-            <div>
-              <div class="appt-option-title">Atividade</div>
-              <div class="appt-option-sub">Agendamento de tarefas.</div>
-            </div>
-            <div class="appt-option-arrow">&#8250;</div>
-          </div>
-          <div class="appt-option" data-appt-option="individual" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','psicoterapia')">
+          <div class="appt-option on" data-appt-option="individual" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','psicoterapia')">
             <div class="appt-option-ico">&#128100;</div>
             <div>
               <div class="appt-option-title">Individual</div>
@@ -1072,11 +1064,19 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             </div>
             <div class="appt-option-arrow">&#8250;</div>
           </div>
+          <div class="appt-option" data-appt-option="atividade" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','atividade')">
+            <div class="appt-option-ico">&#9776;</div>
+            <div>
+              <div class="appt-option-title">Atividade</div>
+              <div class="appt-option-sub">Agendamento de tarefas.</div>
+            </div>
+            <div class="appt-option-arrow">&#8250;</div>
+          </div>
         </div>
 
         <div class="appt-col">
           <div class="appt-row-head">
-            <div class="appt-subtitle">&#8592; Atividade</div>
+            <div class="appt-subtitle">&#8592; Individual</div>
             <button class="appt-x" aria-label="Fechar modal de agendamento" onclick="closeM('m-appt-new')">&#10005;</button>
           </div>
 
@@ -5454,8 +5454,8 @@ openM = function(id){
       var d=new Date(y,m,day);
       rd.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     }
-    var firstCard=document.querySelector('.appt-option[data-appt-option="atividade"]')||document.querySelector('.appt-option');
-    if(firstCard) selectAgendamentoLayout(firstCard,'individual','atividade');
+    var firstCard=document.querySelector('.appt-option[data-appt-option="individual"]')||document.querySelector('.appt-option');
+    if(firstCard) selectAgendamentoLayout(firstCard,'individual','psicoterapia');
     setTimeout(renderTipoGrid, 30);
   }
   _origOpenM(id);
