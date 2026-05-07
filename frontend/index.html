@@ -303,15 +303,56 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .ag-list-name{flex:1;font-size:13px;color:var(--tx);font-weight:500}
 .ag-list-cam{color:var(--dm);flex-shrink:0}
 /* ── APPOINTMENT WIZARD ─────────────────────────────────── */
-.appt-wizard{background:#fff;border-radius:20px;padding:24px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.appt-wizard{background:#fff;border-radius:22px;border:1px solid #E5E7EB;width:min(1320px,96vw);max-height:92vh;overflow:auto;box-shadow:0 24px 80px rgba(15,23,42,.18)}
+.appt-layout{display:grid;grid-template-columns:350px 1fr 420px;min-height:760px}
+.appt-col{padding:32px 28px}
+.appt-col:not(:last-child){border-right:1px solid #E5E7EB}
+.appt-title{font-size:24px;font-weight:800;line-height:1;color:#0B1B57;letter-spacing:-.03em}
+.appt-subtitle{font-size:18px;font-weight:800;line-height:1.1;color:#0B1B57;letter-spacing:-.02em}
+.appt-x{background:none;border:none;font-size:30px;line-height:1;cursor:pointer;color:#0B1B57;padding:0}
+.appt-row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.appt-left-desc{font-size:14px;color:#111827;font-weight:600;margin-bottom:26px}
+.appt-option{border:1px solid #E5E7EB;border-radius:18px;padding:22px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;background:#fff;transition:all .15s;margin-bottom:14px}
+.appt-option:hover{border-color:#93C5FD}
+.appt-option.on{border-color:#2563EB;background:#EFF6FF}
+.appt-option-ico{width:54px;height:54px;border-radius:16px;background:#EEF2FF;display:flex;align-items:center;justify-content:center;font-size:22px;color:#0B1B57;flex-shrink:0}
+.appt-option-title{font-size:16px;font-weight:700;color:#0B1B57;line-height:1.05}
+.appt-option-sub{font-size:12px;color:#334155;margin-top:6px;line-height:1.25}
+.appt-option-arrow{margin-left:auto;color:#0B1B57;font-size:28px;line-height:1}
+.appt-form-label{font-size:14px;font-weight:700;color:#0B1B57;display:block;margin-bottom:10px;line-height:1.1}
+.appt-form-row{margin-bottom:18px}
+.appt-field{width:100%;border:1px solid #D8DFEB;border-radius:14px;background:#fff;font-size:14px;color:#111827;font-family:inherit;padding:14px 16px;outline:none}
+.appt-field:focus{border-color:#2563EB}
+.appt-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.appt-color-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.appt-color-dot{width:40px;height:40px;border-radius:12px;border:1px solid transparent}
+.appt-color-dot.on{border-color:#3B82F6;box-shadow:0 0 0 2px rgba(59,130,246,.2)}
+.appt-rec-box{margin-top:22px;border-top:1px solid #E5E7EB;padding-top:22px}
+.appt-rec-inline{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#0B1B57}
+.appt-rec-toggle{appearance:none;-webkit-appearance:none;width:58px;height:34px;border-radius:999px;background:#D1D5DB;position:relative;cursor:pointer;transition:.2s}
+.appt-rec-toggle:before{content:'';position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s}
+.appt-rec-toggle:checked{background:#2563EB}
+.appt-rec-toggle:checked:before{transform:translateX(24px)}
+.appt-right-title{font-size:18px;font-weight:800;color:#0B1B57}
+.appt-right-label{font-size:14px;font-weight:700;color:#0B1B57;display:block;margin-bottom:10px}
+.appt-info{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:14px 16px;color:#1D4ED8;font-size:14px;font-weight:600;line-height:1.3}
+.appt-radio-line{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#0B1B57;margin-bottom:12px}
+.appt-radio-line input{width:19px;height:19px;accent-color:#2563EB}
+.appt-actions{display:flex;gap:14px;margin-top:20px}
+.appt-actions .btn{flex:1;border-radius:14px;padding:14px 16px;font-size:14px}
+.appt-hidden{display:none!important}
 .appt-tipo-btn{background:#F9FAFB;border:2px solid #E5E7EB;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:#374151;transition:all .15s;user-select:none}
 .appt-tipo-btn.on{border-color:#2563EB;background:#EFF6FF;color:#2563EB}
-.appt-tipo-btn:hover{border-color:#93C5FD;background:#F0F9FF}
-.appt-fmt-btn{background:#F9FAFB;border:2px solid #E5E7EB;border-radius:12px;padding:12px 16px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:#374151;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;user-select:none}
-.appt-fmt-btn.on{border-color:#2563EB;background:#EFF6FF;color:#2563EB}
-.appt-mod-btn{background:#F9FAFB;border:2px solid #E5E7EB;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .15s;user-select:none}
-.appt-mod-btn.on{border-color:#2563EB;background:#EFF6FF}
-.mod-check{position:absolute;top:-6px;right:-6px;background:#2563EB;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.appt-fmt-btn,.appt-mod-btn,.mod-check{display:none!important}
+@media(max-width:1200px){
+  .appt-layout{grid-template-columns:1fr}
+  .appt-col{border-right:none!important;border-bottom:1px solid #E5E7EB}
+  .appt-col:last-child{border-bottom:none}
+  .appt-title{font-size:24px}
+  .appt-subtitle{font-size:20px}
+  .appt-left-desc,.appt-option-title,.appt-option-sub,.appt-form-label,.appt-field,.appt-right-title,.appt-right-label,.appt-info,.appt-radio-line,.appt-actions .btn,.appt-rec-inline{font-size:16px}
+  .appt-x{font-size:28px}
+}
 /* ── GRUPOS ─────────────────────────────────────────────── */
 .gr-tab{background:#fff;border:1px solid var(--bd);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--mt);cursor:pointer;font-family:inherit;transition:all .15s}
 .gr-tab.on{background:var(--ac);border-color:var(--ac);color:#fff}
@@ -992,178 +1033,192 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 <!-- NOVA SESSAO — Wizard 2 etapas -->
 <div id="m-appt-new" class="ov hidden" onclick="if(event.target===this)closeM('m-appt-new')">
   <div class="appt-wizard" onclick="event.stopPropagation()">
-
-    <!-- ── Etapa 1 ──────────────────────────────── -->
     <div id="appt-step1">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <div>
-          <div style="font-size:16px;font-weight:800;color:#111827">Nova sessão</div>
+      <div class="appt-layout">
+        <div class="appt-col">
+          <div class="appt-row-head">
+            <div class="appt-title">Agendar</div>
+            <button class="appt-x" onclick="closeM('m-appt-new')">&#10005;</button>
+          </div>
+          <div class="appt-left-desc">Escolha o formato do agendamento</div>
+          <div class="appt-option on" data-appt-option="atividade" onclick="selectAgendamentoLayout(this,'individual','atividade')">
+            <div class="appt-option-ico">&#9776;</div>
+            <div>
+              <div class="appt-option-title">Atividade</div>
+              <div class="appt-option-sub">Agendamento de tarefas.</div>
+            </div>
+            <div class="appt-option-arrow">&#8250;</div>
+          </div>
+          <div class="appt-option" data-appt-option="individual" onclick="selectAgendamentoLayout(this,'individual','psicoterapia')">
+            <div class="appt-option-ico">&#128100;</div>
+            <div>
+              <div class="appt-option-title">Individual</div>
+              <div class="appt-option-sub">Agendamento para um único participante.</div>
+            </div>
+            <div class="appt-option-arrow">&#8250;</div>
+          </div>
+          <div class="appt-option" data-appt-option="grupo" onclick="selectAgendamentoLayout(this,'grupo','grupo')">
+            <div class="appt-option-ico">&#128101;</div>
+            <div>
+              <div class="appt-option-title">Grupo</div>
+              <div class="appt-option-sub">Agendamento para vários participantes.</div>
+            </div>
+            <div class="appt-option-arrow">&#8250;</div>
+          </div>
+          <div class="appt-option" data-appt-option="evento" onclick="selectAgendamentoLayout(this,'individual','evento')">
+            <div class="appt-option-ico">&#128197;</div>
+            <div>
+              <div class="appt-option-title">Evento</div>
+              <div class="appt-option-sub">Agendamento de eventos e serviços institucionais.</div>
+            </div>
+            <div class="appt-option-arrow">&#8250;</div>
+          </div>
         </div>
-        <button onclick="closeM('m-appt-new')" style="background:none;border:none;cursor:pointer;font-size:20px;color:#9CA3AF;line-height:1;padding:2px">&#10005;</button>
-      </div>
 
-      <!-- Tipo de Serviço — criação inline -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:12px;font-weight:700;color:#374151">Tipo de servi&#231;o</div>
-        <button onclick="toggleAddTipoInline()" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--ac);font-family:inherit;font-weight:600;padding:2px 6px">+ Adicionar tipo</button>
-      </div>
-      <div id="add-tipo-inline" class="hidden" style="display:none;gap:6px;margin-bottom:10px;align-items:center">
-        <input type="text" id="new-tipo-emoji" placeholder="&#128203;" maxlength="2" style="width:44px;border:1px solid var(--bd);border-radius:8px;padding:7px;font-size:16px;text-align:center;outline:none;font-family:inherit"/>
-        <input type="text" id="new-tipo-nome" placeholder="Nome do tipo..." style="flex:1;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;font-size:13px;outline:none;font-family:inherit"/>
-        <button onclick="addTipoInline()" style="background:var(--ac);color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit">OK</button>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="appt-tipo-grid"></div>
-      <!-- Formato -->
-      <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px">Formato</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-        <div class="appt-fmt-btn on" onclick="selectFormato('individual',this)">
-          <span style="font-size:15px">&#128100;</span> Individual
-        </div>
-        <div class="appt-fmt-btn" onclick="selectFormato('grupo',this)">
-          <span style="font-size:15px">&#128101;</span> Grupo
-        </div>
-      </div>
+        <div class="appt-col">
+          <div class="appt-row-head">
+            <div class="appt-subtitle">&#8592; Atividade</div>
+            <button class="appt-x" onclick="closeM('m-appt-new')">&#10005;</button>
+          </div>
 
-      <!-- Individual: paciente único -->
-      <div id="ap-individual-section">
-        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">Paciente</div>
-        <div style="position:relative;margin-bottom:12px">
-          <div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px">
-            <span style="color:#9CA3AF;font-size:16px">&#128100;</span>
-            <select id="ap-pat" class="sel" style="background:transparent;border:none;outline:none;flex:1;font-size:13px;color:#111827;font-family:inherit;padding:0">
+          <div class="appt-form-row">
+            <label class="appt-form-label">Nome da atividade</label>
+            <input id="ap-atividade-nome" class="appt-field" type="text" placeholder="Digite o nome da atividade"/>
+          </div>
+
+          <div class="appt-grid-2 appt-form-row">
+            <div>
+              <label class="appt-form-label">Data</label>
+              <input id="ap-date" class="appt-field" type="date"/>
+            </div>
+            <div>
+              <label class="appt-form-label">Hora</label>
+              <input id="ap-time" class="appt-field" type="time" value="09:00"/>
+            </div>
+          </div>
+
+          <div class="appt-grid-2 appt-form-row">
+            <div>
+              <label class="appt-form-label">Duração</label>
+              <select id="ap-dur" class="appt-field">
+                <option value="30">30 minutos</option>
+                <option value="45">45 minutos</option>
+                <option value="50" selected>50 minutos</option>
+                <option value="60">60 minutos</option>
+                <option value="90">90 minutos</option>
+                <option value="120">2 horas</option>
+              </select>
+            </div>
+            <div>
+              <label class="appt-form-label">Valor</label>
+              <input type="number" id="ap-val" class="appt-field" value="0" min="0" step="10"/>
+            </div>
+          </div>
+
+          <div id="ap-individual-section" class="appt-form-row">
+            <label class="appt-form-label">Participante</label>
+            <select id="ap-pat" class="appt-field">
               <option value="">Selecione o paciente...</option>
             </select>
           </div>
-        </div>
-        <div style="font-size:11px;color:#6B7280;background:#EFF6FF;border-radius:8px;padding:8px 11px;margin-bottom:12px">
-          &#8505;&#65039; Em atendimentos individuais, o valor é único.
-        </div>
-      </div>
 
-      <!-- Grupo: nome + participantes -->
-      <div id="ap-grupo-section" class="hidden">
-
-        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">Participantes</div>
-        <!-- Search -->
-        <div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:8px 12px;margin-bottom:8px">
-          <span style="color:#9CA3AF;font-size:14px">&#128269;</span>
-          <input type="text" id="ap-grupo-search" placeholder="Buscar por nome ou CPF..."
-            style="background:transparent;border:none;outline:none;flex:1;font-size:13px;color:#111827;font-family:inherit"
-            oninput="renderGrupoPatList(this.value)"/>
-        </div>
-        <div id="ap-grupo-pats" style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px;max-height:180px;overflow-y:auto;margin-bottom:12px">
-          <div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>
-        </div>
-        <div style="font-size:11px;color:#6B7280;background:#EFF6FF;border-radius:8px;padding:8px 11px;margin-bottom:12px" id="ap-grupo-count">
-          &#8505;&#65039; 0 participantes selecionados
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px;margin-bottom:20px">
-        <span style="font-size:12px;color:#6B7280;font-weight:600">R$</span>
-        <input type="number" id="ap-val" value="0" min="0" step="10" style="background:transparent;border:none;outline:none;flex:1;font-size:15px;font-weight:600;color:#111827;font-family:inherit"/>
-      </div>
-
-      <button onclick="apptGoStep2()" style="width:100%;padding:13px;background:#2563EB;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
-        Continuar &#8594;
-      </button>
-    </div>
-
-    <!-- ── Etapa 2 ──────────────────────────────── -->
-    <div id="appt-step2" class="hidden">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
-        <button onclick="apptGoStep1()" style="background:none;border:1px solid #E5E7EB;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;color:#6B7280;font-family:inherit">&#8592;</button>
-        <div style="font-size:16px;font-weight:800;color:#111827">Escolha a modalidade</div>
-      </div>
-
-      <!-- Modalidade -->
-      <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px">Modalidade</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-        <div class="appt-mod-btn on" onclick="selectModalidade('ONLINE',this)" id="mod-online">
-          <div style="position:relative">
-            <span style="font-size:22px">&#127909;</span>
-            <span class="mod-check" id="mod-online-check">&#10003;</span>
+          <div id="ap-grupo-section" class="hidden appt-form-row">
+            <label class="appt-form-label">Participantes</label>
+            <input type="text" id="ap-grupo-search" class="appt-field" placeholder="Buscar por nome ou CPF..." oninput="renderGrupoPatList(this.value)"/>
+            <div id="ap-grupo-pats" style="margin-top:10px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px;max-height:180px;overflow-y:auto">
+              <div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>
+            </div>
+            <div style="margin-top:8px;font-size:13px;color:#6B7280" id="ap-grupo-count">&#8505;&#65039; 0 participantes selecionados</div>
           </div>
-          <div style="font-size:13px;font-weight:600;margin-top:4px">Online</div>
-        </div>
-        <div class="appt-mod-btn" onclick="selectModalidade('PRESENTIAL',this)" id="mod-pres">
-          <div style="position:relative">
-            <span style="font-size:22px">&#128205;</span>
-            <span class="mod-check hidden" id="mod-pres-check">&#10003;</span>
+
+          <div class="appt-form-row">
+            <label class="appt-form-label">Cor do agendamento</label>
+            <div class="appt-color-row">
+              <span class="appt-color-dot on" style="background:#FFFFFF"></span>
+              <span class="appt-color-dot" style="background:#9F7AEA"></span>
+              <span class="appt-color-dot" style="background:#F6AD55"></span>
+              <span class="appt-color-dot" style="background:#F6E05E"></span>
+              <span class="appt-color-dot" style="background:#81E6D9"></span>
+              <span class="appt-color-dot" style="background:#F687B3"></span>
+              <span class="appt-color-dot" style="background:#A3E635"></span>
+              <span class="appt-color-dot" style="background:#C4C4D4"></span>
+              <span class="appt-color-dot" style="background:#E9C46A"></span>
+              <span class="appt-color-dot" style="background:#F97316"></span>
+            </div>
           </div>
-          <div style="font-size:13px;font-weight:600;margin-top:4px">Presencial</div>
-        </div>
-      </div>
 
-      <!-- Data e hora -->
-      <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">Data e hora</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-        <div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px">
-          <span style="color:#9CA3AF">&#128197;</span>
-          <input type="date" id="ap-date" class="inp" style="background:transparent;border:none;outline:none;flex:1;font-size:13px;font-family:inherit;padding:0;color:#111827"/>
+          <div class="appt-rec-box">
+            <div class="appt-rec-inline">
+              <input type="checkbox" id="ap-recur-enabled" class="appt-rec-toggle" onchange="toggleApptRecurrence(this.checked)"/>
+              <span>Configurar recorrência</span>
+            </div>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px">
-          <span style="color:#9CA3AF">&#128336;</span>
-          <input type="time" id="ap-time" value="09:00" class="inp" style="background:transparent;border:none;outline:none;flex:1;font-size:13px;font-family:inherit;padding:0;color:#111827"/>
-        </div>
-      </div>
 
-      <!-- Duração -->
-      <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">Duração</div>
-      <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px;margin-bottom:16px">
-        <select id="ap-dur" style="background:transparent;border:none;outline:none;width:100%;font-size:13px;font-family:inherit;color:#111827">
-          <option value="30">30 minutos</option>
-          <option value="45">45 minutos</option>
-          <option value="50" selected>50 minutos</option>
-          <option value="60">60 minutos</option>
-          <option value="90">90 minutos</option>
-          <option value="120">2 horas</option>
-        </select>
-      </div>
+        <div class="appt-col" id="ap-recur-panel">
+          <div class="appt-row-head">
+            <div class="appt-right-title">Recorrência</div>
+            <button class="appt-x" onclick="closeM('m-appt-new')">&#10005;</button>
+          </div>
 
-      <!-- Recorrência -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-        <div>
-          <div style="font-size:11px;font-weight:600;color:#6B7280;margin-bottom:6px">Repetir</div>
-          <select id="ap-recur" style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px;width:100%;font-size:12px;font-family:inherit;color:#111827;outline:none">
-            <option value="">Não repetir</option>
-            <option value="7">Toda semana</option>
-            <option value="14">A cada 2 semanas</option>
-            <option value="30">Todo mês</option>
-          </select>
-        </div>
-        <div>
-          <div style="font-size:11px;font-weight:600;color:#6B7280;margin-bottom:6px">Por quanto tempo</div>
-          <select id="ap-recur-dur" style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px;width:100%;font-size:12px;font-family:inherit;color:#111827;outline:none">
-            <option value="1">1 mês</option>
-            <option value="3" selected>3 meses</option>
-            <option value="6">6 meses</option>
-            <option value="12">12 meses</option>
-          </select>
-        </div>
-      </div>
+          <div class="appt-form-row">
+            <label class="appt-right-label">Frequência</label>
+            <select id="ap-recur" class="appt-field" onchange="updateApptRecurrenceInfo()">
+              <option value="">Todos os dias</option>
+              <option value="7" selected>Semanal</option>
+              <option value="14">Quinzenal</option>
+              <option value="30">Mensal</option>
+            </select>
+          </div>
 
-      <!-- Resumo -->
-      <div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:12px;padding:14px;margin-bottom:16px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <span style="font-size:16px">&#128203;</span>
-          <span style="font-size:12px;font-weight:700;color:#374151">Resumo da sessão</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:11px;color:#6B7280" id="appt-resumo-desc">Psicoterapia • Individual • Online</div>
-          <div style="font-size:14px;font-weight:800;color:#111827" id="appt-resumo-val">R$ 0,00</div>
-        </div>
-        <div style="border-top:1px solid #E5E7EB;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between">
-          <span style="font-size:12px;font-weight:700;color:#374151">Total</span>
-          <span style="font-size:14px;font-weight:800;color:#2563EB" id="appt-resumo-total">R$ 0,00</span>
+          <div class="appt-form-row">
+            <div class="appt-info" id="ap-recur-info">A sessão será repetida toda semana.</div>
+          </div>
+
+          <div class="appt-form-row">
+            <label class="appt-right-label">Repetir até</label>
+            <label class="appt-radio-line"><input type="radio" checked/> Data específica</label>
+            <input id="ap-recur-end-date" class="appt-field" type="date"/>
+          </div>
+
+          <div class="appt-form-row">
+            <label class="appt-radio-line"><input type="radio" disabled/> Por número de ocorrências</label>
+            <select id="ap-recur-dur" class="appt-field">
+              <option value="1">1 mês</option>
+              <option value="3" selected>3 meses</option>
+              <option value="6">6 meses</option>
+              <option value="12">12 meses</option>
+            </select>
+          </div>
+
+          <div style="margin-top:22px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:12px;padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:13px;color:#6B7280" id="appt-resumo-desc">Psicoterapia • Individual • Online</div>
+              <div style="font-size:14px;font-weight:800;color:#111827" id="appt-resumo-val">R$ 0,00</div>
+            </div>
+            <div style="border-top:1px solid #E5E7EB;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between">
+              <span style="font-size:12px;font-weight:700;color:#374151">Total</span>
+              <span style="font-size:14px;font-weight:800;color:#2563EB" id="appt-resumo-total">R$ 0,00</span>
+            </div>
+          </div>
+
+          <div class="appt-actions">
+            <button class="btn bs" onclick="closeM('m-appt-new')">Cancelar</button>
+            <button class="btn bp" onclick="salvarSessaoWizard()">Agendar</button>
+          </div>
         </div>
       </div>
 
       <!-- Tipo de pagamento (hidden) -->
       <input type="hidden" id="ap-pagto" value="particular"/>
+      <input type="hidden" id="ap-type" value="ONLINE"/>
+      <div id="appt-tipo-grid" class="appt-hidden"></div>
+      <div id="add-tipo-inline" class="appt-hidden"></div>
+      <input type="text" id="new-tipo-emoji" class="appt-hidden"/>
+      <input type="text" id="new-tipo-nome" class="appt-hidden"/>
+    </div>
 
-      <button onclick="salvarSessaoWizard()" style="width:100%;padding:13px;background:#2563EB;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
-        &#128197; Agendar sessão
-      </button>
+    <div id="appt-step2" class="hidden">
     </div>
 
   </div>
@@ -2424,6 +2479,7 @@ function saveAppt(){
       confirmToken:genToken(),
       meetLink:(function(){
         if(type!=='ONLINE')return null;
+        var patName=(pat&&pat.name?pat.name:'paciente');
         var room='calenio-'+patName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'-').slice(0,20)+'-'+mid;
         return 'https://meet.jit.si/'+room;
       })()};
@@ -5163,6 +5219,9 @@ function selectFormato(fmt, el){
   _apptFormato = fmt; window._apptFormato = fmt;
   document.querySelectorAll('.appt-fmt-btn').forEach(function(b){b.classList.remove('on');});
   if(el) el.classList.add('on');
+  document.querySelectorAll('.appt-option').forEach(function(b){
+    b.classList.toggle('on', b===el);
+  });
   // Show/hide sections
   var indiv = document.getElementById('ap-individual-section');
   var grupo = document.getElementById('ap-grupo-section');
@@ -5173,6 +5232,23 @@ function selectFormato(fmt, el){
     var sr=document.getElementById('ap-grupo-search');if(sr)sr.value='';
     _grupoSelectedPats=new Set();_grupoPatValores={};
     renderGrupoPatList();
+  }
+  updateApptResumo();
+}
+
+function selectAgendamentoLayout(el, fmt, tipo){
+  document.querySelectorAll('.appt-option').forEach(function(card){ card.classList.remove('on'); });
+  if(el) el.classList.add('on');
+  selectFormato(fmt, el);
+  if(tipo){
+    _apptTipo = tipo;
+    window._apptTipo = tipo;
+  }
+  var subtitle = document.querySelector('#appt-step1 .appt-subtitle');
+  if(subtitle){
+    var nameMap = { atividade:'Atividade', individual:'Individual', grupo:'Grupo', evento:'Evento' };
+    var key = (el&&el.dataset&&el.dataset.apptOption)||'atividade';
+    subtitle.textContent = '← ' + (nameMap[key]||'Atividade');
   }
   updateApptResumo();
 }
@@ -5251,7 +5327,7 @@ function updateApptResumo(){
   } else {
     val = parseFloat((document.getElementById('ap-val')||{}).value)||0;
   }
-  var tipoLabel = {psicoterapia:'Psicoterapia',avaliacao:'Avaliação',orientacao:'Orientação',supervisao:'Supervisão'};
+  var tipoLabel = {psicoterapia:'Psicoterapia',avaliacao:'Avaliação',orientacao:'Orientação',supervisao:'Supervisão',atividade:'Atividade',evento:'Evento',grupo:'Grupo'};
   var fmtLabel  = {individual:'Individual',grupo:'Grupo'};
   var modLabel  = {ONLINE:'Online',PRESENTIAL:'Presencial'};
   var desc = (tipoLabel[_apptTipo]||_apptTipo)+' • '+(fmtLabel[_apptFormato]||_apptFormato)+' • '+(modLabel[_apptModalidade]||_apptModalidade);
@@ -5259,6 +5335,30 @@ function updateApptResumo(){
   var valFmt = 'R$ '+val.toFixed(2).replace('.',',');
   var v1 = document.getElementById('appt-resumo-val');   if(v1) v1.textContent=valFmt;
   var v2 = document.getElementById('appt-resumo-total'); if(v2) v2.textContent=valFmt;
+}
+
+function updateApptRecurrenceInfo(){
+  var info = document.getElementById('ap-recur-info');
+  if(!info) return;
+  var freq = ((document.getElementById('ap-recur')||{}).value||'').trim();
+  var map = {'':'todos os dias','1':'todos os dias','7':'toda semana','14':'a cada 2 semanas','30':'todo mês'};
+  info.textContent = 'A sessão será repetida ' + (map[freq]||'toda semana') + '.';
+}
+
+function toggleApptRecurrence(enabled){
+  var freq = document.getElementById('ap-recur');
+  var dur = document.getElementById('ap-recur-dur');
+  var endDate = document.getElementById('ap-recur-end-date');
+  var panel = document.getElementById('ap-recur-panel');
+  if(panel) panel.style.opacity = enabled ? '1' : '.72';
+  if(freq){
+    freq.disabled = !enabled;
+    if(!enabled) freq.value = '';
+    else if(!freq.value) freq.value = '7';
+  }
+  if(dur) dur.disabled = !enabled;
+  if(endDate) endDate.disabled = !enabled;
+  updateApptRecurrenceInfo();
 }
 
 function apptGoStep2(){
@@ -5299,9 +5399,21 @@ openM = function(id){
     _grupoSelectedPats=window._grupoSelectedPats;_grupoPatValores={};
     document.querySelectorAll('.appt-tipo-btn').forEach(function(b){b.classList.remove('on');});
     document.querySelectorAll('.appt-fmt-btn').forEach(function(b,i){b.classList.toggle('on',i===0);});
+    document.querySelectorAll('.appt-option').forEach(function(b){b.classList.remove('on');});
     document.querySelectorAll('.appt-mod-btn').forEach(function(b,i){b.classList.toggle('on',i===0);});
     var oc=document.getElementById('mod-online-check');if(oc)oc.classList.remove('hidden');
     var pc=document.getElementById('mod-pres-check');if(pc)pc.classList.add('hidden');
+    var re=document.getElementById('ap-recur-enabled');
+    if(re) re.checked=false;
+    toggleApptRecurrence(false);
+    updateApptRecurrenceInfo();
+    var ai=document.getElementById('ap-atividade-nome');if(ai)ai.value='';
+    var rd=document.getElementById('ap-recur-end-date');if(rd&&!rd.value){
+      var d=new Date();d.setMonth(d.getMonth()+3);
+      rd.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    }
+    var firstCard=document.querySelector('.appt-option[data-appt-option="atividade"]')||document.querySelector('.appt-option');
+    if(firstCard) selectAgendamentoLayout(firstCard,'individual','atividade');
     setTimeout(renderTipoGrid, 30);
   }
   _origOpenM(id);
