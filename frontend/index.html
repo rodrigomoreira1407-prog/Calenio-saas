@@ -638,14 +638,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div style="display:flex;gap:4px;flex-shrink:0">
           <button class="ag-view-btn on" id="ag-semana-btn" onclick="switchCalView('semana',this)">Semana</button>
           <button class="ag-view-btn" id="ag-lista-btn" onclick="switchCalView('lista',this)">Lista</button>
-          <button class="ag-view-btn" id="ag-filter-toggle-btn" onclick="toggleAgFilter()" style="display:flex;align-items:center;gap:4px">&#127860; Filtros</button>
+          <button class="ag-view-btn" id="ag-filter-toggle-btn" onclick="toggleAgFilter()" style="display:flex;align-items:center;gap:4px">&#128269; Filtros</button>
         </div>
       </div>
 
       <!-- Filter bar -->
       <div id="ag-filter-bar" class="hidden" style="background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:14px">
         <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-          <span>&#127860; Filtros do calend&#225;rio</span>
+          <span>&#128269; Filtros do calend&#225;rio</span>
           <button onclick="clearCalendarFilter()" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--rd);font-weight:600;font-family:inherit">Limpar tudo</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;flex-wrap:wrap">
@@ -1319,7 +1319,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <div class="appt-form-row" id="ap-tipo-servico-row">
             <label class="appt-form-label">Tipo de servi&#231;o</label>
             <select id="ap-tipo-servico" class="appt-field" onchange="onTipoServicoChange(this.value)">
-              <option value="">Selecione o tipo...</option>
+              <option value="">Selecione o tipo de servi&#231;o...</option>
             </select>
           </div>
 
@@ -1881,7 +1881,7 @@ function renderCal(){
   var SLOT_H=44; // px per hour
   var START_H = _calPrefs.startH||8;
   var END_H   = _calPrefs.endH||22;
-  if(START_H >= END_H) END_H = START_H + 1;
+  if(START_H >= END_H){ START_H = 8; END_H = 22; _calPrefs.startH=8; _calPrefs.endH=22; saveState(); }
 
   // Build time slots column (rebuild when prefs change)
   var tsCol=document.getElementById('cal-time-slots');
@@ -1951,11 +1951,8 @@ function renderCal(){
       var sdDay=sd.getUTCDate()+'-'+(sd.getUTCMonth()+1)+'-'+sd.getUTCFullYear();
       if(sdDay!==dayDate)return;
       if(sess.status==='CANCELLED')return;
-      // Apply time range filter
-      if(_calFilter.timeFrom&&(sess.time||'00:00')<_calFilter.timeFrom)return;
-      if(_calFilter.timeTo&&(sess.time||'00:00')>_calFilter.timeTo)return;
-      // Apply tipo filter
-      if(_calFilter.tipo&&sess._tipoId!==_calFilter.tipo)return;
+      // Apply calendar filters (time, tipo)
+      if(!matchesCalFilter(sess))return;
 
       var timeParts=(sess.time||'09:00').split(':');
       var hour=parseInt(timeParts[0],10);
@@ -2205,10 +2202,10 @@ function renderAgToday(){
   var el=document.getElementById('ag-hoje');if(!el)return;
   var now=new Date();
   var todaySess=SESSIONS.filter(function(s){
-    var sd=new Date(s.date);
     var sIso=(s._rawIso||'').slice(0,10);
     var nowIso=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
     if(sIso!==nowIso||s.status==='CANCELLED') return false;
+    // For today filter, only apply time/tipo filters (not date filter since we're already scoped to today)
     if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
     if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
     if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
@@ -2229,14 +2226,7 @@ function renderAgSemana(){
   var nextSess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);
     if(sd<=now||s.status!=='SCHEDULED') return false;
-    if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
-    if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
-    if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
-    if(_calFilter.date){
-      var fd=new Date(_calFilter.date+'T00:00:00');
-      if(sd.getFullYear()!==fd.getFullYear()||sd.getMonth()!==fd.getMonth()||sd.getDate()!==fd.getDate()) return false;
-    }
-    return true;
+    return matchesCalFilter(s);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(nextSess.length===0){
@@ -2251,14 +2241,7 @@ function renderAgPend(){
   var el=document.getElementById('ag-pend');if(!el)return;
   var pendSess=SESSIONS.filter(function(s){
     if(s.status!=='SCHEDULED') return false;
-    if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
-    if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
-    if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
-    if(_calFilter.date){
-      var sd=new Date(s.date); var fd=new Date(_calFilter.date+'T00:00:00');
-      if(sd.getFullYear()!==fd.getFullYear()||sd.getMonth()!==fd.getMonth()||sd.getDate()!==fd.getDate()) return false;
-    }
-    return true;
+    return matchesCalFilter(s);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(pendSess.length===0){
@@ -6216,14 +6199,7 @@ function renderAgLista(){
     if(s.status==='CANCELLED') return false;
     var sd = new Date(s.date);
     if(sd < base || sd >= weekEnd) return false;
-    if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
-    if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
-    if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
-    if(_calFilter.date){
-      var fd=new Date(_calFilter.date+'T00:00:00');
-      if(sd.getFullYear()!==fd.getFullYear()||sd.getMonth()!==fd.getMonth()||sd.getDate()!==fd.getDate()) return false;
-    }
-    return true;
+    return matchesCalFilter(s);
   }).sort(function(a,b){ return new Date(a.date)-new Date(b.date) || (a.time||'').localeCompare(b.time||''); });
 
   if(weekSess.length===0){
@@ -6630,7 +6606,7 @@ function addTipoInline(){
 function populateTipoServiceSelect(){
   var sel = document.getElementById('ap-tipo-servico'); if(!sel) return;
   var cur = sel.value;
-  sel.innerHTML = '<option value="">Selecione o tipo...</option>';
+  sel.innerHTML = '<option value="">Selecione o tipo de servi\u00e7o...</option>';
   (TIPOS_ATEND||[]).filter(function(t){ return t.ativo !== false; }).forEach(function(t){
     var o = document.createElement('option');
     o.value = t.id; o.textContent = (t.emoji||'')+ ' ' + t.nome;
@@ -6685,6 +6661,19 @@ function populateTipoFilterSelect(){
     });
     if(cur) sel.value = cur;
   });
+}
+
+// Returns true if session passes the active _calFilter
+function matchesCalFilter(s){
+  if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
+  if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
+  if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
+  if(_calFilter.date){
+    var sd=new Date(s.date);
+    var fd=new Date(_calFilter.date+'T00:00:00');
+    if(sd.getFullYear()!==fd.getFullYear()||sd.getMonth()!==fd.getMonth()||sd.getDate()!==fd.getDate()) return false;
+  }
+  return true;
 }
 
 function applyCalendarFilter(){
@@ -6755,7 +6744,7 @@ function saveCfgPrefs(){
   var hideChk  = document.getElementById('cfg-pref-hide-off');
   var startH = parseInt((startSel||{value:'8'}).value)||8;
   var endH   = parseInt((endSel||{value:'22'}).value)||22;
-  if(startH>=endH){ toast('Horário de início deve ser antes do encerramento'); return; }
+  if(startH>=endH){ toast('O hor\u00e1rio de in\u00edcio deve ser anterior ao hor\u00e1rio de encerramento'); return; }
   _calPrefs.startH       = startH;
   _calPrefs.endH         = endH;
   _calPrefs.defaultView  = (viewSel||{value:'semana'}).value||'semana';
