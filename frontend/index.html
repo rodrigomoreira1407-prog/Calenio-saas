@@ -11,7 +11,7 @@
 :root{
   --ac:#2E5BFF;--ac2:#fff;--ac3:#9B8EC9;--ac4:#EEF2FF;
   --acg:linear-gradient(135deg,#2E5BFF,#7C3AED);
-  --bg:#F7F8FC;--w:#fff;--bd:#E8E8F0;
+  --bg:#FBFCFF;--w:#fff;--bd:#ECEDF5;
   --tx:#1A1A2E;--mt:#6B7280;--dm:#A0A3B1;--today-dot:#111827;
   --gn:#16A34A;--gn2:#DCFCE7;
   --rd:#EF4444;--rd2:#FEE2E2;
@@ -106,9 +106,9 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
 /* ── FORM ───────────────────────────────────────── */
 .lbl{font-size:11px;color:var(--mt);font-weight:600;display:block;margin-bottom:4px}
-.inp{width:100%;background:#f8fafa;border:1px solid var(--bd);border-radius:9px;padding:10px 12px;color:var(--tx);font-size:13px;outline:none;transition:border-color .2s;font-family:inherit;-webkit-appearance:none}
+.inp{width:100%;background:#fafbfe;border:1px solid var(--bd);border-radius:9px;padding:10px 12px;color:var(--tx);font-size:13px;outline:none;transition:border-color .2s;font-family:inherit;-webkit-appearance:none}
 .inp:focus{border-color:var(--ac);background:var(--w)}
-.sel{width:100%;background:#f8fafa;border:1px solid var(--bd);border-radius:9px;padding:10px 12px;color:var(--tx);font-size:13px;outline:none;font-family:inherit;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238aa3b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.sel{width:100%;background:#fafbfe;border:1px solid var(--bd);border-radius:9px;padding:10px 12px;color:var(--tx);font-size:13px;outline:none;font-family:inherit;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238aa3b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
 .fr{margin-bottom:11px}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
 .sdv{font-size:10px;font-weight:700;color:var(--ac);letter-spacing:.08em;text-transform:uppercase;margin:14px 0 9px;padding-bottom:5px;border-bottom:1px solid rgba(30,206,196,.15)}
@@ -131,17 +131,17 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
 /* ── CALENDAR ───────────────────────────────────── */
 .cal-wrap{background:var(--w);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:10px}
-.cal-hdr{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:1px solid var(--bd);background:#f8fafa;flex-wrap:wrap}
+.cal-hdr{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:1px solid var(--bd);background:#fafbfe;flex-wrap:wrap}
 .cal-nav{display:flex;align-items:center;gap:5px}
 .cal-nav-btn{background:var(--bg);border:1px solid var(--bd);border-radius:7px;padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;color:var(--mt);font-family:inherit;transition:all .15s}
 .cal-nav-btn:hover{background:var(--ac);color:#fff;border-color:var(--ac)}
 .cal-today-btn{background:var(--ac);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
 .cal-period{font-size:12px;font-weight:700;color:var(--tx);flex:1;text-align:center}
-.cal-info{display:flex;gap:14px;padding:8px 13px;border-bottom:1px solid var(--bd);background:#f8fafa}
+.cal-info{display:flex;gap:14px;padding:8px 13px;border-bottom:1px solid var(--bd);background:#fafbfe}
 .ci{display:flex;flex-direction:column}
 .ci-l{font-size:9px;color:var(--dm);font-weight:600;text-transform:uppercase}
 .ci-v{font-size:13px;font-weight:800;color:var(--ac)}
-.cal-legend{display:flex;gap:10px;padding:6px 13px;border-bottom:1px solid var(--bd);background:#f8fafa;flex-wrap:wrap}
+.cal-legend{display:flex;gap:10px;padding:6px 13px;border-bottom:1px solid var(--bd);background:#fafbfe;flex-wrap:wrap}
 .ldot{width:7px;height:7px;border-radius:50%}
 .leg{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--mt)}
 .cal-grid{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -152,7 +152,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .cal-days{flex:1;display:flex;min-width:0}
 .cday{flex:1;border-right:1px solid var(--bd);min-width:72px;position:relative}
 .cday:last-child{border:none}
-.cday-hdr{height:40px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f8fafa;cursor:default}
+.cday-hdr{height:40px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fafbfe;cursor:default}
 .cday-hdr.today{background:rgba(30,206,196,.07)}
 .cday-name{font-size:9px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.04em}
 .cday-num{font-size:13px;font-weight:800;color:var(--tx);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-top:1px}
@@ -176,14 +176,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .ptabs::-webkit-scrollbar{height:2px}
 .ptab{padding:6px 11px;border-radius:7px;border:1px solid var(--bd);background:var(--w);font-size:11px;font-weight:600;cursor:pointer;color:var(--mt);white-space:nowrap;font-family:inherit;flex-shrink:0}
 .ptab.on{background:var(--acg);color:#fff;border-color:transparent}
-.pf{background:#f8fafa;border-radius:8px;padding:11px;font-size:12px;color:var(--mt);line-height:1.7;min-height:52px}
-.ev-item{border-left:3px solid var(--ac);padding:9px 11px;background:#f8fafa;border-radius:0 9px 9px 0;margin-bottom:7px}
+.pf{background:#fafbfe;border-radius:8px;padding:11px;font-size:12px;color:var(--mt);line-height:1.7;min-height:52px}
+.ev-item{border-left:3px solid var(--ac);padding:9px 11px;background:#fafbfe;border-radius:0 9px 9px 0;margin-bottom:7px}
 .ev-date{font-size:10px;color:var(--dm);font-weight:600;margin-bottom:3px}
 .ev-txt{font-size:12px;color:var(--mt);line-height:1.6}
 
 /* ── ANAMNESE ───────────────────────────────────── */
 .anam-sec{background:var(--w);border:1px solid var(--bd);border-radius:11px;margin-bottom:7px;overflow:hidden}
-.anam-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#f8fafa;border-bottom:1px solid var(--bd);cursor:pointer;user-select:none}
+.anam-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#fafbfe;border-bottom:1px solid var(--bd);cursor:pointer;user-select:none}
 .anam-hd-t{font-size:12px;font-weight:700}
 .anam-chv{font-size:10px;color:var(--dm);transition:transform .2s;flex-shrink:0}
 .anam-hd.open .anam-chv{transform:rotate(180deg)}
@@ -204,7 +204,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
 /* ── TABLE ──────────────────────────────────────── */
 .tbl{width:100%;border-collapse:collapse}
-.tbl th{text-align:left;padding:8px 9px;font-size:10px;font-weight:700;color:var(--dm);text-transform:uppercase;border-bottom:1px solid var(--bd);background:#f8fafa}
+.tbl th{text-align:left;padding:8px 9px;font-size:10px;font-weight:700;color:var(--dm);text-transform:uppercase;border-bottom:1px solid var(--bd);background:#fafbfe}
 .tbl td{padding:9px;font-size:12px;border-bottom:1px solid #f0f5f5;vertical-align:middle}
 
 /* ── SETTINGS ───────────────────────────────────── */
@@ -214,14 +214,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .plan-hero{background:var(--acg);border-radius:12px;padding:16px;color:#fff;margin-bottom:11px}
 
 /* ── AUTH SCREENS ───────────────────────────────── */
-.aov{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#F5F3FF,#EAE7FF);display:flex;align-items:center;justify-content:center;z-index:999;padding:14px;overflow-y:auto}
+.aov{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#F8F6FF,#EDE8FF);display:flex;align-items:center;justify-content:center;z-index:999;padding:14px;overflow-y:auto}
 .aov.hidden{display:none!important}
 .abox{background:var(--w);border-radius:18px;padding:26px 22px;width:100%;max-width:380px;box-shadow:0 16px 48px rgba(0,0,0,.1);border:1px solid rgba(30,206,196,.1)}
 .a-logo{text-align:center;margin-bottom:18px}
 .a-logo-name{font-size:20px;font-weight:700;color:var(--tx);margin-top:6px;letter-spacing:-.03em}
 .a-logo-sub{font-size:11px;color:var(--dm);margin-top:2px}
 .a-lbl{font-size:11px;color:var(--mt);font-weight:600;display:block;margin-bottom:4px}
-.a-inp{width:100%;background:#f8fafa;border:1px solid var(--bd);border-radius:9px;padding:11px 12px;color:var(--tx);font-size:14px;outline:none;font-family:inherit;margin-bottom:10px;-webkit-appearance:none;transition:border-color .2s}
+.a-inp{width:100%;background:#fafbfe;border:1px solid var(--bd);border-radius:9px;padding:11px 12px;color:var(--tx);font-size:14px;outline:none;font-family:inherit;margin-bottom:10px;-webkit-appearance:none;transition:border-color .2s}
 .a-inp:focus{border-color:var(--ac);background:var(--w)}
 .a-btn{width:100%;padding:13px;background:var(--acg);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:2px;transition:all .2s}
 .a-btn:active{transform:scale(.97)}
@@ -233,7 +233,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .a-div{display:flex;align-items:center;gap:9px;margin:12px 0;color:var(--dm);font-size:11px}
 .a-div::before,.a-div::after{content:'';flex:1;height:1px;background:var(--bd)}
 /* Plans */
-.pov{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#F5F3FF,#EAE7FF);display:flex;flex-direction:column;align-items:center;z-index:999;padding:16px 12px 28px;overflow-y:auto}
+.pov{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#F8F6FF,#EDE8FF);display:flex;flex-direction:column;align-items:center;z-index:999;padding:16px 12px 28px;overflow-y:auto}
 .pov.hidden{display:none!important}
 .pl-hdr{text-align:center;margin-bottom:16px}
 .pl-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(30,206,196,.1);border:1px solid rgba(30,206,196,.25);color:var(--ac);padding:4px 13px;border-radius:100px;font-size:11px;font-weight:700;margin:7px 0 5px}
@@ -432,7 +432,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .fin-status.exempt{background:#DBEAFE;color:#1d4ed8;border-color:#93c5fd}
 .fin-graph{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:14px}
 .fin-graph-bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
-.fin-graph-bar{background:#f8fafa;border:1px solid var(--bd);border-radius:10px;padding:10px;text-align:center}
+.fin-graph-bar{background:#fafbfe;border:1px solid var(--bd);border-radius:10px;padding:10px;text-align:center}
 
 /* ── RESPONSIVE ─────────────────────────────────── */
 @media(min-width:768px){
@@ -996,7 +996,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         <div class="fg"><div><label class="lbl">Nome do contador</label><input class="inp" id="cont-name" placeholder="Jo&#227;o Silva Contabilidade"/></div><div><label class="lbl">WhatsApp do contador</label><input class="inp" id="cont-phone" placeholder="(11) 99999-9999"/></div></div>
       </div>
       <div class="card" style="padding:0;overflow:hidden">
-        <div style="padding:10px 12px;background:#f8fafa;border-bottom:1px solid var(--bd);font-size:12px;font-weight:700">Resumo</div>
+        <div style="padding:10px 12px;background:#fafbfe;border-bottom:1px solid var(--bd);font-size:12px;font-weight:700">Resumo</div>
         <table class="tbl"><thead><tr><th>Paciente</th><th>Sess&#245;es</th><th>Total</th></tr></thead>
           <tbody id="cont-tbody"><tr><td colspan="3" style="text-align:center;padding:24px;color:var(--dm)">Nenhuma consulta no per&#237;odo</td></tr></tbody>
         </table>
@@ -2915,7 +2915,7 @@ function viewPat(idx){
 
   var fields=[['&#128222; Telefone',p.phone||p.r1p||'\u2014'],['&#9993;&#65039; E-mail',p.email||'\u2014'],['&#128205; Endere\u00e7o',p.addr||'\u2014']];
   if(p.type==='CHILD'){fields=[['&#128101; Respons\u00e1vel',p.r1n+(p.r1r?' ('+p.r1r+')':'')],['&#128222; Telefone',p.r1p||'\u2014']];}
-  var box=document.createElement('div');box.style.cssText='background:#f8fafa;border-radius:10px;padding:12px;margin-bottom:11px';
+  var box=document.createElement('div');box.style.cssText='background:#fafbfe;border-radius:10px;padding:12px;margin-bottom:11px';
   fields.forEach(function(f){
     var r=document.createElement('div');r.style.cssText='display:flex;gap:8px;margin-bottom:7px';
     var l=document.createElement('div');l.style.cssText='font-size:10px;color:var(--dm);font-weight:600;width:80px;flex-shrink:0;padding-top:1px';l.innerHTML=f[0];
@@ -3094,7 +3094,7 @@ function showPront(patId){
 
   // Patient header
   var hdr=document.createElement('div');
-  hdr.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:11px;background:#f8fafa;border-radius:11px;border:1px solid var(--bd)';
+  hdr.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:11px;background:#fafbfe;border-radius:11px;border:1px solid var(--bd)';
   var av=document.createElement('div');av.className='av avm';av.style.background=pat.color||'#46b0b3';av.textContent=pat.initials||'?';
   var info=document.createElement('div');info.style.flex='1';
   var pSess=SESSIONS.filter(function(s){return s.patId===patId;}).length;
@@ -3199,7 +3199,7 @@ function buildAnamSections(sections, isKid){
     }).join('');
     var isFirst=si===0;
     return '<div class="anam-sec"><div class="anam-hd'+(isFirst?' open':'')+'" onclick="toggleAnam(this)"><div class="anam-hd-t">'+title+'</div><span class="anam-chv">&#9660;</span></div><div class="anam-body'+(isFirst?' open':'')+'">'+fhtml+'</div></div>';
-  }).join('')+'<div style="background:#f8fafa;border:1px solid var(--bd);border-radius:10px;padding:13px;margin-top:10px"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">'+(isKid?'17.':'16.')+' TERMO DE CONSENTIMENTO</div><div style="font-size:12px;color:var(--mt);line-height:1.7;margin-bottom:12px">Declaro que as informa\u00e7\u00f5es fornecidas s\u00e3o verdadeiras e estou ciente sobre o processo terap\u00eautico, sigilo profissional e limites \u00e9ticos.</div><div class="fg"><div><label class="lbl">Assinatura do '+(isKid?'respons\u00e1vel':'paciente')+'</label><div style="border-bottom:1px solid var(--bd);height:30px;margin-top:3px"></div></div><div><label class="lbl">Assinatura do profissional</label><div style="border-bottom:1px solid var(--bd);height:30px;margin-top:3px"></div></div></div><div><label class="lbl">Data</label><input type="date" class="inp" style="max-width:170px"/></div></div><button class="btn bp fw" style="background:var(--acg);margin-top:10px" onclick="toast(\'\u2713 Anamnese salva!\')">Salvar Anamnese</button>';
+  }).join('')+'<div style="background:#fafbfe;border:1px solid var(--bd);border-radius:10px;padding:13px;margin-top:10px"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">'+(isKid?'17.':'16.')+' TERMO DE CONSENTIMENTO</div><div style="font-size:12px;color:var(--mt);line-height:1.7;margin-bottom:12px">Declaro que as informa\u00e7\u00f5es fornecidas s\u00e3o verdadeiras e estou ciente sobre o processo terap\u00eautico, sigilo profissional e limites \u00e9ticos.</div><div class="fg"><div><label class="lbl">Assinatura do '+(isKid?'respons\u00e1vel':'paciente')+'</label><div style="border-bottom:1px solid var(--bd);height:30px;margin-top:3px"></div></div><div><label class="lbl">Assinatura do profissional</label><div style="border-bottom:1px solid var(--bd);height:30px;margin-top:3px"></div></div></div><div><label class="lbl">Data</label><input type="date" class="inp" style="max-width:170px"/></div></div><button class="btn bp fw" style="background:var(--acg);margin-top:10px" onclick="toast(\'\u2713 Anamnese salva!\')">Salvar Anamnese</button>';
 }
 
 function toggleAnam(hd){hd.classList.toggle('open');hd.nextElementSibling.classList.toggle('open');}
@@ -3620,7 +3620,7 @@ sendWAReminder = sendWAWithConfirm;
     if (backendUrl) {
       // Show loading overlay first
       var overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#F5F3FF,#EAE7FF);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px';
+      overlay.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#F8F6FF,#EDE8FF);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px';
       overlay.innerHTML = '<div style="background:#fff;border-radius:18px;padding:28px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.1)"><div style="font-size:30px;margin-bottom:12px">&#128197;</div><div style="font-size:15px;font-weight:600;color:#1A1830">Carregando...</div></div>';
       document.body.appendChild(overlay);
 
@@ -3652,7 +3652,7 @@ sendWAReminder = sendWAWithConfirm;
 
 function showConfirmOverlay(data, token) {
     var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#F5F3FF,#EAE7FF);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px';
+    overlay.style.cssText = 'position:fixed;inset:0;background:linear-gradient(135deg,#F8F6FF,#EDE8FF);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px';
     var sess = data;
     if (sess) {
       // date may already be a formatted string from backend, or a Date object
@@ -3733,7 +3733,7 @@ function exportProntPDF() {
     : evos.slice().reverse().map(function(e){
         var d = new Date(e.date);
         var ds = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
-        return '<div style="margin-bottom:16px;padding:12px 14px;border-left:3px solid #46b0b3;background:#f8fafa;border-radius:0 8px 8px 0">' +
+        return '<div style="margin-bottom:16px;padding:12px 14px;border-left:3px solid #46b0b3;background:#fafbfe;border-radius:0 8px 8px 0">' +
           '<div style="font-size:11px;color:#888;font-weight:600;margin-bottom:6px">' + ds + (e.ai?' \u2022 IA':'') + '</div>' +
           '<div style="font-size:13px;line-height:1.7;white-space:pre-wrap">' + (e.txt||'') + '</div>' +
           (e.tech ? '<div style="font-size:11px;color:#46b0b3;margin-top:5px"><b>T\u00e9cnicas:</b> '+e.tech+'</div>' : '') +
@@ -4308,7 +4308,7 @@ showPront = function(patId) {
     if (!panels[3].querySelector('.abord-form')) {
       var formWrap = document.createElement('div');
       formWrap.className = 'abord-form';
-      formWrap.style.cssText = 'background:#f8fafa;border:1px solid var(--bd);border-radius:11px;padding:13px;margin-bottom:10px';
+      formWrap.style.cssText = 'background:#fafbfe;border:1px solid var(--bd);border-radius:11px;padding:13px;margin-bottom:10px';
       var evoDateVal = new Date().toISOString().slice(0,16);
       formWrap.innerHTML = '<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:9px;display:flex;align-items:center;justify-content:space-between">' +
         '<span>\u270F\uFE0F Nova evolu\u00e7\u00e3o \u2014 ' + (['livre','tcc','psicanalise','gestalt','aba'].indexOf(abord) >= 0 ? abord.toUpperCase() : 'LIVRE') + '</span>' +
@@ -4446,7 +4446,7 @@ function renderContador() {
       '<td style="font-weight:700;color:var(--gn)">R$ ' + r.total.toFixed(2) + '</td>' +
       '<td><button class="btn bgn2" style="font-size:10px;padding:4px 8px" onclick="toast(\'PDF: '+r.name+'\')">PDF</button></td></tr>';
   }).join('') +
-  '<tr style="background:#f8fafa"><td colspan="2" style="font-weight:700;text-align:right;padding:9px 8px">TOTAL</td>' +
+  '<tr style="background:#fafbfe"><td colspan="2" style="font-weight:700;text-align:right;padding:9px 8px">TOTAL</td>' +
   '<td style="font-weight:800;color:var(--ac)">R$ ' + grandTotal.toFixed(2) + '</td><td></td></tr>';
 }
 
@@ -5516,7 +5516,7 @@ function gerarRelatorioPDF(tipo) {
       } else {
         evos.slice().reverse().forEach(function(e){
           var d=new Date(e.date);var ds=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
-          body += '<div style="margin-bottom:10px;padding:10px;border-left:3px solid #46b0b3;background:#f8fafa;border-radius:0 6px 6px 0">'+
+          body += '<div style="margin-bottom:10px;padding:10px;border-left:3px solid #46b0b3;background:#fafbfe;border-radius:0 6px 6px 0">'+
             '<div style="font-size:10px;color:#888;margin-bottom:4px">'+ds+(e.ai?' · IA':'')+'</div>'+
             '<div style="font-size:12px;line-height:1.6">'+e.txt+'</div>'+
             (e.tech?'<div style="font-size:11px;color:#46b0b3;margin-top:4px"><b>Técnicas:</b> '+e.tech+'</div>':'')+
@@ -6803,7 +6803,7 @@ function renderTiposConfigSection(){
 function buildTipoRow(t){
   var row = document.createElement('div');
   row.className = 'tipo-cfg-row';
-  row.style.cssText = 'border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:#f8fafa';
+  row.style.cssText = 'border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:#fafbfe';
 
   // Row 1: name + delete
   var r1 = document.createElement('div');
