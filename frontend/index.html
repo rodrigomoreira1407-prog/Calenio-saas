@@ -1818,7 +1818,8 @@ var EVOS     = {};   // patId -> [ {id, date, txt, tech, evol, goal, risk, ai} ]
 var GROUPS   = [];   // grupos terapêuticos
 var TIPOS_ATEND = []; // tipos de serviço personalizados { id, nome, emoji, duracao, valor, ativo }
 var _calFilter  = { date: '', timeFrom: '', timeTo: '', tipo: '' };
-var _calPrefs   = { startH: 8, endH: 22, hideOffHours: false, defaultView: 'semana', weekDays: [0,1,2,3,4,5,6] };
+var DEFAULT_CAL_WEEK_DAYS = [0,1,2,3,4,5,6];
+var _calPrefs   = { startH: 8, endH: 22, hideOffHours: false, defaultView: 'semana', weekDays: DEFAULT_CAL_WEEK_DAYS.slice() };
 var _curPlan = '';
 var _curUser = null;
 var _sidOpen = window.innerWidth >= 768;
@@ -2086,7 +2087,7 @@ function updateAgCounts(){
   var nextSess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);return sd>=tomorrow&&s.status==='SCHEDULED'&&matchesWeekDayPreference(sd, visibleDays);
   });
-  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED'&&matchesWeekDayPreference(s.date, visibleDays);});
+  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED'&&matchesWeekDayPreference(new Date(s.date), visibleDays);});
 
   var c1=document.getElementById('cnt-hoje');if(c1)c1.textContent=todaySess.length||'';
   var c2=document.getElementById('cnt-semana');if(c2)c2.textContent=nextSess.length||'';
@@ -6870,13 +6871,21 @@ function onTipoServicoChange(tipoId){
 // CALENDAR FILTERS
 // ═══════════════════════════════════════════════════════
 function getVisibleCalWeekDays(){
-  var days = Array.isArray(_calPrefs.weekDays) && _calPrefs.weekDays.length ? _calPrefs.weekDays : [0,1,2,3,4,5,6];
+  var days = Array.isArray(_calPrefs.weekDays) && _calPrefs.weekDays.length ? _calPrefs.weekDays : DEFAULT_CAL_WEEK_DAYS;
+  var isNormalized = true;
+  var seen = [];
+  days.forEach(function(day){
+    if(typeof day!=='number' || day<0 || day>6 || seen.indexOf(day)!==-1) isNormalized = false;
+    else seen.push(day);
+  });
+  if(isNormalized) return days.slice();
   var normalized = [];
   days.forEach(function(day){
     var parsedDay = parseInt(day,10);
     if(!isNaN(parsedDay) && normalized.indexOf(parsedDay)===-1) normalized.push(parsedDay);
   });
-  return normalized;
+  _calPrefs.weekDays = normalized.length ? normalized.slice() : DEFAULT_CAL_WEEK_DAYS.slice();
+  return _calPrefs.weekDays.slice();
 }
 
 function matchesWeekDayPreference(dateLike, visibleDays){
