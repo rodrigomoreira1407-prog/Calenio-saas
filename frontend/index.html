@@ -1041,7 +1041,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
     <div id="cfg-servicos" class="hidden">
       <div class="card">
         <div style="font-size:15px;font-weight:800;color:var(--tx);margin-bottom:4px">&#127920; Tipos de Servi&#231;o</div>
-        <div style="font-size:12px;color:var(--mt);margin-bottom:14px">Cadastre os servi&#231;os que voc&#234; realiza. Eles aparecer&#227;o no agendamento com dura&#231;&#227;o e valor pr&#233;-definidos.</div>
+        <div style="font-size:12px;color:var(--mt);margin-bottom:14px">Cadastre apenas os nomes dos servi&#231;os que voc&#234; realiza para us&#225;-los no agendamento.</div>
         <div id="cfg-tipos-section" style="margin-bottom:10px"></div>
         <button onclick="addTipoRow()" class="btn bs" style="width:100%;margin-bottom:8px;font-size:13px">&#43; Adicionar tipo</button>
         <button onclick="saveTiposConfig()" class="btn bp" style="width:100%;font-size:13px">&#10003; Salvar tipos</button>
@@ -1109,6 +1109,18 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <option value="semana">Semana</option>
             <option value="lista">Lista</option>
           </select>
+        </div>
+        <div class="fr">
+          <label class="lbl">Dias exibidos na agenda</label>
+          <div id="cfg-pref-weekdays" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="1" style="accent-color:var(--ac)"/>Seg</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="2" style="accent-color:var(--ac)"/>Ter</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="3" style="accent-color:var(--ac)"/>Qua</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="4" style="accent-color:var(--ac)"/>Qui</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="5" style="accent-color:var(--ac)"/>Sex</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="6" style="accent-color:var(--ac)"/>S&#225;b</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="0" style="accent-color:var(--ac)"/>Dom</label>
+          </div>
         </div>
         <div class="fr" style="display:flex;align-items:center;gap:10px">
           <input type="checkbox" id="cfg-pref-hide-off" style="width:18px;height:18px;accent-color:var(--ac);flex-shrink:0"/>
@@ -1279,6 +1291,12 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <!-- Mantido para compatibilidade com funções JS legadas (ex.: saveAppt/_saveAppt_orig2) que ainda leem #ap-atividade-nome -->
           <input id="ap-atividade-nome" type="hidden" value=""/>
 
+          <!-- Nome da atividade (atividade only) -->
+          <div class="appt-form-row hidden" id="ap-atividade-nome-row">
+            <label class="appt-form-label" for="ap-atividade-nome-vis">Nome da atividade</label>
+            <input id="ap-atividade-nome-vis" class="appt-field" type="text" placeholder="Digite o nome da atividade" oninput="syncAtividadeNome(this.value)"/>
+          </div>
+
           <div class="appt-grid-2 appt-form-row">
             <div>
               <label class="appt-form-label">Data</label>
@@ -1307,6 +1325,19 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
               <label class="appt-form-label">Valor</label>
               <input type="number" id="ap-val" class="appt-field" value="0" min="0" step="10"/>
             </div>
+          </div>
+
+          <!-- Duração only (atividade only) -->
+          <div class="appt-form-row hidden" id="ap-atividade-dur-row">
+            <label class="appt-form-label">Dura&#231;&#227;o</label>
+            <select id="ap-atividade-dur" class="appt-field" style="max-width:240px">
+              <option value="30">30 minutos</option>
+              <option value="45">45 minutos</option>
+              <option value="50" selected>50 minutos</option>
+              <option value="60">60 minutos</option>
+              <option value="90">90 minutos</option>
+              <option value="120">2 horas</option>
+            </select>
           </div>
 
           <!-- Duração + Especificação (grupo only) -->
@@ -1391,6 +1422,33 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <div class="appt-rec-inline">
               <input type="checkbox" id="ap-recur-enabled" class="appt-rec-toggle" onchange="toggleApptRecurrence(this.checked)"/>
               <span>Configurar recorr&#234;ncia</span>
+            </div>
+          </div>
+
+          <!-- Recorrência section (atividade only) -->
+          <div class="hidden" id="ap-atividade-recur-section" style="border-top:1px solid #E5E7EB;margin-top:14px;padding-top:14px">
+            <div style="font-size:14px;font-weight:700;color:#0B1B57;margin-bottom:0">Recorr&#234;ncia</div>
+            <div class="appt-expand-section" style="border-top:none;margin-top:0">
+              <div class="appt-expand-row" onclick="toggleAtividadeRecur(false)">
+                <input type="checkbox" id="ap-atividade-recur-toggle" class="appt-rec-toggle" aria-label="Configurar recorr&#234;ncia" onclick="event.stopPropagation()" onchange="toggleAtividadeRecur(true)"/>
+                <span class="appt-expand-label">Configurar recorr&#234;ncia</span>
+                <span class="appt-expand-chevron" id="ap-atividade-recur-chevron">&#8964;</span>
+              </div>
+              <div class="hidden" id="ap-atividade-recur-content">
+                <div class="appt-form-row">
+                  <label class="appt-form-label">Frequ&#234;ncia</label>
+                  <select id="ap-atividade-recur-freq" class="appt-field">
+                    <option value="1">Todos os dias</option>
+                    <option value="7" selected>Semanal</option>
+                    <option value="14">Quinzenal</option>
+                    <option value="30">Mensal</option>
+                  </select>
+                </div>
+                <div class="appt-form-row">
+                  <label class="appt-form-label">Repetir at&#233;</label>
+                  <input id="ap-atividade-recur-end" class="appt-field" type="date"/>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1760,7 +1818,8 @@ var EVOS     = {};   // patId -> [ {id, date, txt, tech, evol, goal, risk, ai} ]
 var GROUPS   = [];   // grupos terapêuticos
 var TIPOS_ATEND = []; // tipos de serviço personalizados { id, nome, emoji, duracao, valor, ativo }
 var _calFilter  = { date: '', timeFrom: '', timeTo: '', tipo: '' };
-var _calPrefs   = { startH: 8, endH: 22, hideOffHours: false, defaultView: 'semana' };
+var DEFAULT_CAL_WEEK_DAYS = [0,1,2,3,4,5,6];
+var _calPrefs   = { startH: 8, endH: 22, hideOffHours: false, defaultView: 'semana', weekDays: DEFAULT_CAL_WEEK_DAYS.slice() };
 var _curPlan = '';
 var _curUser = null;
 var _sidOpen = window.innerWidth >= 768;
@@ -1918,9 +1977,11 @@ function renderCal(){
   // Build day columns
   var container=document.getElementById('cal-days');
   container.innerHTML='';
+  var visibleDays = getVisibleCalWeekDays();
 
   for(var i=0;i<7;i++){
     var d=new Date(base);d.setDate(d.getDate()+i);
+    if(visibleDays.indexOf(d.getDay())===-1) continue;
     var isToday=(d.getTime()===today.getTime());
     var dn=['DOM','SEG','TER','QUA','QUI','SEX','S\u00c1B'][d.getDay()];
 
@@ -1973,7 +2034,7 @@ function renderCal(){
       if(sdDay!==dayDate)return;
       if(sess.status==='CANCELLED')return;
       // Apply calendar filters (time, tipo)
-      if(!matchesCalFilter(sess))return;
+      if(!matchesCalFilter(sess, visibleDays))return;
 
       var timeParts=(sess.time||'09:00').split(':');
       var hour=parseInt(timeParts[0],10);
@@ -2017,15 +2078,16 @@ function updateAgCounts(){
   var now=new Date();
   var today2=new Date();today2.setHours(0,0,0,0);
   var tomorrow=new Date(today2);tomorrow.setDate(tomorrow.getDate()+1);
+  var visibleDays = getVisibleCalWeekDays();
 
   var todaySess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);
-    return sd.getUTCFullYear()===today2.getFullYear()&&sd.getUTCMonth()===today2.getMonth()&&sd.getUTCDate()===today2.getDate()&&s.status!=='CANCELLED';
+    return sd.getUTCFullYear()===today2.getFullYear()&&sd.getUTCMonth()===today2.getMonth()&&sd.getUTCDate()===today2.getDate()&&s.status!=='CANCELLED'&&matchesWeekDayPreference(sd, visibleDays);
   });
   var nextSess=SESSIONS.filter(function(s){
-    var sd=new Date(s.date);return sd>=tomorrow&&s.status==='SCHEDULED';
+    var sd=new Date(s.date);return sd>=tomorrow&&s.status==='SCHEDULED'&&matchesWeekDayPreference(sd, visibleDays);
   });
-  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED';});
+  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED'&&matchesWeekDayPreference(new Date(s.date), visibleDays);});
 
   var c1=document.getElementById('cnt-hoje');if(c1)c1.textContent=todaySess.length||'';
   var c2=document.getElementById('cnt-semana');if(c2)c2.textContent=nextSess.length||'';
@@ -2222,10 +2284,12 @@ async function doRemoveSess(sessId){
 function renderAgToday(){
   var el=document.getElementById('ag-hoje');if(!el)return;
   var now=new Date();
+  var visibleDays = getVisibleCalWeekDays();
   var todaySess=SESSIONS.filter(function(s){
     var sIso=(s._rawIso||'').slice(0,10);
     var nowIso=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
     if(sIso!==nowIso||s.status==='CANCELLED') return false;
+    if(!matchesWeekDayPreference(s.date, visibleDays)) return false;
     // For today filter, only apply time/tipo filters (not date filter since we're already scoped to today)
     if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
     if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
@@ -2244,10 +2308,11 @@ function renderAgToday(){
 function renderAgSemana(){
   var el=document.getElementById('ag-semana');if(!el)return;
   var now=new Date();
+  var visibleDays = getVisibleCalWeekDays();
   var nextSess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);
     if(sd<=now||s.status!=='SCHEDULED') return false;
-    return matchesCalFilter(s);
+    return matchesCalFilter(s, visibleDays);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(nextSess.length===0){
@@ -2260,9 +2325,10 @@ function renderAgSemana(){
 
 function renderAgPend(){
   var el=document.getElementById('ag-pend');if(!el)return;
+  var visibleDays = getVisibleCalWeekDays();
   var pendSess=SESSIONS.filter(function(s){
     if(s.status!=='SCHEDULED') return false;
-    return matchesCalFilter(s);
+    return matchesCalFilter(s, visibleDays);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(pendSess.length===0){
@@ -5687,9 +5753,29 @@ function selectAgendamentoLayout(el, fmt, tipo){
   }
   var subtitle = document.querySelector('#appt-step1 .appt-subtitle');
   if(subtitle){
-    var nameMap = { atividade:'Tarefas', individual:'Individual', grupo:'Grupo', evento:'Evento' };
+    var nameMap = { atividade:'Atividade', individual:'Individual', grupo:'Grupo', evento:'Evento' };
     var key = (el&&el.dataset&&el.dataset.apptOption)||'atividade';
-    subtitle.textContent = '← ' + (nameMap[key]||'Tarefas');
+    subtitle.textContent = '← ' + (nameMap[key]||'Atividade');
+  }
+  // Atividade-specific layout overrides
+  var isAtividade = tipo === 'atividade';
+  var atmNomeRow  = document.getElementById('ap-atividade-nome-row');
+  var atmDurRow   = document.getElementById('ap-atividade-dur-row');
+  var atmRecurSec = document.getElementById('ap-atividade-recur-section');
+  var recBoxEl    = document.querySelector('.appt-rec-box');
+  var aisEl       = document.getElementById('ap-individual-section');
+  var aimEl       = document.getElementById('ap-indiv-mod-row');
+  var atsEl       = document.getElementById('ap-tipo-servico-row');
+  var dvEl        = document.getElementById('ap-dur-val-row');
+  if(atmNomeRow)  atmNomeRow.classList.toggle('hidden', !isAtividade);
+  if(atmDurRow)   atmDurRow.classList.toggle('hidden', !isAtividade);
+  if(atmRecurSec) atmRecurSec.classList.toggle('hidden', !isAtividade);
+  if(recBoxEl)    recBoxEl.classList.toggle('hidden', isAtividade);
+  if(isAtividade){
+    if(aisEl) aisEl.classList.add('hidden');
+    if(aimEl) aimEl.classList.add('hidden');
+    if(atsEl) atsEl.classList.add('hidden');
+    if(dvEl)  dvEl.classList.add('hidden');
   }
   updateApptResumo();
 }
@@ -5723,6 +5809,27 @@ function toggleEventoSection(section, fromToggle){
 function updateEventoObsCount(el){
   var cnt = document.getElementById('ap-evento-obs-count');
   if(cnt) cnt.textContent = (el.value||'').length + '/300';
+}
+
+function syncAtividadeNome(val){
+  var h = document.getElementById('ap-atividade-nome');
+  if(h) h.value = val;
+}
+
+function toggleAtividadeRecur(fromToggle){
+  var toggle  = document.getElementById('ap-atividade-recur-toggle');
+  var content = document.getElementById('ap-atividade-recur-content');
+  var chevron = document.getElementById('ap-atividade-recur-chevron');
+  if(!toggle || !content) return;
+  var isOpen;
+  if(fromToggle){
+    isOpen = toggle.checked;
+  } else {
+    if(!toggle.checked) return;
+    isOpen = content.classList.contains('hidden');
+  }
+  content.classList.toggle('hidden', !isOpen);
+  if(chevron) chevron.style.transform = isOpen ? 'rotate(180deg)' : '';
 }
 
 function renderGrupoPatList(filter){
@@ -6120,6 +6227,13 @@ openM = function(id){
     toggleApptRecurrence(false);
     updateApptRecurrenceInfo();
     var ai=document.getElementById('ap-atividade-nome');if(ai)ai.value='';
+    // Reset atividade-specific fields
+    var anv=document.getElementById('ap-atividade-nome-vis');if(anv)anv.value='';
+    var ani=document.getElementById('ap-atividade-nome');if(ani)ani.value='';
+    var atd=document.getElementById('ap-atividade-dur');if(atd)atd.value='50';
+    var atrt=document.getElementById('ap-atividade-recur-toggle');if(atrt)atrt.checked=false;
+    var atrc=document.getElementById('ap-atividade-recur-content');if(atrc)atrc.classList.add('hidden');
+    var atrch=document.getElementById('ap-atividade-recur-chevron');if(atrch)atrch.style.transform='';
     // Reset grupo-specific fields
     var gn=document.getElementById('ap-grupo-nome');if(gn)gn.value='';
     var gvt=document.getElementById('ap-grupo-val-toggle');if(gvt)gvt.checked=false;
@@ -6291,13 +6405,15 @@ function renderAgLista(){
   var now = new Date();
   var base = new Date(_calBase.getTime());
   base.setDate(base.getDate() + _calOff*7);
+  var visibleDays = getVisibleCalWeekDays();
   // Get week sessions sorted
   var weekEnd = new Date(base); weekEnd.setDate(weekEnd.getDate()+7);
   var weekSess = SESSIONS.filter(function(s){
     if(s.status==='CANCELLED') return false;
     var sd = new Date(s.date);
     if(sd < base || sd >= weekEnd) return false;
-    return matchesCalFilter(s);
+    if(!matchesWeekDayPreference(sd, visibleDays)) return false;
+    return matchesCalFilter(s, visibleDays);
   }).sort(function(a,b){ return new Date(a.date)-new Date(b.date) || (a.time||'').localeCompare(b.time||''); });
 
   if(weekSess.length===0){
@@ -6457,11 +6573,7 @@ function saveTiposConfig(){
   TIPOS_ATEND = [];
   list.forEach(function(row){
     var nome  = (row.querySelector('.tipo-nome-inp')||{}).value.trim();
-    var emoji = (row.querySelector('.tipo-emoji-inp')||{}).value.trim()||'📋';
-    var dur   = parseInt((row.querySelector('.tipo-dur-inp')||{}).value)||50;
-    var valor = parseFloat((row.querySelector('.tipo-valor-inp')||{}).value)||0;
-    var ativo = (row.querySelector('.tipo-ativo-chk')||{checked:true}).checked;
-    if(nome) TIPOS_ATEND.push({id:'tipo-'+nome.toLowerCase().replace(/\s+/g,'-'), nome:nome, emoji:emoji, duracao:dur, valor:valor, ativo:ativo});
+    if(nome) TIPOS_ATEND.push({id:'tipo-'+nome.toLowerCase().replace(/\s+/g,'-'), nome:nome, emoji:'📋', duracao:50, valor:0, ativo:true});
   });
   saveState();
   toast('\u2713 Tipos de atendimento salvos!');
@@ -6483,13 +6595,9 @@ function buildTipoRow(t){
   row.className = 'tipo-cfg-row';
   row.style.cssText = 'border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:#f8fafa';
 
-  // Row 1: emoji + name + delete
+  // Row 1: name + delete
   var r1 = document.createElement('div');
-  r1.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:8px';
-  var eInp = document.createElement('input');
-  eInp.className = 'tipo-emoji-inp inp';
-  eInp.value = t.emoji||'📋';
-  eInp.style.cssText = 'width:48px;text-align:center;font-size:18px;padding:8px;flex-shrink:0';
+  r1.style.cssText = 'display:flex;align-items:center;gap:8px';
   var nInp = document.createElement('input');
   nInp.className = 'tipo-nome-inp inp';
   nInp.value = t.nome;
@@ -6499,45 +6607,14 @@ function buildTipoRow(t){
   bDel.style.cssText = 'background:none;border:none;cursor:pointer;font-size:16px;color:var(--rd);padding:4px;flex-shrink:0';
   bDel.innerHTML = '&#128465;';
   bDel.onclick = function(){ row.remove(); };
-  r1.appendChild(eInp); r1.appendChild(nInp); r1.appendChild(bDel);
-
-  // Row 2: duration + value + ativo toggle
-  var r2 = document.createElement('div');
-  r2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center';
-
-  var dWrap = document.createElement('div');
-  var dLbl = document.createElement('label'); dLbl.className='lbl'; dLbl.textContent='Duração (min)';
-  var dInp = document.createElement('select'); dInp.className='tipo-dur-inp sel';
-  [30,45,50,60,90,120].forEach(function(v){
-    var o=document.createElement('option'); o.value=v;
-    o.textContent = v<60 ? v+' min' : (v/60)+'h';
-    if((t.duracao||50)==v) o.selected=true;
-    dInp.appendChild(o);
-  });
-  dWrap.appendChild(dLbl); dWrap.appendChild(dInp);
-
-  var vWrap = document.createElement('div');
-  var vLbl = document.createElement('label'); vLbl.className='lbl'; vLbl.textContent='Valor padrão (R$)';
-  var vInp = document.createElement('input'); vInp.className='tipo-valor-inp inp'; vInp.type='number';
-  vInp.value = t.valor||0; vInp.min=0; vInp.step=10; vInp.placeholder='0';
-  vWrap.appendChild(vLbl); vWrap.appendChild(vInp);
-
-  var aWrap = document.createElement('div');
-  aWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px';
-  var aLbl = document.createElement('div'); aLbl.className='lbl'; aLbl.style.marginBottom='0'; aLbl.textContent='Ativo';
-  var aChk = document.createElement('input'); aChk.type='checkbox'; aChk.className='tipo-ativo-chk';
-  aChk.checked = (t.ativo !== false);
-  aChk.style.cssText='width:20px;height:20px;accent-color:var(--ac);cursor:pointer';
-  aWrap.appendChild(aLbl); aWrap.appendChild(aChk);
-
-  r2.appendChild(dWrap); r2.appendChild(vWrap); r2.appendChild(aWrap);
-  row.appendChild(r1); row.appendChild(r2);
+  r1.appendChild(nInp); r1.appendChild(bDel);
+  row.appendChild(r1);
   return row;
 }
 
 function addTipoRow(){
   var el = document.getElementById('cfg-tipos-section'); if(!el) return;
-  el.appendChild(buildTipoRow({id:'', nome:'', emoji:'📋', duracao:50, valor:0, ativo:true}));
+  el.appendChild(buildTipoRow({id:'', nome:''}));
 }
 
 
@@ -6661,6 +6738,57 @@ function salvarSessaoWizard(){
     return;
   }
 
+  // ── ATIVIDADE ──────────────────────────────────────────────────
+  if(tipo === 'atividade'){
+    var atmNome = ((document.getElementById('ap-atividade-nome-vis')||{}).value||'').trim() ||
+                  ((document.getElementById('ap-atividade-nome')||{}).value||'').trim() || 'Atividade';
+    var atmDur  = parseInt(((document.getElementById('ap-atividade-dur')||{}).value)||'50')||50;
+    var atmColor = window._apptSelectedColor || '#FFFFFF';
+    var atmRecurEl   = document.getElementById('ap-atividade-recur-toggle');
+    var atmRecurOn   = atmRecurEl && atmRecurEl.checked;
+    var atmRecurStep = atmRecurOn ? parseInt(((document.getElementById('ap-atividade-recur-freq')||{}).value)||'7')||7 : 0;
+    var atmEndDate   = atmRecurOn ? ((document.getElementById('ap-atividade-recur-end')||{}).value||'') : '';
+
+    var atmDates = [date];
+    if(atmRecurStep > 0 && atmEndDate){
+      var atmEnd = new Date(atmEndDate+'T00:00:00');
+      var atmCur = new Date(date+'T00:00:00');
+      atmCur.setDate(atmCur.getDate() + atmRecurStep);
+      while(atmCur <= atmEnd){
+        var ay=atmCur.getFullYear(),am=String(atmCur.getMonth()+1).padStart(2,'0'),ad=String(atmCur.getDate()).padStart(2,'0');
+        atmDates.push(ay+'-'+am+'-'+ad);
+        atmCur.setDate(atmCur.getDate() + atmRecurStep);
+      }
+    }
+
+    var atmBase = Date.now();
+    atmDates.forEach(function(dt, idx){
+      SESSIONS.push({
+        id: 'at-'+(atmBase+idx)+'-'+Math.random().toString(36).slice(2,6),
+        patId: '_atividade_',
+        patName: atmNome,
+        _isAtividade: true,
+        title: atmNome,
+        date: new Date(dt+'T'+time+':00'),
+        _rawIso: dt+'T'+time+':00.000Z',
+        time: time, dur: atmDur,
+        type: 'PRESENTIAL',
+        value: 0,
+        status: 'SCHEDULED',
+        color: atmColor
+      });
+    });
+
+    saveState();
+    closeM('m-appt-new');
+    renderCal(); renderAgToday(); renderAgSemana(); renderAgPend(); updateAgCounts(); renderDash();
+    var atmMsg = atmDates.length > 1
+      ? '\u2713 Atividade "'+atmNome+'" agendada em '+atmDates.length+' datas!'
+      : '\u2713 Atividade "'+atmNome+'" agendada!';
+    toast(atmMsg);
+    return;
+  }
+
   // ── INDIVIDUAL ─────────────────────────────────────
   // Delegate to existing saveAppt which handles API + local
   saveAppt();
@@ -6742,6 +6870,34 @@ function onTipoServicoChange(tipoId){
 // ═══════════════════════════════════════════════════════
 // CALENDAR FILTERS
 // ═══════════════════════════════════════════════════════
+function getVisibleCalWeekDays(){
+  var days = Array.isArray(_calPrefs.weekDays) && _calPrefs.weekDays.length ? _calPrefs.weekDays : DEFAULT_CAL_WEEK_DAYS;
+  var isNormalized = true;
+  var seen = [];
+  for(var i=0;i<days.length;i++){
+    var day = days[i];
+    if(!Number.isInteger(day) || day<0 || day>6 || seen.indexOf(day)!==-1){
+      isNormalized = false;
+      break;
+    }
+    seen.push(day);
+  }
+  if(isNormalized) return days.slice();
+  var normalized = [];
+  days.forEach(function(day){
+    var parsedDay = parseInt(day,10);
+    if(!isNaN(parsedDay) && parsedDay>=0 && parsedDay<=6 && normalized.indexOf(parsedDay)===-1) normalized.push(parsedDay);
+  });
+  _calPrefs.weekDays = normalized.length ? normalized.slice() : DEFAULT_CAL_WEEK_DAYS.slice();
+  return _calPrefs.weekDays.slice();
+}
+
+function matchesWeekDayPreference(dateLike, visibleDays){
+  var dt = dateLike instanceof Date ? dateLike : new Date(dateLike);
+  var days = visibleDays || getVisibleCalWeekDays();
+  return days.indexOf(dt.getDay()) !== -1;
+}
+
 function toggleAgFilter(){
   var bar = document.getElementById('ag-filter-bar'); if(!bar) return;
   var showing = !bar.classList.contains('hidden');
@@ -6763,7 +6919,8 @@ function populateTipoFilterSelect(){
 }
 
 // Returns true if session passes the active _calFilter
-function matchesCalFilter(s){
+function matchesCalFilter(s, visibleDays){
+  if(!matchesWeekDayPreference(s.date, visibleDays)) return false;
   if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
   if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
   if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
@@ -6830,10 +6987,14 @@ function renderCfgPrefs(){
   var endSel   = document.getElementById('cfg-pref-end');
   var viewSel  = document.getElementById('cfg-pref-view');
   var hideChk  = document.getElementById('cfg-pref-hide-off');
+  var visibleDays = getVisibleCalWeekDays();
   if(startSel) startSel.value = _calPrefs.startH || 8;
   if(endSel)   endSel.value   = _calPrefs.endH   || 22;
   if(viewSel)  viewSel.value  = _calPrefs.defaultView || 'semana';
   if(hideChk)  hideChk.checked = !!_calPrefs.hideOffHours;
+  document.querySelectorAll('.cfg-pref-day').forEach(function(chk){
+    chk.checked = visibleDays.indexOf(parseInt(chk.value,10)) !== -1;
+  });
 }
 
 function saveCfgPrefs(){
@@ -6841,16 +7002,23 @@ function saveCfgPrefs(){
   var endSel   = document.getElementById('cfg-pref-end');
   var viewSel  = document.getElementById('cfg-pref-view');
   var hideChk  = document.getElementById('cfg-pref-hide-off');
+  var weekDays = Array.from(document.querySelectorAll('.cfg-pref-day:checked')).map(function(chk){
+    return parseInt(chk.value,10);
+  });
   var startH = parseInt((startSel||{value:'8'}).value)||8;
   var endH   = parseInt((endSel||{value:'22'}).value)||22;
   if(startH>=endH){ toast('O hor\u00e1rio de in\u00edcio deve ser anterior ao hor\u00e1rio de encerramento'); return; }
+  if(weekDays.length===0){ toast('Selecione pelo menos um dia da semana'); return; }
   _calPrefs.startH       = startH;
   _calPrefs.endH         = endH;
   _calPrefs.defaultView  = (viewSel||{value:'semana'}).value||'semana';
   _calPrefs.hideOffHours = (hideChk||{checked:false}).checked;
+  _calPrefs.weekDays     = weekDays;
   saveState();
   // Apply default view
   if(typeof switchCalView==='function') switchCalView(_calPrefs.defaultView, null);
+  renderCal(); renderAgToday(); renderAgSemana(); renderAgPend();
+  if(typeof renderAgLista==='function') renderAgLista();
   toast('\u2713 Prefer\u00eancias salvas!');
 }
 
