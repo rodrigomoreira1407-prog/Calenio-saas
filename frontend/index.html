@@ -5158,7 +5158,6 @@ enterApp = async function() {
   var token = localStorage.getItem('cal_token');
   if (API_BASE && token && token !== 'demo') {
     PATS=[]; SESSIONS=[]; FINS=[]; EVOS={}; CONVS=[];
-    localStorage.removeItem('cal_data_v1');
   }
   _enterApp_bknd();
   await loadAllData();
