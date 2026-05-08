@@ -1427,6 +1427,12 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <div style="text-align:right;font-size:12px;color:#9CA3AF;margin-top:6px" id="ap-evento-obs-count">0/300</div>
           </div>
 
+          <!-- Ações (individual / grupo / atividade) -->
+          <div class="appt-actions" id="ap-indiv-actions">
+            <button class="btn bs" onclick="closeM('m-appt-new')">Cancelar</button>
+            <button class="btn bp" onclick="salvarSessaoWizard()">Agendar</button>
+          </div>
+
           <!-- Ações (evento only) -->
           <div class="appt-actions hidden" id="ap-evento-actions">
             <button class="btn bs" onclick="closeM('m-appt-new')">Cancelar</button>
@@ -1966,7 +1972,7 @@ function renderCal(){
 
       // Color by type — matches reference
       var evColor;
-      if(sess.color){
+      if(sess.color && sess.color !== '#FFFFFF'){
         evColor={bg:sess.color,text:'#111827',border:'#CBD5E1'};
       } else if(sess._isGrupo){
         evColor={bg:'#FFF3C4',text:'#92400E',border:'#FDE68A'}; // #4 yellow = group
@@ -5612,6 +5618,7 @@ function selectFormato(fmt, el){
   var evRecurRow   = document.getElementById('ap-evento-recur-row');
   var evObsRow     = document.getElementById('ap-evento-obs-row');
   var evActions    = document.getElementById('ap-evento-actions');
+  var indivActions = document.getElementById('ap-indiv-actions');
 
   var isGrupo  = fmt === 'grupo';
   var isEvento = fmt === 'evento';
@@ -5637,6 +5644,7 @@ function selectFormato(fmt, el){
   if(evRecurRow)   evRecurRow.classList.toggle('hidden', !isEvento);
   if(evObsRow)     evObsRow.classList.toggle('hidden', !isEvento);
   if(evActions)    evActions.classList.toggle('hidden', !isEvento);
+  if(indivActions) indivActions.classList.toggle('hidden', isEvento);
 
   // Populate / reset group/evento state
   if(isGrupo){
@@ -6247,7 +6255,7 @@ function renderAgLista(){
       // Color dot
       var dot = document.createElement('div');
       dot.className = 'ag-list-dot';
-      dot.style.background = s._isGrupo ? '#F59E0B' : s.type==='ONLINE' ? '#818CF8' : '#A78BFA';
+      dot.style.background = (s.color && s.color !== '#FFFFFF') ? s.color : s._isGrupo ? '#F59E0B' : s.type==='ONLINE' ? '#818CF8' : '#A78BFA';
       row.appendChild(dot);
 
       // Time
@@ -6506,7 +6514,8 @@ function salvarSessaoWizard(){
       _rawIso: date + 'T' + time + ':00.000Z',
       time: time, dur: gDur, type: modal,
       value: partics.reduce(function(s,p){ return s + p.valor; }, 0),
-      status: 'SCHEDULED', pagto:'particular', meetLink: null
+      status: 'SCHEDULED', pagto:'particular', meetLink: null,
+      color: window._apptSelectedColor || '#FFFFFF'
     });
 
     saveState();
