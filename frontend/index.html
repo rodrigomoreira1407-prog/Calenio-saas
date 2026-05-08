@@ -2077,15 +2077,16 @@ function updateAgCounts(){
   var now=new Date();
   var today2=new Date();today2.setHours(0,0,0,0);
   var tomorrow=new Date(today2);tomorrow.setDate(tomorrow.getDate()+1);
+  var visibleDays = getVisibleCalWeekDays();
 
   var todaySess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);
-    return sd.getUTCFullYear()===today2.getFullYear()&&sd.getUTCMonth()===today2.getMonth()&&sd.getUTCDate()===today2.getDate()&&s.status!=='CANCELLED'&&matchesWeekDayPreference(sd);
+    return sd.getUTCFullYear()===today2.getFullYear()&&sd.getUTCMonth()===today2.getMonth()&&sd.getUTCDate()===today2.getDate()&&s.status!=='CANCELLED'&&matchesWeekDayPreference(sd, visibleDays);
   });
   var nextSess=SESSIONS.filter(function(s){
-    var sd=new Date(s.date);return sd>=tomorrow&&s.status==='SCHEDULED'&&matchesWeekDayPreference(sd);
+    var sd=new Date(s.date);return sd>=tomorrow&&s.status==='SCHEDULED'&&matchesWeekDayPreference(sd, visibleDays);
   });
-  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED'&&matchesWeekDayPreference(s.date);});
+  var pendSess=SESSIONS.filter(function(s){return s.status==='SCHEDULED'&&matchesWeekDayPreference(s.date, visibleDays);});
 
   var c1=document.getElementById('cnt-hoje');if(c1)c1.textContent=todaySess.length||'';
   var c2=document.getElementById('cnt-semana');if(c2)c2.textContent=nextSess.length||'';
@@ -6399,13 +6400,14 @@ function renderAgLista(){
   var now = new Date();
   var base = new Date(_calBase.getTime());
   base.setDate(base.getDate() + _calOff*7);
+  var visibleDays = getVisibleCalWeekDays();
   // Get week sessions sorted
   var weekEnd = new Date(base); weekEnd.setDate(weekEnd.getDate()+7);
   var weekSess = SESSIONS.filter(function(s){
     if(s.status==='CANCELLED') return false;
     var sd = new Date(s.date);
     if(sd < base || sd >= weekEnd) return false;
-    if(!matchesWeekDayPreference(sd)) return false;
+    if(!matchesWeekDayPreference(sd, visibleDays)) return false;
     return matchesCalFilter(s);
   }).sort(function(a,b){ return new Date(a.date)-new Date(b.date) || (a.time||'').localeCompare(b.time||''); });
 
@@ -6865,14 +6867,18 @@ function onTipoServicoChange(tipoId){
 // ═══════════════════════════════════════════════════════
 function getVisibleCalWeekDays(){
   var days = Array.isArray(_calPrefs.weekDays) && _calPrefs.weekDays.length ? _calPrefs.weekDays : [0,1,2,3,4,5,6];
-  return days.map(function(day){ return parseInt(day,10); }).filter(function(day, idx, arr){
-    return !isNaN(day) && arr.indexOf(day) === idx;
+  var normalized = [];
+  days.forEach(function(day){
+    var parsedDay = parseInt(day,10);
+    if(!isNaN(parsedDay) && normalized.indexOf(parsedDay)===-1) normalized.push(parsedDay);
   });
+  return normalized;
 }
 
-function matchesWeekDayPreference(dateLike){
+function matchesWeekDayPreference(dateLike, visibleDays){
   var dt = new Date(dateLike);
-  return getVisibleCalWeekDays().indexOf(dt.getDay()) !== -1;
+  var days = visibleDays || getVisibleCalWeekDays();
+  return days.indexOf(dt.getDay()) !== -1;
 }
 
 function toggleAgFilter(){
