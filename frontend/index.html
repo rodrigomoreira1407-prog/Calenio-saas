@@ -1258,10 +1258,23 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 
           <!-- Participante (exibido em layouts individuais) -->
           <div id="ap-individual-section" class="appt-form-row">
-            <label class="appt-form-label" for="ap-pat">Participante</label>
-            <select id="ap-pat" class="appt-field">
+            <label class="appt-form-label" for="ap-pat-search">Participante</label>
+            <div style="position:relative">
+              <input type="text" id="ap-pat-search" class="appt-field" placeholder="Buscar paciente..." autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="ap-pat-results" aria-expanded="false" oninput="renderIndivPatSearch(this.value)" onfocus="renderIndivPatSearch(this.value)" onblur="hideIndivPatResults()"/>
+              <div id="ap-pat-results" class="ap-add-part-search-wrap hidden" style="position:absolute;top:100%;left:0;right:0;z-index:50;margin-top:4px;max-height:200px;overflow-y:auto"></div>
+            </div>
+            <select id="ap-pat" style="display:none">
               <option value="">Selecione o paciente...</option>
             </select>
+          </div>
+
+          <!-- Modalidade (individual only) -->
+          <div class="appt-form-row" id="ap-indiv-mod-row">
+            <label class="appt-form-label">Modalidade</label>
+            <div style="display:flex;gap:8px">
+              <button type="button" class="gr-mod-btn on" id="indiv-mod-online" onclick="selectIndividualMod('ONLINE',this)">Online</button>
+              <button type="button" class="gr-mod-btn" id="indiv-mod-pres" onclick="selectIndividualMod('PRESENTIAL',this)">Presencial</button>
+            </div>
           </div>
           <!-- Mantido para compatibilidade com funções JS legadas (ex.: saveAppt/_saveAppt_orig2) que ainda leem #ap-atividade-nome -->
           <input id="ap-atividade-nome" type="hidden" value=""/>
@@ -2727,8 +2740,7 @@ function viewPat(idx){
 
   var btns=document.createElement('div');btns.style.cssText='display:flex;gap:7px;flex-wrap:wrap;margin-top:12px';
   var ba=document.createElement('button');ba.className='btn bp';ba.style.cssText='flex:1;font-size:11px;background:var(--acg)';ba.textContent='+ Agendar';
-  ba.onclick=function(){closeM('m-pat-view');openM('m-appt-new');var s=document.getElementById('ap-pat');if(s){for(var i=0;i<s.options.length;i++){if(s.options[i].value===p.id){s.selectedIndex=i;break;}}}};
-  var bp2=document.createElement('button');bp2.className='btn bs';bp2.style.cssText='flex:1;font-size:11px';bp2.innerHTML='&#128196; Prontu\u00e1rio';
+  ba.onclick=function(){closeM('m-pat-view');openM('m-appt-new');var s=document.getElementById('ap-pat');if(s){for(var i=0;i<s.options.length;i++){if(s.options[i].value===p.id){s.selectedIndex=i;break;}}}var ips=document.getElementById('ap-pat-search');if(ips)ips.value=p.name;};  var bp2=document.createElement('button');bp2.className='btn bs';bp2.style.cssText='flex:1;font-size:11px';bp2.innerHTML='&#128196; Prontu\u00e1rio';
   bp2.onclick=function(){closeM('m-pat-view');var sel=document.getElementById('pront-sel');if(sel)sel.value=p.id;showPront(p.id);go('pront',document.getElementById('ni-pront'));};
   var be=document.createElement('button');be.className='btn bam2';be.style.cssText='flex:1;font-size:11px';be.innerHTML='&#9998; Editar';
   be.onclick=function(){closeM('m-pat-view');openEditPat(idx);};
@@ -5620,11 +5632,14 @@ function selectFormato(fmt, el){
   var evActions    = document.getElementById('ap-evento-actions');
   var indivActions = document.getElementById('ap-indiv-actions');
 
+  var indivModRow = document.getElementById('ap-indiv-mod-row');
+
   var isGrupo  = fmt === 'grupo';
   var isEvento = fmt === 'evento';
   var isIndiv  = !isGrupo && !isEvento;
 
-  if(indiv)  indiv.classList.toggle('hidden', !isIndiv);
+  if(indiv)        indiv.classList.toggle('hidden', !isIndiv);
+  if(indivModRow)  indivModRow.classList.toggle('hidden', !isIndiv);
   if(grupo)  grupo.classList.toggle('hidden', !isGrupo);
   if(gnRow)  gnRow.classList.toggle('hidden', !isGrupo);
   if(atmRow) atmRow.classList.toggle('hidden', !isIndiv);
@@ -5899,8 +5914,69 @@ function addGrupoParticipante(pid){
 function selectGrupoMod(mod, el){
   _apptModalidade        = mod;
   window._apptModalidade = mod;
-  document.querySelectorAll('.gr-mod-btn').forEach(function(b){ b.classList.remove('on'); });
+  var container = document.getElementById('ap-grupo-mod-val-row');
+  if(container) container.querySelectorAll('.gr-mod-btn').forEach(function(b){ b.classList.remove('on'); });
   if(el) el.classList.add('on');
+}
+
+function hideIndivPatResults(){
+  setTimeout(function(){
+    var el = document.getElementById('ap-pat-results');
+    if(el) el.classList.add('hidden');
+    var inp = document.getElementById('ap-pat-search');
+    if(inp) inp.setAttribute('aria-expanded','false');
+  }, 150);
+}
+
+function selectIndividualMod(mod, el){
+  _apptModalidade        = mod;
+  window._apptModalidade = mod;
+  var onlineBtn = document.getElementById('indiv-mod-online');
+  var presBtn   = document.getElementById('indiv-mod-pres');
+  if(onlineBtn) onlineBtn.classList.toggle('on', mod === 'ONLINE');
+  if(presBtn)   presBtn.classList.toggle('on', mod === 'PRESENTIAL');
+}
+
+function renderIndivPatSearch(filter){
+  var el = document.getElementById('ap-pat-results');
+  if(!el) return;
+  el.innerHTML = '';
+  var q = (filter||'').toLowerCase().trim();
+  var qDigits = q.replace(/\D/g,'');
+  var list = PATS.filter(function(p){
+    if(!q) return true;
+    return p.name.toLowerCase().includes(q) || (qDigits && (p.cpf||'').replace(/\D/g,'').includes(qDigits));
+  });
+  if(PATS.length === 0){
+    el.innerHTML = '<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum paciente cadastrado</div>';
+    el.classList.remove('hidden');
+    return;
+  }
+  if(list.length === 0){
+    el.innerHTML = '<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:8px">Nenhum resultado encontrado</div>';
+    el.classList.remove('hidden');
+    return;
+  }
+  list.forEach(function(p){
+    var item = document.createElement('div');
+    item.className = 'ap-add-part-list-item';
+    item.innerHTML = '<span style="font-size:14px">&#128100;</span><span>' + _esc(p.name) + '</span>';
+    item.onmousedown = function(e){ e.preventDefault(); selectIndivPat(p.id, p.name); };
+    el.appendChild(item);
+  });
+  el.classList.remove('hidden');
+  var inp = document.getElementById('ap-pat-search');
+  if(inp) inp.setAttribute('aria-expanded','true');
+}
+
+function selectIndivPat(id, name){
+  var sel = document.getElementById('ap-pat');
+  if(sel) sel.value = id;
+  var inp = document.getElementById('ap-pat-search');
+  if(inp){ inp.value = name; inp.setAttribute('aria-expanded','false'); }
+  var el = document.getElementById('ap-pat-results');
+  if(el) el.classList.add('hidden');
+  updateApptResumo();
 }
 
 function toggleGrupoValPP(checked){
@@ -6066,6 +6142,12 @@ openM = function(id){
     var ecrch=document.getElementById('ap-evento-recur-chevron');if(ecrch)ecrch.style.transform='';
     var emo=document.getElementById('ev-mod-online');if(emo)emo.classList.add('on');
     var emp=document.getElementById('ev-mod-pres');if(emp)emp.classList.remove('on');
+    // Reset individual-specific fields
+    var ips=document.getElementById('ap-pat-search');if(ips)ips.value='';
+    var ipr=document.getElementById('ap-pat-results');if(ipr)ipr.classList.add('hidden');
+    var aps=document.getElementById('ap-pat');if(aps)aps.value='';
+    var imo=document.getElementById('indiv-mod-online');if(imo)imo.classList.add('on');
+    var imp=document.getElementById('indiv-mod-pres');if(imp)imp.classList.remove('on');
     var firstColor=document.querySelector('.appt-color-dot');
     if(firstColor) selectApptColor(firstColor.dataset.color||'#FFFFFF', firstColor);
     var rd=document.getElementById('ap-recur-end-date');if(rd&&!rd.value){
