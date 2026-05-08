@@ -1208,7 +1208,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <div class="appt-option" data-appt-option="atividade" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){this.click();}" onclick="selectAgendamentoLayout(this,'individual','atividade')">
             <div class="appt-option-ico">&#9776;</div>
             <div>
-              <div class="appt-option-title">Atividade</div>
+              <div class="appt-option-title">Tarefas</div>
               <div class="appt-option-sub">Agendamento de tarefas.</div>
             </div>
             <div class="appt-option-arrow">&#8250;</div>
@@ -1251,11 +1251,15 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <input id="ap-evento-nome" class="appt-field" type="text" placeholder="Digite o nome do evento"/>
           </div>
 
-          <!-- Nome da atividade (hidden for grupo) -->
-          <div class="appt-form-row" id="ap-atividade-nome-row">
-            <label class="appt-form-label" for="ap-atividade-nome">Nome da atividade</label>
-            <input id="ap-atividade-nome" class="appt-field" type="text" placeholder="Digite o nome da atividade"/>
+          <!-- Participante (exibido em layouts individuais) -->
+          <div id="ap-individual-section" class="appt-form-row">
+            <label class="appt-form-label" for="ap-pat">Participante</label>
+            <select id="ap-pat" class="appt-field">
+              <option value="">Selecione o paciente...</option>
+            </select>
           </div>
+          <!-- Mantido para compatibilidade com funções JS legadas (ex.: saveAppt/_saveAppt_orig2) que ainda leem #ap-atividade-nome -->
+          <input id="ap-atividade-nome" type="hidden" value=""/>
 
           <div class="appt-grid-2 appt-form-row">
             <div>
@@ -1306,13 +1310,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
                 <option value="">Selecione um servi&#231;o</option>
               </select>
             </div>
-          </div>
-
-          <div id="ap-individual-section" class="appt-form-row">
-            <label class="appt-form-label" for="ap-pat">Participante</label>
-            <select id="ap-pat" class="appt-field">
-              <option value="">Selecione o paciente...</option>
-            </select>
           </div>
 
           <!-- Tipo de serviço (individual only) -->
@@ -5659,9 +5656,9 @@ function selectAgendamentoLayout(el, fmt, tipo){
   }
   var subtitle = document.querySelector('#appt-step1 .appt-subtitle');
   if(subtitle){
-    var nameMap = { atividade:'Atividade', individual:'Individual', grupo:'Grupo', evento:'Evento' };
+    var nameMap = { atividade:'Tarefas', individual:'Individual', grupo:'Grupo', evento:'Evento' };
     var key = (el&&el.dataset&&el.dataset.apptOption)||'atividade';
-    subtitle.textContent = '← ' + (nameMap[key]||'Atividade');
+    subtitle.textContent = '← ' + (nameMap[key]||'Tarefas');
   }
   updateApptResumo();
 }
@@ -5946,7 +5943,7 @@ function updateApptResumo(){
   } else {
     val = parseFloat((document.getElementById('ap-val')||{}).value)||0;
   }
-  var tipoLabel = {psicoterapia:'Psicoterapia',avaliacao:'Avaliação',orientacao:'Orientação',supervisao:'Supervisão',atividade:'Atividade',evento:'Evento',grupo:'Grupo'};
+  var tipoLabel = {psicoterapia:'Psicoterapia',avaliacao:'Avaliação',orientacao:'Orientação',supervisao:'Supervisão',atividade:'Tarefas',evento:'Evento',grupo:'Grupo'};
   var fmtLabel  = {individual:'Individual',grupo:'Grupo'};
   var modLabel  = {ONLINE:'Online',PRESENTIAL:'Presencial'};
   var desc = (tipoLabel[_apptTipo]||_apptTipo)+' • '+(fmtLabel[_apptFormato]||_apptFormato)+' • '+(modLabel[_apptModalidade]||_apptModalidade);
