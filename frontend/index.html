@@ -1282,7 +1282,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <!-- Nome da atividade (atividade only) -->
           <div class="appt-form-row hidden" id="ap-atividade-nome-row">
             <label class="appt-form-label" for="ap-atividade-nome-vis">Nome da atividade</label>
-            <input id="ap-atividade-nome-vis" class="appt-field" type="text" placeholder="Digite o nome da atividade" oninput="var h=document.getElementById('ap-atividade-nome');if(h)h.value=this.value;"/>
+            <input id="ap-atividade-nome-vis" class="appt-field" type="text" placeholder="Digite o nome da atividade" oninput="syncAtividadeNome(this.value)"/>
           </div>
 
           <div class="appt-grid-2 appt-form-row">
@@ -5791,6 +5791,11 @@ function updateEventoObsCount(el){
   if(cnt) cnt.textContent = (el.value||'').length + '/300';
 }
 
+function syncAtividadeNome(val){
+  var h = document.getElementById('ap-atividade-nome');
+  if(h) h.value = val;
+}
+
 function toggleAtividadeRecur(fromToggle){
   var toggle  = document.getElementById('ap-atividade-recur-toggle');
   var content = document.getElementById('ap-atividade-recur-content');
@@ -6773,9 +6778,10 @@ function salvarSessaoWizard(){
       }
     }
 
-    atmDates.forEach(function(dt){
+    var atmBase = Date.now();
+    atmDates.forEach(function(dt, idx){
       SESSIONS.push({
-        id: 'at-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),
+        id: 'at-'+(atmBase+idx)+'-'+Math.random().toString(36).slice(2,6),
         patId: '_atividade_',
         patName: atmNome,
         _isAtividade: true,
