@@ -882,7 +882,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
     </div>
     <div class="fin-period">
       <span style="font-size:14px">&#128197;</span>
-      <span style="font-size:12px;font-weight:700">Per&#237;odo:</span>
+      <label for="fin-period" style="font-size:12px;font-weight:700">Per&#237;odo:</label>
       <input id="fin-period" type="month" class="inp" style="border:none;background:transparent;padding:0;height:auto;font-size:12px;min-width:130px" onchange="setFinPeriod(this.value)"/>
     </div>
     <div id="fin-main-view">
@@ -927,10 +927,10 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         </div>
       </div>
       <div class="fin-filters">
-        <div><label class="lbl">Descri&#231;&#227;o</label><input class="inp" id="fin-search" placeholder="Buscar por descri&#231;&#227;o..." oninput="setFinFilters()"/></div>
-        <div><label class="lbl">Fluxo</label><select class="sel" id="fin-flow" onchange="setFinFilters()"><option value="ALL">Todos</option><option value="INCOME">Entradas</option><option value="EXPENSE">Despesas</option></select></div>
-        <div><label class="lbl">Categoria</label><select class="sel" id="fin-cat" onchange="setFinFilters()"><option value="ALL">Todas</option></select></div>
-        <div><label class="lbl">Status</label><select class="sel" id="fin-status" onchange="setFinFilters()"><option value="ALL">Todos</option><option value="PAID">Pago</option><option value="PENDING">Pendente</option><option value="EXEMPT">Isento</option></select></div>
+        <div><label class="lbl" for="fin-search">Descri&#231;&#227;o</label><input class="inp" id="fin-search" placeholder="Buscar por descri&#231;&#227;o..." oninput="setFinFilters()"/></div>
+        <div><label class="lbl" for="fin-flow">Fluxo</label><select class="sel" id="fin-flow" onchange="setFinFilters()"><option value="ALL">Todos</option><option value="INCOME">Entradas</option><option value="EXPENSE">Despesas</option></select></div>
+        <div><label class="lbl" for="fin-cat">Categoria</label><select class="sel" id="fin-cat" onchange="setFinFilters()"><option value="ALL">Todas</option></select></div>
+        <div><label class="lbl" for="fin-status">Status</label><select class="sel" id="fin-status" onchange="setFinFilters()"><option value="ALL">Todos</option><option value="PAID">Pago</option><option value="PENDING">Pendente</option><option value="EXEMPT">Isento</option></select></div>
       </div>
       <div class="fin-table-wrap">
         <table class="tbl">
@@ -1983,6 +1983,7 @@ function hdrAction(){
 // ── MODALS ─────────────────────────────────────────────────────
 function openM(id){var el=document.getElementById(id);if(el)el.classList.remove('hidden');}
 function closeM(id){var el=document.getElementById(id);if(el)el.classList.add('hidden');}
+function finDefaultCategory(type){return type==='EXPENSE'?'despesa':'particular';}
 
 // ── TABS ───────────────────────────────────────────────────────
 function setTab(el){el.parentElement.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});el.classList.add('on');}
@@ -2052,8 +2053,11 @@ function setFinMTab(t,el){
   setTab(el);
   document.getElementById('fin-m-type').value=t;
   var c=document.getElementById('fin-m-cat');
-  if(c&&c.value==='despesa'&&t==='INCOME')c.value='particular';
-  if(c&&t==='EXPENSE')c.value='despesa';
+  if(!c)return;
+  var incomeOnly=['particular','convenio','grupo','evento'];
+  var expenseOnly=['despesa'];
+  if(t==='INCOME'&&expenseOnly.indexOf(c.value)!==-1)c.value=finDefaultCategory('INCOME');
+  if(t==='EXPENSE'&&incomeOnly.indexOf(c.value)!==-1)c.value=finDefaultCategory('EXPENSE');
 }
 
 // ── CALENDAR ───────────────────────────────────────────────────
@@ -3297,30 +3301,34 @@ function saveFin(){
   if(!desc){toast('Informe a descri\u00e7\u00e3o');return;}
   if(!val){toast('Informe o valor');return;}
   var type=document.getElementById('fin-m-type').value||'INCOME';
-  var cat=(document.getElementById('fin-m-cat').value||'').trim()||(type==='EXPENSE'?'despesa':'particular');
+  var cat=(document.getElementById('fin-m-cat').value||'').trim()||finDefaultCategory(type);
   FINS.push({id:'fin-'+Date.now(),type:type,cat:cat,
     desc:desc,value:val,date:new Date(document.getElementById('fin-m-date').value||Date.now()),
     status:document.getElementById('fin-m-status').value,method:(document.getElementById('fin-m-method').value||'')});
   closeM('m-fin-new');
   ['fin-m-desc','fin-m-val','fin-m-method'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  var c=document.getElementById('fin-m-cat');if(c)c.value='particular';
+  var c=document.getElementById('fin-m-cat');if(c)c.value=finDefaultCategory('INCOME');
   renderFin();toast('\u2713 Lan\u00e7amento salvo!');
 }
 function renderFin(){
   function fmtMoney(v){return (isNaN(v)?0:v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
   function fmtDate(d){
-    if(typeof d==='string'&&/^\d{4}-\d{2}-\d{2}/.test(d)){
+    if(typeof d==='string'&&d.length>=10&&/^\d{4}-\d{2}-\d{2}/.test(d)){
       return d.slice(8,10)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
     }
     var dt=new Date(d);
     if(isNaN(dt.getTime()))return '-';
     return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear();
   }
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function ymKey(d){
     if(typeof d==='string'&&/^\d{4}-\d{2}/.test(d))return d.slice(0,7);
     var dt=new Date(d);
     if(isNaN(dt.getTime()))return '';
     return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');
+  }
+  function normCat(f){
+    return ((f&&f.cat)||finDefaultCategory((f&&f.type)||'INCOME')||'outros').toLowerCase();
   }
   var monthInput=document.getElementById('fin-period');
   if(monthInput && !monthInput.value){
@@ -3336,22 +3344,26 @@ function renderFin(){
   });
   var categories={};
   baseItems.forEach(function(f){
-    var key=(f.cat||'outros').toLowerCase();
+    var key=normCat(f);
     categories[key]=true;
   });
   var catEl=document.getElementById('fin-cat');
   if(catEl){
     var prev=catEl.value||_finCat||'ALL';
-    var options=['<option value="ALL">Todas</option>'].concat(Object.keys(categories).sort().map(function(k){
-      return '<option value="'+k+'">'+k.charAt(0).toUpperCase()+k.slice(1)+'</option>';
-    }));
-    catEl.innerHTML=options.join('');
+    catEl.innerHTML='';
+    var opAll=document.createElement('option');opAll.value='ALL';opAll.textContent='Todas';catEl.appendChild(opAll);
+    Object.keys(categories).sort().forEach(function(k){
+      var op=document.createElement('option');
+      op.value=k;
+      op.textContent=k.charAt(0).toUpperCase()+k.slice(1);
+      catEl.appendChild(op);
+    });
     catEl.value=categories[prev]||prev==='ALL'?prev:'ALL';
     _finCat=catEl.value;
   }
   var items=baseItems.filter(function(f){
     var desc=(f.desc||'').toLowerCase();
-    var cat=(f.cat||'').toLowerCase();
+    var cat=normCat(f);
     var st=(f.status||'').toUpperCase();
     if(_finQuery&&desc.indexOf(_finQuery)===-1)return false;
     if(_finFlow!=='ALL'&&f.type!==_finFlow)return false;
@@ -3385,7 +3397,7 @@ function renderFin(){
   if(items.length===0){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--dm)">Nenhum lan\u00e7amento no per\u00edodo/filtros</td></tr>';return;}
   tbody.innerHTML=items.map(function(f){
     var isInc=f.type==='INCOME';
-    var cat=(f.cat||'outros');
+    var cat=normCat(f);
     var status=(f.status||'PENDING').toUpperCase();
     var statusClass=status==='PAID'?'paid':status==='EXEMPT'?'exempt':'pending';
     var statusLabel=status==='PAID'?'Pago':status==='EXEMPT'?'Isento':'Pendente';
@@ -3393,9 +3405,9 @@ function renderFin(){
     return '<tr>'+
       '<td>'+fmtDate(f.date)+'</td>'+
       '<td><span class="fin-flow '+(isInc?'in':'out')+'">'+(isInc?'&#8593;':'&#8595;')+'</span></td>'+
-      '<td><div style="font-weight:600">'+(f.desc||'-')+'</div><div style="font-size:10px;color:var(--dm)">'+(f.method||'-')+'</div></td>'+
-      '<td style="font-weight:700;color:'+(isInc?'var(--gn)':'var(--rd)')+'">'+(isInc?'':'- ')+fmtMoney(parseFloat(f.value||0))+'</td>'+
-      '<td style="text-transform:capitalize">'+cat+'</td>'+
+      '<td><div style="font-weight:600">'+esc(f.desc||'-')+'</div><div style="font-size:10px;color:var(--dm)">'+esc(f.method||'-')+'</div></td>'+
+      '<td style="font-weight:700;color:'+(isInc?'var(--gn)':'var(--rd)')+'">'+(isInc?'':'-')+fmtMoney(parseFloat(f.value||0))+'</td>'+
+      '<td style="text-transform:capitalize">'+esc(cat)+'</td>'+
       '<td><span class="fin-status '+statusClass+'"'+statusClick+'>'+statusLabel+'</span></td>'+
     '</tr>';
   }).join('');
@@ -5237,7 +5249,7 @@ saveFin = async function() {
   var desc   = ((document.getElementById('fin-m-desc')||{}).value||'').trim();
   var val    = parseFloat((document.getElementById('fin-m-val')||{}).value)||0;
   var type   = ((document.getElementById('fin-m-type')||{}).value)||'INCOME';
-  var cat    = ((document.getElementById('fin-m-cat')||{}).value||'').trim() || (type==='EXPENSE'?'despesa':'particular');
+  var cat    = ((document.getElementById('fin-m-cat')||{}).value||'').trim() || finDefaultCategory(type);
   var date   = ((document.getElementById('fin-m-date')||{}).value)||new Date().toISOString().slice(0,10);
   var method = ((document.getElementById('fin-m-method')||{}).value||'').trim();
   var status = ((document.getElementById('fin-m-status')||{}).value)||'PAID';
@@ -5254,7 +5266,7 @@ saveFin = async function() {
   FINS.push(_tFin(r));
   closeM('m-fin-new');
   ['fin-m-desc','fin-m-val','fin-m-method'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  if(document.getElementById('fin-m-cat')) document.getElementById('fin-m-cat').value='particular';
+  if(document.getElementById('fin-m-cat')) document.getElementById('fin-m-cat').value=finDefaultCategory('INCOME');
   renderFin();
   toast('\u2713 Lan\u00E7amento salvo!');
 };
