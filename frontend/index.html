@@ -289,6 +289,10 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 .ncal-evt-time{font-size:10px;font-weight:700;opacity:.85}
 .ncal-evt-name{font-size:10px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
 .ncal-time-lbl{height:44px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;color:var(--dm);border-bottom:0.5px solid var(--bd)}
+/* ── AGENDA GRADIENT BACKGROUND ───────────────────────── */
+#main.agenda-active{background:linear-gradient(to right,#C5CAF5 0%,#EDD5F5 100%)}
+#main.agenda-active #hdr{background:transparent}
+#main.agenda-active #content{background:transparent}
 /* ── AGENDA TABS ────────────────────────────────────────── */
 .ag-main-tab{font-size:12px;font-weight:700;letter-spacing:.06em;padding:12px 4px;cursor:pointer;color:var(--mt);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-transform:uppercase}
 .ag-main-tab.on{color:var(--ac);border-bottom-color:var(--ac)}
@@ -1944,6 +1948,8 @@ function go(pg, el){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   var target=document.getElementById('pg-'+pg);
   if(target)target.classList.add('on');
+  var mainEl=document.getElementById('main');
+  if(mainEl)mainEl.classList.toggle('agenda-active',pg==='agenda');
   document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
   if(el)el.classList.add('on');
   var titles={dash:'Dashboard',pats:'Pacientes',agenda:'Agenda',sess:'Sess\u00f5es',
