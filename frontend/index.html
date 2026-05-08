@@ -1260,7 +1260,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <div id="ap-individual-section" class="appt-form-row">
             <label class="appt-form-label" for="ap-pat-search">Participante</label>
             <div style="position:relative">
-              <input type="text" id="ap-pat-search" class="appt-field" placeholder="Buscar paciente..." autocomplete="off" oninput="renderIndivPatSearch(this.value)" onfocus="renderIndivPatSearch(this.value)" onblur="setTimeout(function(){var el=document.getElementById('ap-pat-results');if(el)el.classList.add('hidden');},150)"/>
+              <input type="text" id="ap-pat-search" class="appt-field" placeholder="Buscar paciente..." autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="ap-pat-results" aria-expanded="false" oninput="renderIndivPatSearch(this.value)" onfocus="renderIndivPatSearch(this.value)" onblur="hideIndivPatResults()"/>
               <div id="ap-pat-results" class="ap-add-part-search-wrap hidden" style="position:absolute;top:100%;left:0;right:0;z-index:50;margin-top:4px;max-height:200px;overflow-y:auto"></div>
             </div>
             <select id="ap-pat" style="display:none">
@@ -5919,6 +5919,15 @@ function selectGrupoMod(mod, el){
   if(el) el.classList.add('on');
 }
 
+function hideIndivPatResults(){
+  setTimeout(function(){
+    var el = document.getElementById('ap-pat-results');
+    if(el) el.classList.add('hidden');
+    var inp = document.getElementById('ap-pat-search');
+    if(inp) inp.setAttribute('aria-expanded','false');
+  }, 150);
+}
+
 function selectIndividualMod(mod, el){
   _apptModalidade        = mod;
   window._apptModalidade = mod;
@@ -5956,13 +5965,15 @@ function renderIndivPatSearch(filter){
     el.appendChild(item);
   });
   el.classList.remove('hidden');
+  var inp = document.getElementById('ap-pat-search');
+  if(inp) inp.setAttribute('aria-expanded','true');
 }
 
 function selectIndivPat(id, name){
   var sel = document.getElementById('ap-pat');
   if(sel) sel.value = id;
   var inp = document.getElementById('ap-pat-search');
-  if(inp) inp.value = name;
+  if(inp){ inp.value = name; inp.setAttribute('aria-expanded','false'); }
   var el = document.getElementById('ap-pat-results');
   if(el) el.classList.add('hidden');
   updateApptResumo();
