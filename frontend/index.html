@@ -1118,7 +1118,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="3" style="accent-color:var(--ac)"/>Qua</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="4" style="accent-color:var(--ac)"/>Qui</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="5" style="accent-color:var(--ac)"/>Sex</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="6" style="accent-color:var(--ac)"/>Sáb</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="6" style="accent-color:var(--ac)"/>S&#225;b</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tx)"><input type="checkbox" class="cfg-pref-day" value="0" style="accent-color:var(--ac)"/>Dom</label>
           </div>
         </div>
@@ -6874,22 +6874,26 @@ function getVisibleCalWeekDays(){
   var days = Array.isArray(_calPrefs.weekDays) && _calPrefs.weekDays.length ? _calPrefs.weekDays : DEFAULT_CAL_WEEK_DAYS;
   var isNormalized = true;
   var seen = [];
-  days.forEach(function(day){
-    if(typeof day!=='number' || day<0 || day>6 || seen.indexOf(day)!==-1) isNormalized = false;
-    else seen.push(day);
-  });
+  for(var i=0;i<days.length;i++){
+    var day = days[i];
+    if(!Number.isInteger(day) || day<0 || day>6 || seen.indexOf(day)!==-1){
+      isNormalized = false;
+      break;
+    }
+    seen.push(day);
+  }
   if(isNormalized) return days.slice();
   var normalized = [];
   days.forEach(function(day){
     var parsedDay = parseInt(day,10);
-    if(!isNaN(parsedDay) && normalized.indexOf(parsedDay)===-1) normalized.push(parsedDay);
+    if(!isNaN(parsedDay) && parsedDay>=0 && parsedDay<=6 && normalized.indexOf(parsedDay)===-1) normalized.push(parsedDay);
   });
   _calPrefs.weekDays = normalized.length ? normalized.slice() : DEFAULT_CAL_WEEK_DAYS.slice();
   return _calPrefs.weekDays.slice();
 }
 
 function matchesWeekDayPreference(dateLike, visibleDays){
-  var dt = new Date(dateLike);
+  var dt = dateLike instanceof Date ? dateLike : new Date(dateLike);
   var days = visibleDays || getVisibleCalWeekDays();
   return days.indexOf(dt.getDay()) !== -1;
 }
