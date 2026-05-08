@@ -2033,7 +2033,7 @@ function renderCal(){
       if(sdDay!==dayDate)return;
       if(sess.status==='CANCELLED')return;
       // Apply calendar filters (time, tipo)
-      if(!matchesCalFilter(sess))return;
+      if(!matchesCalFilter(sess, visibleDays))return;
 
       var timeParts=(sess.time||'09:00').split(':');
       var hour=parseInt(timeParts[0],10);
@@ -2283,10 +2283,12 @@ async function doRemoveSess(sessId){
 function renderAgToday(){
   var el=document.getElementById('ag-hoje');if(!el)return;
   var now=new Date();
+  var visibleDays = getVisibleCalWeekDays();
   var todaySess=SESSIONS.filter(function(s){
     var sIso=(s._rawIso||'').slice(0,10);
     var nowIso=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
     if(sIso!==nowIso||s.status==='CANCELLED') return false;
+    if(!matchesWeekDayPreference(s.date, visibleDays)) return false;
     // For today filter, only apply time/tipo filters (not date filter since we're already scoped to today)
     if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
     if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
@@ -2305,10 +2307,11 @@ function renderAgToday(){
 function renderAgSemana(){
   var el=document.getElementById('ag-semana');if(!el)return;
   var now=new Date();
+  var visibleDays = getVisibleCalWeekDays();
   var nextSess=SESSIONS.filter(function(s){
     var sd=new Date(s.date);
     if(sd<=now||s.status!=='SCHEDULED') return false;
-    return matchesCalFilter(s);
+    return matchesCalFilter(s, visibleDays);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(nextSess.length===0){
@@ -2321,9 +2324,10 @@ function renderAgSemana(){
 
 function renderAgPend(){
   var el=document.getElementById('ag-pend');if(!el)return;
+  var visibleDays = getVisibleCalWeekDays();
   var pendSess=SESSIONS.filter(function(s){
     if(s.status!=='SCHEDULED') return false;
-    return matchesCalFilter(s);
+    return matchesCalFilter(s, visibleDays);
   }).sort(function(a,b){return new Date(a.date)-new Date(b.date);});
   el.innerHTML='';
   if(pendSess.length===0){
@@ -6408,7 +6412,7 @@ function renderAgLista(){
     var sd = new Date(s.date);
     if(sd < base || sd >= weekEnd) return false;
     if(!matchesWeekDayPreference(sd, visibleDays)) return false;
-    return matchesCalFilter(s);
+    return matchesCalFilter(s, visibleDays);
   }).sort(function(a,b){ return new Date(a.date)-new Date(b.date) || (a.time||'').localeCompare(b.time||''); });
 
   if(weekSess.length===0){
@@ -6902,8 +6906,8 @@ function populateTipoFilterSelect(){
 }
 
 // Returns true if session passes the active _calFilter
-function matchesCalFilter(s){
-  if(!matchesWeekDayPreference(s.date)) return false;
+function matchesCalFilter(s, visibleDays){
+  if(!matchesWeekDayPreference(s.date, visibleDays)) return false;
   if(_calFilter.timeFrom&&(s.time||'00:00')<_calFilter.timeFrom) return false;
   if(_calFilter.timeTo&&(s.time||'00:00')>_calFilter.timeTo) return false;
   if(_calFilter.tipo&&s._tipoId!==_calFilter.tipo) return false;
