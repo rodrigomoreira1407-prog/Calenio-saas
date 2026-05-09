@@ -33,7 +33,8 @@ model User {
   appointments Appointment[]
   records      Record[]
   financials   Financial[]
-  convenios    Convenio[]
+  convenios       Convenio[]
+  paymentGateways PaymentGateway[]
   @@index([email])
 }
 
@@ -140,5 +141,21 @@ model Convenio {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([userId])
+}
+
+model PaymentGateway {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider    String   // mercadopago | asaas | pix_manual
+  apiKeyEnc   String?  // chave/token criptografado
+  pixKey      String?  // chave PIX (para pix_manual)
+  pixKeyType  String?  // cpf | cnpj | email | telefone | aleatoria
+  holderName  String?  // nome do beneficiário
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@unique([userId, provider])
   @@index([userId])
 }

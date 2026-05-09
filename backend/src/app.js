@@ -13,6 +13,7 @@ const convenioRoutes     = require("./routes/convenios");
 const subscriptionRoutes = require("./routes/subscriptions");
 const aiRoutes           = require("./routes/ai");
 const adminRoutes        = require("./routes/admin");
+const paymentRoutes      = require("./routes/payments");
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/api/convenios",     convenioRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/ai",            aiRoutes);
 app.use("/api/admin",         adminRoutes);
+app.use("/api/payments",      paymentRoutes);
 
 // ── Health check ───────────────────────────────────────────
 app.get("/api/health", (req, res) => {

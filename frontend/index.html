@@ -876,7 +876,10 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
   <div id="pg-fin" class="page">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
       <div><div style="font-size:28px;font-weight:800;letter-spacing:-.02em">Financeiro</div></div>
-      <button class="abtn" onclick="openM('m-fin-new')">+ Lan&#231;ar</button>
+      <div style="display:flex;gap:8px">
+        <button class="abtn" style="background:var(--gn);color:#fff;font-size:12px" onclick="openM('m-charge')">&#128179; Cobran&#231;a</button>
+        <button class="abtn" onclick="openM('m-fin-new')">+ Lan&#231;ar</button>
+      </div>
     </div>
     <div class="fin-tabs">
       <div class="fin-tab on" onclick="setFinTab('resumo',this)">RESUMO</div>
@@ -1098,6 +1101,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
       <div class="tab" onclick="setCfgTab('servicos',this)">Servi&#231;os</div>
       <div class="tab" onclick="setCfgTab('agenda-cfg',this)">Agenda</div>
       <div class="tab" onclick="setCfgTab('preferencias',this)">Prefer&#234;ncias</div>
+      <div class="tab" onclick="setCfgTab('pagamentos',this)">&#128179; Pagamentos</div>
     </div>
     <div id="cfg-perfil">
       <div class="card">
@@ -1217,6 +1221,61 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
           <label for="cfg-pref-hide-off" style="font-size:13px;font-weight:600;color:var(--tx);cursor:pointer">Ocultar hor&#225;rios fora do expediente</label>
         </div>
         <button onclick="saveCfgPrefs()" class="btn bp" style="width:100%;margin-top:12px">&#10003; Salvar prefer&#234;ncias</button>
+      </div>
+    </div>
+
+    <!-- ── PAGAMENTOS ─────────────────────────────────────────── -->
+    <div id="cfg-pagamentos" class="hidden">
+      <div class="al alt" style="margin-bottom:12px"><span>&#128179;</span><div><div style="font-size:12px;font-weight:700;color:var(--ac)">Integra&#231;&#245;es de Pagamento</div><div style="font-size:11px;color:var(--ac2);margin-top:1px">Configure o gateway e gere cobran&#231;as para seus pacientes</div></div></div>
+
+      <!-- Mercado Pago -->
+      <div class="card" style="margin-bottom:10px">
+        <div class="si" style="margin-bottom:10px">
+          <div class="sico" style="background:#00B1EA">&#128179;</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">Mercado Pago</div><div style="font-size:11px;color:var(--mt)">Gera link de pagamento (PIX, cart&#227;o)</div></div>
+          <span id="gw-badge-mercadopago" class="bx" style="background:#f1f5f9;color:#64748b">N&#227;o conf.</span>
+        </div>
+        <div class="fr"><label class="lbl">Access Token *</label><input class="inp" id="gw-mp-token" type="password" placeholder="APP_USR-..." autocomplete="new-password"/></div>
+        <div style="font-size:10px;color:var(--mt);margin-bottom:10px">Obtenha em: mercadopago.com.br &#8250; Suas integra&#231;&#245;es &#8250; Access Token</div>
+        <button class="btn bp fw" style="font-size:12px" onclick="saveGateway('mercadopago')">&#10003; Salvar Mercado Pago</button>
+        <button id="gw-mp-del" class="btn hidden" style="width:100%;margin-top:6px;background:var(--rd2);color:var(--rd);border:1px solid #fecaca;font-size:12px" onclick="deleteGateway('mercadopago')">&#128465; Remover</button>
+      </div>
+
+      <!-- Asaas -->
+      <div class="card" style="margin-bottom:10px">
+        <div class="si" style="margin-bottom:10px">
+          <div class="sico" style="background:#FF6B35">&#128176;</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">Asaas</div><div style="font-size:11px;color:var(--mt)">Cobran&#231;a PIX, boleto e cart&#227;o</div></div>
+          <span id="gw-badge-asaas" class="bx" style="background:#f1f5f9;color:#64748b">N&#227;o conf.</span>
+        </div>
+        <div class="fr"><label class="lbl">API Key *</label><input class="inp" id="gw-asaas-key" type="password" placeholder="$aact_..." autocomplete="new-password"/></div>
+        <div style="font-size:10px;color:var(--mt);margin-bottom:10px">Obtenha em: asaas.com &#8250; Minha conta &#8250; Integra&#231;&#245;es &#8250; API Key</div>
+        <button class="btn bp fw" style="font-size:12px" onclick="saveGateway('asaas')">&#10003; Salvar Asaas</button>
+        <button id="gw-asaas-del" class="btn hidden" style="width:100%;margin-top:6px;background:var(--rd2);color:var(--rd);border:1px solid #fecaca;font-size:12px" onclick="deleteGateway('asaas')">&#128465; Remover</button>
+      </div>
+
+      <!-- PIX Manual -->
+      <div class="card">
+        <div class="si" style="margin-bottom:10px">
+          <div class="sico" style="background:#22C55E">&#128304;</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">PIX Manual</div><div style="font-size:11px;color:var(--mt)">Gera instru&#231;&#245;es com sua chave PIX</div></div>
+          <span id="gw-badge-pix_manual" class="bx" style="background:#f1f5f9;color:#64748b">N&#227;o conf.</span>
+        </div>
+        <div class="fr"><label class="lbl">Nome do benefici&#225;rio *</label><input class="inp" id="gw-pix-holder" placeholder="Seu nome completo ou raz&#227;o social"/></div>
+        <div class="fg">
+          <div><label class="lbl">Tipo de chave *</label>
+            <select class="sel" id="gw-pix-type">
+              <option value="cpf">CPF</option>
+              <option value="cnpj">CNPJ</option>
+              <option value="email">E-mail</option>
+              <option value="telefone">Telefone</option>
+              <option value="aleatoria">Chave aleat&#243;ria</option>
+            </select>
+          </div>
+          <div><label class="lbl">Chave PIX *</label><input class="inp" id="gw-pix-key" placeholder="Ex: seu@email.com"/></div>
+        </div>
+        <button class="btn bp fw" style="font-size:12px;margin-top:4px" onclick="saveGateway('pix_manual')">&#10003; Salvar PIX Manual</button>
+        <button id="gw-pix_manual-del" class="btn hidden" style="width:100%;margin-top:6px;background:var(--rd2);color:var(--rd);border:1px solid #fecaca;font-size:12px" onclick="deleteGateway('pix_manual')">&#128465; Remover</button>
       </div>
     </div>
 
@@ -1746,6 +1805,68 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
     </div>
 </div>
 
+<!-- GERAR COBRANÇA -->
+<div id="m-charge" class="ov hidden" onclick="if(event.target===this)closeM('m-charge')">
+  <div class="modal" onclick="event.stopPropagation()"><div class="mbar"></div>
+    <div class="mttl">&#128179; Gerar Cobran&#231;a</div>
+    <div class="msub">Gere um link de pagamento para o paciente</div>
+
+    <!-- Passo 1: formulário -->
+    <div id="charge-form-step">
+      <div class="fr"><label class="lbl">Paciente</label>
+        <select class="sel" id="charge-patient">
+          <option value="">Selecione (opcional)</option>
+        </select>
+      </div>
+      <div class="fr"><label class="lbl">Descri&#231;&#227;o *</label><input class="inp" id="charge-desc" placeholder="Ex: Consulta TCC"/></div>
+      <div class="fg">
+        <div><label class="lbl">Valor (R$) *</label><input type="number" class="inp" id="charge-value" placeholder="150" min="0.01" step="0.01"/></div>
+        <div><label class="lbl">Gateway *</label>
+          <select class="sel" id="charge-provider">
+            <option value="">Selecione...</option>
+          </select>
+        </div>
+      </div>
+      <div id="charge-no-gw" class="al alt hidden" style="margin-bottom:10px">
+        <span>&#9888;&#65039;</span>
+        <div style="font-size:11px;color:var(--ac)">Nenhum gateway configurado. <span style="color:var(--ac);font-weight:700;cursor:pointer;text-decoration:underline" onclick="closeM('m-charge');go('cfg',document.getElementById('ni-cfg'));setCfgTab('pagamentos',document.querySelector('#pg-cfg .tabs .tab:last-child'))">Configurar agora</span></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn bs" style="flex:1" onclick="closeM('m-charge')">Cancelar</button>
+        <button class="btn bp" style="flex:1" id="btn-charge-gen" onclick="generateCharge()">&#128179; Gerar</button>
+      </div>
+    </div>
+
+    <!-- Passo 2: resultado -->
+    <div id="charge-result-step" class="hidden">
+      <div style="text-align:center;padding:10px 0 14px">
+        <div style="font-size:32px">&#127881;</div>
+        <div style="font-size:14px;font-weight:700;margin-top:6px">Cobran&#231;a gerada!</div>
+        <div style="font-size:12px;color:var(--mt);margin-top:4px" id="charge-result-amount"></div>
+      </div>
+      <!-- Link de pagamento (MP / Asaas) -->
+      <div id="charge-result-link-box" class="hidden">
+        <div style="font-size:11px;font-weight:700;color:var(--mt);margin-bottom:5px">Link de pagamento</div>
+        <div style="background:var(--bg);border:1px solid var(--br);border-radius:9px;padding:10px;word-break:break-all;font-size:11px;font-family:monospace;margin-bottom:10px" id="charge-result-url"></div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="btn bp" style="flex:1;font-size:12px" onclick="copyChargeLink()">&#128203; Copiar link</button>
+          <button class="btn bs" style="flex:1;font-size:12px" onclick="shareChargeWhatsapp()">&#128242; WhatsApp</button>
+        </div>
+      </div>
+      <!-- Instruções PIX manual -->
+      <div id="charge-result-pix-box" class="hidden">
+        <div style="font-size:11px;font-weight:700;color:var(--mt);margin-bottom:5px">Instru&#231;&#245;es de pagamento</div>
+        <div style="background:var(--bg);border:1px solid var(--br);border-radius:9px;padding:12px;font-size:12px;line-height:1.7;margin-bottom:10px;white-space:pre-line" id="charge-result-pix-inst"></div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="btn bp" style="flex:1;font-size:12px" onclick="copyChargeLink()">&#128203; Copiar</button>
+          <button class="btn bs" style="flex:1;font-size:12px" onclick="shareChargeWhatsapp()">&#128242; WhatsApp</button>
+        </div>
+      </div>
+      <button class="btn bs fw" style="font-size:12px" onclick="resetChargeModal()">+ Nova cobran&#231;a</button>
+    </div>
+  </div>
+</div>
+
 <!-- DETALHES PACIENTE -->
 <div id="m-pat-view" class="ov hidden" onclick="if(event.target===this)closeM('m-pat-view')">
   <div class="modal" onclick="event.stopPropagation()"><div class="mbar"></div>
@@ -1987,7 +2108,7 @@ function hdrAction(){
 }
 
 // ── MODALS ─────────────────────────────────────────────────────
-function openM(id){var el=document.getElementById(id);if(el)el.classList.remove('hidden');}
+function openM(id){var el=document.getElementById(id);if(el)el.classList.remove('hidden');if(id==='m-charge'){resetChargeModal();openChargeModal();}}
 function closeM(id){var el=document.getElementById(id);if(el)el.classList.add('hidden');}
 function finDefaultCategory(type){return type==='EXPENSE'?'despesa':'particular';}
 
@@ -2039,11 +2160,12 @@ function setRelTab(t,el){
 }
 function setCfgTab(t,el){
   setTab(el);
-  ['perfil','senha','integ','plano','servicos','agenda-cfg','preferencias'].forEach(function(x){
+  ['perfil','senha','integ','plano','servicos','agenda-cfg','preferencias','pagamentos'].forEach(function(x){
     var panel=document.getElementById('cfg-'+x);
     if(panel) panel.classList.toggle('hidden',x!==t);
   });
   if(t==='servicos') renderTiposConfigSection();
+  if(t==='pagamentos') loadGateways();
   if(t==='agenda-cfg') {
     populateTipoFilterSelect();
     // Sync current filter values into cfg inputs
@@ -3455,6 +3577,220 @@ function renderDash(){
 }
 
 // ── CONTA / CONFIG ────────────────────────────────────────────
+
+// ── PAGAMENTOS — Gateways & Cobranças ─────────────────────────
+var _gateways = [];
+var _chargeResult = null;
+
+async function loadGateways() {
+  var data = await apiCall('GET', '/payments/gateways');
+  if (!data) return;
+  _gateways = Array.isArray(data) ? data : [];
+  _renderGatewayBadges();
+  _fillGatewayForms();
+}
+
+function _renderGatewayBadges() {
+  var map = {};
+  _gateways.forEach(function(g){ map[g.provider] = g; });
+  ['mercadopago','asaas','pix_manual'].forEach(function(p){
+    var badge = document.getElementById('gw-badge-'+p);
+    var delBtn = document.getElementById('gw-'+p+'-del');
+    if (!badge) return;
+    if (map[p]) {
+      badge.textContent = '✅ Configurado';
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#16a34a';
+      if (delBtn) delBtn.classList.remove('hidden');
+    } else {
+      badge.textContent = 'Não conf.';
+      badge.style.background = '#f1f5f9';
+      badge.style.color = '#64748b';
+      if (delBtn) delBtn.classList.add('hidden');
+    }
+  });
+}
+
+function _fillGatewayForms() {
+  var pix = _gateways.find(function(g){ return g.provider === 'pix_manual'; });
+  if (pix) {
+    var h = document.getElementById('gw-pix-holder');
+    var k = document.getElementById('gw-pix-key');
+    var t = document.getElementById('gw-pix-type');
+    if (h) h.value = pix.holderName || '';
+    if (k) k.value = pix.pixKey || '';
+    if (t) t.value = pix.pixKeyType || 'cpf';
+  }
+}
+
+async function saveGateway(provider) {
+  var payload = { provider: provider };
+  if (provider === 'mercadopago') {
+    var t = (document.getElementById('gw-mp-token').value || '').trim();
+    if (!t) { toast('Informe o Access Token'); return; }
+    payload.apiKey = t;
+  } else if (provider === 'asaas') {
+    var k = (document.getElementById('gw-asaas-key').value || '').trim();
+    if (!k) { toast('Informe a API Key'); return; }
+    payload.apiKey = k;
+  } else if (provider === 'pix_manual') {
+    var h = (document.getElementById('gw-pix-holder').value || '').trim();
+    var pk = (document.getElementById('gw-pix-key').value || '').trim();
+    var pt = (document.getElementById('gw-pix-type').value || 'cpf');
+    if (!h) { toast('Informe o nome do beneficiário'); return; }
+    if (!pk) { toast('Informe a chave PIX'); return; }
+    payload.holderName = h;
+    payload.pixKey = pk;
+    payload.pixKeyType = pt;
+  }
+  var r = await apiCall('POST', '/payments/gateways', payload);
+  if (!r) return;
+  // Limpar campo de senha
+  if (provider === 'mercadopago') { var el=document.getElementById('gw-mp-token'); if(el) el.value=''; }
+  if (provider === 'asaas') { var el=document.getElementById('gw-asaas-key'); if(el) el.value=''; }
+  toast('✅ Gateway salvo!');
+  await loadGateways();
+}
+
+async function deleteGateway(provider) {
+  var gw = _gateways.find(function(g){ return g.provider === provider; });
+  if (!gw) return;
+  if (!confirm('Remover integração com ' + provider + '?')) return;
+  var r = await apiCall('DELETE', '/payments/gateways/' + gw.id);
+  if (!r) return;
+  toast('Gateway removido');
+  await loadGateways();
+}
+
+// ── Modal de cobrança ──────────────────────────────────────────
+function openChargeModal() {
+  // Popular dropdown de pacientes
+  var sel = document.getElementById('charge-patient');
+  if (sel) {
+    sel.innerHTML = '<option value="">Selecione (opcional)</option>';
+    (PATS || []).forEach(function(p){
+      var o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.name;
+      sel.appendChild(o);
+    });
+  }
+  // Popular dropdown de gateways
+  var gsel = document.getElementById('charge-provider');
+  var noGw = document.getElementById('charge-no-gw');
+  if (gsel) {
+    gsel.innerHTML = '<option value="">Selecione...</option>';
+    var labels = { mercadopago: 'Mercado Pago', asaas: 'Asaas', pix_manual: 'PIX Manual' };
+    _gateways.forEach(function(g){
+      var o = document.createElement('option');
+      o.value = g.provider;
+      o.textContent = labels[g.provider] || g.provider;
+      gsel.appendChild(o);
+    });
+    if (_gateways.length === 0) {
+      if (noGw) noGw.classList.remove('hidden');
+    } else {
+      if (noGw) noGw.classList.add('hidden');
+    }
+  }
+}
+
+async function generateCharge() {
+  var desc = (document.getElementById('charge-desc').value || '').trim();
+  var val  = parseFloat(document.getElementById('charge-value').value || '0');
+  var prov = document.getElementById('charge-provider').value;
+  var patId = document.getElementById('charge-patient').value;
+  if (!desc) { toast('Informe a descrição'); return; }
+  if (!val || val <= 0) { toast('Informe um valor válido'); return; }
+  if (!prov) { toast('Selecione o gateway de pagamento'); return; }
+
+  var pat = patId ? (PATS || []).find(function(p){ return p.id === patId; }) : null;
+  var payload = {
+    provider:     prov,
+    amount:       val,
+    description:  desc,
+    patientName:  pat ? pat.name  : undefined,
+    patientEmail: pat ? pat.email : undefined,
+    patientCpf:   pat ? pat.cpf   : undefined,
+  };
+
+  var btn = document.getElementById('btn-charge-gen');
+  if (btn) { btn.disabled = true; btn.textContent = 'Gerando...'; }
+
+  var r = await apiCall('POST', '/payments/charge', payload);
+
+  if (btn) { btn.disabled = false; btn.textContent = '💳 Gerar'; }
+  if (!r) return;
+  _chargeResult = r;
+
+  // Criar lançamento financeiro pendente
+  await apiCall('POST', '/financial', {
+    type: 'INCOME', category: 'particular', description: desc,
+    value: val, status: 'PENDING', method: prov,
+    patientId: patId || null,
+  });
+
+  // Mostrar resultado
+  document.getElementById('charge-form-step').classList.add('hidden');
+  document.getElementById('charge-result-step').classList.remove('hidden');
+  var amtEl = document.getElementById('charge-result-amount');
+  if (amtEl) amtEl.textContent = 'R$ ' + val.toFixed(2).replace('.', ',') + ' — ' + desc;
+
+  var linkBox = document.getElementById('charge-result-link-box');
+  var pixBox  = document.getElementById('charge-result-pix-box');
+
+  if (r.provider === 'pix_manual') {
+    if (pixBox) pixBox.classList.remove('hidden');
+    var inst = document.getElementById('charge-result-pix-inst');
+    if (inst) inst.textContent = r.instructions || '';
+  } else {
+    if (linkBox) linkBox.classList.remove('hidden');
+    var urlEl = document.getElementById('charge-result-url');
+    if (urlEl) urlEl.textContent = r.chargeUrl || '';
+  }
+
+  // Recarregar financeiro
+  try {
+    var fins = await apiCall('GET', '/financial');
+    if (fins && fins.items) { FINS = fins.items.map(_tFin); renderFin(); }
+  } catch(e) {}
+}
+
+function copyChargeLink() {
+  if (!_chargeResult) return;
+  var text = _chargeResult.chargeUrl || _chargeResult.instructions || '';
+  if (!text) return;
+  navigator.clipboard.writeText(text)
+    .then(function(){ toast('📋 Copiado!'); })
+    .catch(function(){ toast('Texto: ' + text.slice(0, 60) + '...'); });
+}
+
+function shareChargeWhatsapp() {
+  if (!_chargeResult) return;
+  var val = (_chargeResult.amount || 0).toFixed(2).replace('.', ',');
+  var desc = _chargeResult.description || 'Consulta';
+  var text;
+  if (_chargeResult.provider === 'pix_manual') {
+    text = _chargeResult.instructions || '';
+  } else {
+    text = 'Olá! Segue o link de pagamento para ' + desc + ' no valor de R$ ' + val + ':\n\n' + (_chargeResult.chargeUrl || '');
+  }
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+function resetChargeModal() {
+  _chargeResult = null;
+  document.getElementById('charge-form-step').classList.remove('hidden');
+  document.getElementById('charge-result-step').classList.add('hidden');
+  var lb = document.getElementById('charge-result-link-box');
+  var pb = document.getElementById('charge-result-pix-box');
+  if (lb) lb.classList.add('hidden');
+  if (pb) pb.classList.add('hidden');
+  var desc = document.getElementById('charge-desc'); if(desc) desc.value='';
+  var val  = document.getElementById('charge-value'); if(val) val.value='';
+}
+// ── Fim Pagamentos ─────────────────────────────────────────────
+
 function saveProfile(){
   var n=(document.getElementById('cfg-name').value||'').trim();
   if(!n){toast('Informe o nome');return;}
