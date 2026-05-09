@@ -3704,7 +3704,7 @@ async function generateCharge() {
   if (!val || val <= 0) { toast('Informe um valor válido'); return; }
   if (!prov) { toast('Selecione o gateway de pagamento'); return; }
 
-  var pat = patId ? (PATS || []).find(function(p){ return p.id === patId; }) : null;
+  var pat = patId ? (PATS || []).find(function(p){ return String(p.id) === String(patId); }) : null;
   var payload = {
     provider:     prov,
     amount:       val,
@@ -3724,11 +3724,12 @@ async function generateCharge() {
   _chargeResult = r;
 
   // Criar lançamento financeiro pendente
-  await apiCall('POST', '/financial', {
+  var finOk = await apiCall('POST', '/financial', {
     type: 'INCOME', category: 'particular', description: desc,
     value: val, status: 'PENDING', method: prov,
     patientId: patId || null,
   });
+  if (!finOk) { toast('⚠️ Cobrança gerada, mas não foi possível criar o lançamento financeiro.'); }
 
   // Mostrar resultado
   document.getElementById('charge-form-step').classList.add('hidden');
@@ -3753,7 +3754,7 @@ async function generateCharge() {
   try {
     var fins = await apiCall('GET', '/financial');
     if (fins && fins.items) { FINS = fins.items.map(_tFin); renderFin(); }
-  } catch(e) {}
+  } catch(e) { console.error('Erro ao recarregar financeiro:', e); }
 }
 
 function copyChargeLink() {

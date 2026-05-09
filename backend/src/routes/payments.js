@@ -9,7 +9,10 @@ const prisma = new PrismaClient();
 const mw = [auth, requireActivePlan];
 
 // ── Criptografia das chaves ────────────────────────────────────
-const ENC_KEY = (process.env.ENCRYPTION_KEY || "calenio_default_encryption_key_32").slice(0, 32).padEnd(32, "_");
+const ENC_KEY = (process.env.ENCRYPTION_KEY || "").slice(0, 32).padEnd(32, "_");
+if (!process.env.ENCRYPTION_KEY) {
+  console.warn("⚠️  ENCRYPTION_KEY não definida — use uma chave segura em produção via variável de ambiente");
+}
 const IV_LEN  = 16;
 
 function encrypt(text) {
@@ -192,16 +195,19 @@ router.post("/charge", ...mw, async (req, res) => {
       const apiKey = decrypt(gw.apiKeyEnc);
       if (!apiKey) return res.status(400).json({ error: "API Key do Asaas não configurada" });
 
-      // Determina ambiente (sandbox vs produção) pela chave
-      const isSandbox = apiKey.startsWith("$aact_") && apiKey.includes("_sandbox_");
+      // Determina ambiente pela convenção da API key do Asaas:
+      // chaves sandbox contêm "_sandbox_"; chaves de produção começam com "$aact_" sem esse segmento.
+      // Configure ASAAS_MODE=sandbox para forçar sandbox independentemente da chave.
+      const isSandbox = process.env.ASAAS_MODE === "sandbox" || (apiKey.startsWith("$aact_") && apiKey.includes("_sandbox_"));
       const asaasHost = isSandbox ? "sandbox.asaas.com" : "api.asaas.com";
 
       // Primeiro cria o cliente no Asaas (ou encontra pelo CPF/email)
+      const chargeRef = `${req.user.id}_${Date.now()}`;
       const custPayload = {
         name:          patientName  || "Paciente",
-        email:         patientEmail || undefined,
-        cpfCnpj:       patientCpf   ? patientCpf.replace(/\D/g, "") : undefined,
-        externalReference: req.user.id,
+        ...(patientEmail && { email: patientEmail }),
+        ...(patientCpf   && { cpfCnpj: patientCpf.replace(/\D/g, "") }),
+        externalReference: chargeRef,
       };
 
       const custResp = await httpRequest(
@@ -231,7 +237,7 @@ router.post("/charge", ...mw, async (req, res) => {
         value:       amountNum,
         dueDate,
         description,
-        externalReference: req.user.id,
+        externalReference: chargeRef,
       };
 
       const payResp = await httpRequest(
