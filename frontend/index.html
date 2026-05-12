@@ -3965,9 +3965,21 @@ function sendContadorWA(){
 
 // ── AUTH ──────────────────────────────────────────────────────
 var SC=['sc-login','sc-register','sc-forgot','sc-plans'];
+var DEFAULT_PLAN='BASIC';
 function showSc(which){SC.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('hidden');});var t=document.getElementById('sc-'+which);if(t)t.classList.remove('hidden');['msg-login','msg-reg','msg-forgot'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML='';});}
 function hideAllSc(){SC.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('hidden');});}
 function aMsg(id,txt,t){var el=document.getElementById(id);if(!el)return;el.innerHTML='<div class="a-'+(t==='e'?'err':'ok')+'">'+(t==='e'?'&#10007;':'&#10003;')+' '+txt+'</div>';}
+function ensurePlan(){
+  var p=(localStorage.getItem('cal_plan')||_curPlan||(_curUser&&_curUser.plan)||'').trim();
+  if(!p)p=DEFAULT_PLAN;
+  _curPlan=p;
+  localStorage.setItem('cal_plan',p);
+  if(_curUser){
+    if(!_curUser.plan)_curUser.plan=p;
+    localStorage.setItem('cal_user',JSON.stringify(_curUser));
+  }
+  return p;
+}
 
 function doLogin(){
   var email=(document.getElementById('l-email').value||'').trim();
@@ -3989,7 +4001,7 @@ function doLogin(){
   localStorage.setItem('cal_token','demo');localStorage.setItem('cal_user',JSON.stringify(_curUser));
   afterLogin();
 }
-function afterLogin(){_curPlan=localStorage.getItem('cal_plan')||'';if(!_curPlan){showSc('plans');}else{enterApp();}}
+function afterLogin(){ensurePlan();enterApp();}
 function doRegister(){
   var name=(document.getElementById('r-name').value||'').trim();
   var email=(document.getElementById('r-email').value||'').trim();
@@ -4007,10 +4019,11 @@ function doRegister(){
     .catch(function(){btn.disabled=false;btn.textContent='Criar conta gr\u00e1tis';aMsg('msg-reg','Sem conex\u00e3o','e');});
     return;
   }
-  _curUser={name:name,email:email,plan:''};
+  _curUser={name:name,email:email,plan:DEFAULT_PLAN};
   localStorage.setItem('cal_token','demo');localStorage.setItem('cal_user',JSON.stringify(_curUser));
-  aMsg('msg-reg','Conta criada! Agora escolha seu plano.','o');
-  setTimeout(function(){showSc('plans');},1000);
+  localStorage.setItem('cal_plan',DEFAULT_PLAN);
+  aMsg('msg-reg','Conta criada! Entrando...','o');
+  setTimeout(function(){enterApp();},1000);
 }
 function doForgot(){
   var email=(document.getElementById('f-email').value||'').trim();
@@ -5349,7 +5362,7 @@ async function apiCall(method, path, body) {
     var data = await res.json().catch(function(){ return {}; });
     if (res.status === 401) { authLogout(); return null; }
     if (res.status === 403 && (data.redirect === '/plans' || data.code === 'PLAN_BLOCKED' || data.code === 'TRIAL_EXPIRED')) {
-      showSc('plans');
+      toast('⚠️ A tela de planos está desativada temporariamente.');
       return null;
     }
     if (!res.ok) { toast('\u274C ' + (data.error || 'Erro ao comunicar com o servidor')); return null; }
@@ -7745,18 +7758,22 @@ function authLogout(){
 
   // Check auth
   var token=localStorage.getItem('cal_token');
-  var plan=localStorage.getItem('cal_plan');
+  var plan=(localStorage.getItem('cal_plan')||'').trim();
   var user=JSON.parse(localStorage.getItem('cal_user')||'null');
   if(!token){showSc('login');return;}
-  if(!plan){_curUser=user;showSc('plans');return;}
+  if(!plan){
+    plan=DEFAULT_PLAN;
+    localStorage.setItem('cal_plan',plan);
+    if(user&&!user.plan){user.plan=plan;localStorage.setItem('cal_user',JSON.stringify(user));}
+  }
   if(API_BASE){
     fetch(API_BASE+'/auth/me',{headers:{'Authorization':'Bearer '+token}})
     .then(function(r){if(!r.ok)throw new Error();return r.json();})
-    .then(function(u){_curUser=u;_curPlan=u.plan||plan;enterApp();})
+    .then(function(u){_curUser=u;_curPlan=u.plan||plan||DEFAULT_PLAN;ensurePlan();enterApp();})
     .catch(function(){showSc('login');});
     return;
   }
-  _curUser=user;_curPlan=plan;
+  _curUser=user;_curPlan=plan||DEFAULT_PLAN;ensurePlan();
   enterApp();
 })();
 </script>
