@@ -5362,7 +5362,7 @@ async function apiCall(method, path, body) {
     var data = await res.json().catch(function(){ return {}; });
     if (res.status === 401) { authLogout(); return null; }
     if (res.status === 403 && (data.redirect === '/plans' || data.code === 'PLAN_BLOCKED' || data.code === 'TRIAL_EXPIRED')) {
-      toast('⚠️ A tela de planos está desativada temporariamente.');
+      toast('⚠️ Tela de planos desativada temporariamente. Se precisar, fale com o suporte.');
       return null;
     }
     if (!res.ok) { toast('\u274C ' + (data.error || 'Erro ao comunicar com o servidor')); return null; }
