@@ -5348,7 +5348,7 @@ async function apiCall(method, path, body) {
     var res  = await fetch(API_BASE + path, opts);
     var data = await res.json().catch(function(){ return {}; });
     if (res.status === 401) { authLogout(); return null; }
-    if (res.status === 403 && (data.code === 'PLAN_BLOCKED' || data.code === 'TRIAL_EXPIRED' || data.redirect === '/plans')) {
+    if (res.status === 403 && (data.redirect === '/plans' || data.code === 'PLAN_BLOCKED' || data.code === 'TRIAL_EXPIRED')) {
       showSc('plans');
       return null;
     }
