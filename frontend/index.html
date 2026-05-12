@@ -933,7 +933,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
     <div class="fin-cards">
       <div class="fin-card">
         <div class="fin-card-head">
-          <div class="fin-card-ico" style="background:#E8F8EA;color:#2E9B3C">&#8595;</div>
+          <div class="fin-card-ico" style="background:#E8F8EA;color:#2E9B3C">&#8593;</div>
           <div class="fin-card-copy">
             <div class="fin-card-title">Entradas do per&#237;odo</div>
             <div class="fin-card-kpi positive" id="fin-rec">R$ 0,00</div>
@@ -943,7 +943,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
       </div>
       <div class="fin-card">
         <div class="fin-card-head">
-          <div class="fin-card-ico" style="background:#FCEAEA;color:#E14141">&#8599;</div>
+          <div class="fin-card-ico" style="background:#FCEAEA;color:#E14141">&#8595;</div>
           <div class="fin-card-copy">
             <div class="fin-card-title">Sa&#237;das do per&#237;odo</div>
             <div class="fin-card-kpi negative" id="fin-desp">R$ 0,00</div>
@@ -3588,16 +3588,17 @@ function renderFin(){
   var despTotal=baseItems.filter(function(f){return f.type==='EXPENSE';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var despPaid=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PAID';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var despPending=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PENDING';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
-  var saldo=recTotal-despTotal;
-  var margem=recTotal?((saldo/recTotal)*100):0;
+  var saldo=recPaid-despPaid;
+  var margem=recPaid?((saldo/recPaid)*100):0;
+  var cashItems=baseItems.filter(function(f){return (f.status||'').toUpperCase()==='PAID';});
   document.getElementById('fin-rec').textContent=fmtMoney(recTotal);
   document.getElementById('fin-desp').textContent=fmtMoney(despTotal);
   document.getElementById('fin-sal').textContent=fmtMoney(saldo);
   document.getElementById('fin-margin').textContent=fmtPct(margem);
   var r1=document.getElementById('fin-rec-note');if(r1)r1.textContent='Recebido '+fmtMoney(recPaid)+' · Pendente '+fmtMoney(recPending);
   var d1=document.getElementById('fin-desp-note');if(d1)d1.textContent='Pago '+fmtMoney(despPaid)+' · Pendente '+fmtMoney(despPending);
-  var s1=document.getElementById('fin-sal-note');if(s1)s1.textContent=saldo>=0?'Resultado positivo do período':'Resultado negativo do período';
-  var m1=document.getElementById('fin-margin-note');if(m1)m1.textContent='Sobre as entradas do ano selecionado';
+  var s1=document.getElementById('fin-sal-note');if(s1)s1.textContent='Recebido - despesas pagas';
+  var m1=document.getElementById('fin-margin-note');if(m1)m1.textContent='Sobre as entradas do período';
   var salEl=document.getElementById('fin-sal');if(salEl)salEl.className='fin-card-kpi '+(saldo>=0?'positive':'negative');
   var salNote=document.getElementById('fin-sal-note');if(salNote)salNote.className='fin-card-note '+(saldo>=0?'positive':'negative');
   var marginEl=document.getElementById('fin-margin');if(marginEl)marginEl.className='fin-card-kpi '+(margem>=0?'neutral':'negative');
@@ -3614,7 +3615,7 @@ function renderFin(){
       INCOME:{rows:{},total:new Array(12).fill(0),grand:0},
       EXPENSE:{rows:{},total:new Array(12).fill(0),grand:0}
     };
-    baseItems.forEach(function(f){
+    cashItems.forEach(function(f){
       var type=f.type==='EXPENSE'?'EXPENSE':'INCOME';
       var cat=normCat(f);
       var idx=monthIndex(f.date);
@@ -3629,7 +3630,7 @@ function renderFin(){
     });
     if(cashHead)cashHead.innerHTML='<tr><th>Descrição</th>'+months.map(function(m){return '<th>'+m+'</th>';}).join('')+'<th>Total do Ano</th></tr>';
     if(cashBody){
-      if(baseItems.length===0){
+      if(cashItems.length===0){
         cashBody.innerHTML='<tr><td colspan="14" class="fin-cash-empty">Nenhum dado disponível no período.</td></tr>';
       }else{
         var sectionHtml='';
@@ -3676,7 +3677,7 @@ function renderFin(){
     var meta=catMeta(isInc?'INCOME':'EXPENSE',cat);
     return '<tr>'+
       '<td>'+fmtDate(f.date)+'</td>'+
-      '<td><span class="fin-flow '+(isInc?'in':'out')+'">'+(isInc?'&#8595;':'&#8599;')+'</span></td>'+
+      '<td><span class="fin-flow '+(isInc?'in':'out')+'">'+(isInc?'&#8593;':'&#8595;')+'</span></td>'+
       '<td><div class="fin-list-meta"><div class="fin-list-title">'+esc(f.desc||'-')+'</div><div class="fin-list-sub">'+esc(f.method||meta.label||'-')+'</div></div></td>'+
       '<td style="font-weight:700;color:'+(isInc?'var(--gn)':'var(--rd)')+'">'+(isInc?'':'-')+fmtMoney(parseFloat(f.value||0))+'</td>'+
       '<td style="text-transform:capitalize">'+esc(meta.label)+'</td>'+
