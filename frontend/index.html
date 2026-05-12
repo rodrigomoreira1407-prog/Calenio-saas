@@ -410,29 +410,56 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
 @keyframes fup{from{opacity:0;transform:translateX(-50%) translateY(6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .hidden{display:none!important}
 
-/* ── FINANCEIRO (NOVO) ───────────────────────────── */
-.fin-tabs{display:flex;gap:16px;border-bottom:1px solid var(--bd);margin-bottom:10px;overflow-x:auto}
-.fin-tab{padding:9px 2px;font-size:12px;font-weight:700;color:var(--mt);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
-.fin-tab.on{color:var(--tx);border-bottom-color:var(--tx)}
-.fin-period{display:flex;align-items:center;gap:8px;background:#f3f2ff;border:1px solid #e8e5ff;border-radius:10px;padding:7px 10px;width:fit-content;margin-bottom:10px}
-.fin-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
-.fin-card{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:14px}
-.fin-card-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-.fin-card-ico{width:36px;height:36px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;flex-shrink:0}
-.fin-card-kpi{font-size:14px;font-weight:800;color:var(--tx);margin-top:2px}
-.fin-card-sub{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:8px;border-top:1px solid var(--bd)}
-.fin-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px}
-.fin-table-wrap{background:var(--w);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
-.fin-flow{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
-.fin-flow.in{background:#DCFCE7;color:#166534}
-.fin-flow.out{background:#FEE2E2;color:#991B1B}
-.fin-status{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;border:1px solid transparent}
-.fin-status.paid{background:#DCFCE7;color:#166534;border-color:#bbf7d0}
-.fin-status.pending{background:#FEF3C7;color:#92400e;border-color:#fcd34d;cursor:pointer}
-.fin-status.exempt{background:#DBEAFE;color:#1d4ed8;border-color:#93c5fd}
-.fin-graph{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:14px}
-.fin-graph-bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
-.fin-graph-bar{background:#fafbfe;border:1px solid var(--bd);border-radius:10px;padding:10px;text-align:center}
+/* ── FINANCEIRO ──────────────────────────────────── */
+.fin-tabs{display:flex;gap:28px;border-bottom:1px solid #ECEBFA;margin-bottom:18px;overflow-x:auto;padding-bottom:1px}
+.fin-tab{padding:12px 0 14px;font-size:13px;font-weight:800;color:#2c2c2c;cursor:pointer;border-bottom:4px solid transparent;white-space:nowrap;text-transform:uppercase;letter-spacing:.02em}
+.fin-tab.on{color:#5B3DF5;border-bottom-color:#5B3DF5}
+.fin-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.fin-period{display:flex;align-items:center;gap:10px;background:#F4F0FF;border:1px solid #E7DEFF;border-radius:16px;padding:10px 14px;width:fit-content;min-width:190px}
+.fin-period-ico{width:34px;height:34px;border-radius:12px;background:#fff;color:#5B3DF5;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 6px 18px rgba(91,61,245,.08)}
+.fin-period select{border:none;background:transparent;font-size:14px;font-weight:700;color:#2b215a;padding-right:18px;outline:none;font-family:inherit}
+.fin-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}
+.fin-card{background:#fff;border:1px solid #E8E8F2;border-radius:22px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.04)}
+.fin-card-head{display:flex;align-items:flex-start;gap:12px}
+.fin-card-ico{width:54px;height:54px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.fin-card-copy{min-width:0}
+.fin-card-title{font-size:14px;font-weight:800;color:#222;margin-bottom:8px}
+.fin-card-kpi{font-size:20px;font-weight:900;line-height:1.2;margin-bottom:6px}
+.fin-card-note{font-size:12px;color:#6B7280;font-weight:600}
+.fin-card-note.positive{color:#2E9B3C}
+.fin-card-note.negative{color:#D14343}
+.fin-card-note.neutral{color:#5B3DF5}
+.fin-card-kpi.positive{color:#2E9B3C}
+.fin-card-kpi.negative{color:#E14141}
+.fin-card-kpi.neutral{color:#4F46E5}
+.fin-filters{display:grid;grid-template-columns:minmax(220px,2fr) repeat(2,minmax(160px,1fr));gap:12px;margin-bottom:14px}
+.fin-table-wrap,.fin-cash-wrap{background:#fff;border:1px solid #E8E8F2;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(15,23,42,.04)}
+.fin-flow{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700}
+.fin-flow.in{background:#E8F8EA;color:#2E9B3C}
+.fin-flow.out{background:#FCEAEA;color:#D14343}
+.fin-status{display:inline-flex;align-items:center;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;border:1px solid transparent}
+.fin-status.paid{background:#E8F8EA;color:#2E9B3C;border-color:#CDEFD2}
+.fin-status.pending{background:#FFF3D9;color:#B36B00;border-color:#FFE1A6;cursor:pointer}
+.fin-status.exempt{background:#EEEAFE;color:#5B3DF5;border-color:#DDD6FE}
+.fin-list-meta{display:flex;flex-direction:column;gap:3px}
+.fin-list-title{font-size:13px;font-weight:700;color:#1F2937}
+.fin-list-sub{font-size:11px;color:#8A8FA3}
+.fin-cash-head th{background:#fff;font-size:13px;font-weight:800;color:#202020;padding:18px 20px;border-bottom:1px solid #ECECF4;white-space:nowrap}
+.fin-cash-table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}
+.fin-cash-table td{padding:14px 20px;font-size:13px;color:#202020;border-bottom:1px solid #F1F1F6;white-space:nowrap}
+.fin-cash-table tr:last-child td{border-bottom:none}
+.fin-cash-label{display:flex;align-items:center;gap:10px;font-weight:700}
+.fin-cash-icon{width:28px;height:28px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;background:#F4F0FF;color:#5B3DF5}
+.fin-cash-section td{font-size:14px;font-weight:900;text-transform:uppercase;background:#FBFDF9}
+.fin-cash-section.income td{color:#2E9B3C}
+.fin-cash-section.expense td{color:#D14343;background:#FFF9F9}
+.fin-cash-total td{font-weight:900}
+.fin-cash-total.income td{color:#2E9B3C;background:#FBFDF9}
+.fin-cash-total.expense td{color:#D14343;background:#FFF9F9}
+.fin-cash-balance td{font-weight:900;color:#2E9B3C;background:#FBFDF9}
+.fin-cash-margin td{font-weight:900;color:#4F46E5;background:#FAF8FF}
+.fin-cash-neg{color:#D14343!important}
+.fin-cash-empty{padding:40px 20px;text-align:center;color:#8A8FA3;font-weight:600}
 
 /* ── RESPONSIVE ─────────────────────────────────── */
 @media(min-width:768px){
@@ -446,8 +473,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
   .modal-c{border-radius:16px}
 }
 @media(max-width:900px){
+  .fin-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fin-filters{grid-template-columns:1fr}
+  .fin-tab{font-size:12px}
+}
+@media(max-width:620px){
   .fin-cards{grid-template-columns:1fr}
-  .fin-filters{grid-template-columns:1fr 1fr}
+  .fin-toolbar{align-items:stretch}
+  .fin-period{width:100%}
 }
 </style>
 
@@ -885,57 +918,63 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
       <div class="fin-tab on" onclick="setFinTab('resumo',this)">RESUMO</div>
       <div class="fin-tab" onclick="setFinTab('entradas',this)">ENTRADAS</div>
       <div class="fin-tab" onclick="setFinTab('despesas',this)">DESPESAS</div>
-      <div class="fin-tab" onclick="setFinTab('graficos',this)">GR&#193;FICOS</div>
+      <div class="fin-tab" onclick="setFinTab('cobrancas',this)">COBRAN&#199;AS</div>
+      <div class="fin-tab" onclick="setFinTab('fluxo',this)">FLUXO DE CAIXA</div>
     </div>
-    <div class="fin-period">
-      <span style="font-size:14px">&#128197;</span>
-      <label for="fin-period" style="font-size:12px;font-weight:700">Per&#237;odo:</label>
-      <input id="fin-period" type="month" class="inp" style="border:none;background:transparent;padding:0;height:auto;font-size:12px;min-width:130px" onchange="setFinPeriod(this.value)"/>
+    <div class="fin-toolbar">
+      <div class="fin-period">
+        <div class="fin-period-ico">&#128197;</div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <label for="fin-period" style="font-size:12px;font-weight:700;color:#5B3DF5">Per&#237;odo</label>
+          <select id="fin-period" onchange="setFinPeriod(this.value)"></select>
+        </div>
+      </div>
     </div>
-    <div id="fin-main-view">
-      <div class="fin-cards">
-        <div class="fin-card">
-          <div class="fin-card-head">
-            <div class="fin-card-ico" style="background:#16A34A">&#8593;</div>
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:800">ENTRADAS</div>
-              <div style="font-size:11px;color:var(--mt);margin-top:2px">Valor total</div>
-              <div class="fin-card-kpi" id="fin-rec">R$ 0,00</div>
-            </div>
-          </div>
-          <div class="fin-card-sub">
-            <div><div style="font-size:11px;color:var(--mt)">Recebido</div><div style="font-size:15px;font-weight:700;color:var(--gn)" id="fin-rec-paid">R$ 0,00</div></div>
-            <div><div style="font-size:11px;color:var(--mt)">A receber</div><div style="font-size:15px;font-weight:700;color:var(--rd)" id="fin-rec-pending">R$ 0,00</div></div>
-          </div>
-        </div>
-        <div class="fin-card">
-          <div class="fin-card-head">
-            <div class="fin-card-ico" style="background:#EF4444">&#8595;</div>
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:800">DESPESAS</div>
-              <div style="font-size:11px;color:var(--mt);margin-top:2px">Valor total</div>
-              <div class="fin-card-kpi" id="fin-desp">R$ 0,00</div>
-            </div>
-          </div>
-          <div class="fin-card-sub">
-            <div><div style="font-size:11px;color:var(--mt)">Pagas</div><div style="font-size:15px;font-weight:700;color:var(--gn)" id="fin-desp-paid">R$ 0,00</div></div>
-            <div><div style="font-size:11px;color:var(--mt)">Pendentes</div><div style="font-size:15px;font-weight:700;color:var(--rd)" id="fin-desp-pending">R$ 0,00</div></div>
-          </div>
-        </div>
-        <div class="fin-card">
-          <div class="fin-card-head">
-            <div class="fin-card-ico" style="background:#1D4ED8">&#128179;</div>
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:800">SALDO L&#205;QUIDO</div>
-              <div style="font-size:11px;color:var(--mt);margin-top:2px">Recebido - Despesas pagas</div>
-              <div class="fin-card-kpi" id="fin-sal" style="color:var(--gn)">R$ 0,00</div>
-            </div>
+    <div class="fin-cards">
+      <div class="fin-card">
+        <div class="fin-card-head">
+          <div class="fin-card-ico" style="background:#E8F8EA;color:#2E9B3C">&#8595;</div>
+          <div class="fin-card-copy">
+            <div class="fin-card-title">Entradas do per&#237;odo</div>
+            <div class="fin-card-kpi positive" id="fin-rec">R$ 0,00</div>
+            <div class="fin-card-note positive" id="fin-rec-note">Total recebido</div>
           </div>
         </div>
       </div>
+      <div class="fin-card">
+        <div class="fin-card-head">
+          <div class="fin-card-ico" style="background:#FCEAEA;color:#E14141">&#8599;</div>
+          <div class="fin-card-copy">
+            <div class="fin-card-title">Sa&#237;das do per&#237;odo</div>
+            <div class="fin-card-kpi negative" id="fin-desp">R$ 0,00</div>
+            <div class="fin-card-note negative" id="fin-desp-note">Total gasto</div>
+          </div>
+        </div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-card-head">
+          <div class="fin-card-ico" style="background:#E8F8EA;color:#2E9B3C">&#128179;</div>
+          <div class="fin-card-copy">
+            <div class="fin-card-title">Saldo l&#237;quido</div>
+            <div class="fin-card-kpi positive" id="fin-sal">R$ 0,00</div>
+            <div class="fin-card-note positive" id="fin-sal-note">Resultado do per&#237;odo</div>
+          </div>
+        </div>
+      </div>
+      <div class="fin-card">
+        <div class="fin-card-head">
+          <div class="fin-card-ico" style="background:#F4F0FF;color:#5B3DF5">%</div>
+          <div class="fin-card-copy">
+            <div class="fin-card-title">% Lucratividade / Preju&#237;zo</div>
+            <div class="fin-card-kpi neutral" id="fin-margin">0,00%</div>
+            <div class="fin-card-note neutral" id="fin-margin-note">Sobre as entradas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="fin-main-view">
       <div class="fin-filters">
         <div><label class="lbl" for="fin-search">Descri&#231;&#227;o</label><input class="inp" id="fin-search" placeholder="Buscar por descri&#231;&#227;o..." oninput="setFinFilters()"/></div>
-        <div><label class="lbl" for="fin-flow">Fluxo</label><select class="sel" id="fin-flow" onchange="setFinFilters()"><option value="ALL">Todos</option><option value="INCOME">Entradas</option><option value="EXPENSE">Despesas</option></select></div>
         <div><label class="lbl" for="fin-cat">Categoria</label><select class="sel" id="fin-cat" onchange="setFinFilters()"><option value="ALL">Todas</option></select></div>
         <div><label class="lbl" for="fin-status">Status</label><select class="sel" id="fin-status" onchange="setFinFilters()"><option value="ALL">Todos</option><option value="PAID">Pago</option><option value="PENDING">Pendente</option><option value="EXEMPT">Isento</option></select></div>
       </div>
@@ -946,14 +985,15 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sa
         </table>
       </div>
     </div>
-    <div id="fin-graph-view" class="hidden">
-      <div class="fin-graph">
-        <div style="font-size:14px;font-weight:800">Vis&#227;o de Gr&#225;ficos</div>
-        <div style="font-size:12px;color:var(--mt);margin-top:2px">Resumo visual do per&#237;odo selecionado</div>
-        <div class="fin-graph-bars">
-          <div class="fin-graph-bar"><div style="font-size:11px;color:var(--mt);margin-bottom:4px">Entradas</div><div id="fin-graph-rec" style="font-size:20px;font-weight:800;color:var(--gn)">R$ 0,00</div></div>
-          <div class="fin-graph-bar"><div style="font-size:11px;color:var(--mt);margin-bottom:4px">Despesas</div><div id="fin-graph-desp" style="font-size:20px;font-weight:800;color:var(--rd)">R$ 0,00</div></div>
-          <div class="fin-graph-bar"><div style="font-size:11px;color:var(--mt);margin-bottom:4px">Saldo</div><div id="fin-graph-sal" style="font-size:20px;font-weight:800;color:var(--ac)">R$ 0,00</div></div>
+    <div id="fin-cash-view" class="hidden">
+      <div class="fin-cash-wrap">
+        <div style="overflow:auto">
+          <table class="fin-cash-table">
+            <thead class="fin-cash-head" id="fin-cash-head"></thead>
+            <tbody id="fin-cash-body">
+              <tr><td class="fin-cash-empty">Nenhum dado dispon&#237;vel no per&#237;odo.</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -2138,17 +2178,17 @@ function setSessTab(f,el){setTab(el);_sessFilter=f;renderSess();}
 function setFinTab(f,el){
   if(el && el.parentElement){el.parentElement.querySelectorAll('.fin-tab').forEach(function(t){t.classList.remove('on');});el.classList.add('on');}
   _finView = f || 'resumo';
-  if(_finView==='entradas')_finFlow='INCOME';
-  else if(_finView==='despesas')_finFlow='EXPENSE';
-  else if(_finView==='resumo')_finFlow='ALL';
-  var flowEl=document.getElementById('fin-flow');
-  if(flowEl)flowEl.value=_finFlow;
+  if(_finView==='entradas'){_finFlow='INCOME';_finStatus='ALL';}
+  else if(_finView==='despesas'){_finFlow='EXPENSE';_finStatus='ALL';}
+  else if(_finView==='cobrancas'){_finFlow='INCOME';_finStatus='PENDING';}
+  else{_finFlow='ALL';_finStatus='ALL';}
+  var statusEl=document.getElementById('fin-status');
+  if(statusEl)statusEl.value=_finStatus;
   renderFin();
 }
 function setFinPeriod(v){_finPeriod=(v||'').trim();renderFin();}
 function setFinFilters(){
   _finQuery=((document.getElementById('fin-search')||{}).value||'').trim().toLowerCase();
-  _finFlow=((document.getElementById('fin-flow')||{}).value)||'ALL';
   _finCat=((document.getElementById('fin-cat')||{}).value)||'ALL';
   _finStatus=((document.getElementById('fin-status')||{}).value)||'ALL';
   renderFin();
@@ -3440,6 +3480,8 @@ function saveFin(){
 }
 function renderFin(){
   function fmtMoney(v){return (isNaN(v)?0:v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+  function fmtPct(v){return (isNaN(v)?0:v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';}
+  function fmtTableMoney(v){return (isNaN(v)?0:v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
   function fmtDate(d){
     if(typeof d==='string'&&d.length>=10&&/^\d{4}-\d{2}-\d{2}/.test(d)){
       return d.slice(8,10)+'/'+d.slice(5,7)+'/'+d.slice(0,4);
@@ -3449,32 +3491,73 @@ function renderFin(){
     return String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear();
   }
   function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function ymKey(d){
-    if(typeof d==='string'&&/^\d{4}-\d{2}/.test(d))return d.slice(0,7);
+  function yearKey(d){
+    if(typeof d==='string'&&/^\d{4}/.test(d))return d.slice(0,4);
     var dt=new Date(d);
     if(isNaN(dt.getTime()))return '';
-    return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');
+    return String(dt.getFullYear());
+  }
+  function monthIndex(d){
+    if(typeof d==='string'&&/^\d{4}-\d{2}/.test(d))return Math.max(0,Math.min(11,parseInt(d.slice(5,7),10)-1));
+    var dt=new Date(d);
+    return isNaN(dt.getTime())?0:dt.getMonth();
   }
   function normCat(f){
     return ((f&&f.cat)||finDefaultCategory((f&&f.type)||'INCOME')||'outros').toLowerCase();
   }
-  var monthInput=document.getElementById('fin-period');
-  if(monthInput && !monthInput.value){
-    var now=new Date();
-    monthInput.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-    _finPeriod=monthInput.value;
-  }else if(monthInput && !_finPeriod){
-    _finPeriod=monthInput.value;
+  function catMeta(type,cat){
+    var key=(cat||'outros').toLowerCase();
+    var map={
+      INCOME:{
+        particular:{label:'Individual',icon:'👤'},
+        convenio:{label:'Convênio',icon:'🏥'},
+        grupo:{label:'Grupo',icon:'👥'},
+        evento:{label:'Eventos',icon:'⭐'},
+        assinatura:{label:'Assinaturas',icon:'🔁'},
+        materiais:{label:'Materiais',icon:'📦'},
+        outros:{label:'Outros',icon:'⋯'}
+      },
+      EXPENSE:{
+        aluguel:{label:'Aluguel',icon:'🏠'},
+        'pro-labore':{label:'Pró-labore',icon:'👤'},
+        prolabore:{label:'Pró-labore',icon:'👤'},
+        marketing:{label:'Marketing',icon:'📣'},
+        'contas fixas':{label:'Contas Fixas',icon:'🧾'},
+        contasfixas:{label:'Contas Fixas',icon:'🧾'},
+        materiais:{label:'Materiais / Equipamentos',icon:'📦'},
+        despesa:{label:'Despesas Gerais',icon:'👜'},
+        outros:{label:'Outras Despesas',icon:'⋯'}
+      }
+    };
+    if(map[type] && map[type][key])return map[type][key];
+    return {label:key.replace(/[-_]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}),icon:type==='INCOME'?'💜':'💼'};
+  }
+  function ensureYears(items){
+    var years={}, currentYear=String(new Date().getFullYear());
+    years[currentYear]=true;
+    items.forEach(function(f){
+      var y=yearKey(f.date);
+      if(y)years[y]=true;
+    });
+    return Object.keys(years).sort(function(a,b){return Number(b)-Number(a);});
+  }
+  var periodEl=document.getElementById('fin-period');
+  var years=ensureYears(FINS);
+  if(periodEl){
+    var prevYear=_finPeriod||periodEl.value||years[0]||String(new Date().getFullYear());
+    periodEl.innerHTML=years.map(function(y){return '<option value="'+esc(y)+'">'+esc(y)+'</option>';}).join('');
+    if(years.indexOf(prevYear)===-1)prevYear=years[0];
+    periodEl.value=prevYear;
+    _finPeriod=prevYear;
+  }else if(!_finPeriod){
+    _finPeriod=years[0]||String(new Date().getFullYear());
   }
   var baseItems=FINS.filter(function(f){
     if(!_finPeriod)return true;
-    return ymKey(f.date)===_finPeriod;
+    return yearKey(f.date)===_finPeriod;
   });
   var categories={};
-  baseItems.forEach(function(f){
-    var key=normCat(f);
-    categories[key]=true;
-  });
+  baseItems.forEach(function(f){categories[normCat(f)]=f.type==='EXPENSE'?'EXPENSE':'INCOME';});
   var catEl=document.getElementById('fin-cat');
   if(catEl){
     var prev=catEl.value||_finCat||'ALL';
@@ -3483,7 +3566,7 @@ function renderFin(){
     Object.keys(categories).sort().forEach(function(k){
       var op=document.createElement('option');
       op.value=k;
-      op.textContent=k.charAt(0).toUpperCase()+k.slice(1);
+      op.textContent=catMeta(categories[k],k).label;
       catEl.appendChild(op);
     });
     catEl.value=categories[prev]||prev==='ALL'?prev:'ALL';
@@ -3505,24 +3588,84 @@ function renderFin(){
   var despTotal=baseItems.filter(function(f){return f.type==='EXPENSE';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var despPaid=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PAID';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var despPending=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PENDING';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
-  var saldo=recPaid-despPaid;
+  var saldo=recTotal-despTotal;
+  var margem=recTotal?((saldo/recTotal)*100):0;
   document.getElementById('fin-rec').textContent=fmtMoney(recTotal);
   document.getElementById('fin-desp').textContent=fmtMoney(despTotal);
   document.getElementById('fin-sal').textContent=fmtMoney(saldo);
-  var r1=document.getElementById('fin-rec-paid');if(r1)r1.textContent=fmtMoney(recPaid);
-  var r2=document.getElementById('fin-rec-pending');if(r2)r2.textContent=fmtMoney(recPending);
-  var d1=document.getElementById('fin-desp-paid');if(d1)d1.textContent=fmtMoney(despPaid);
-  var d2=document.getElementById('fin-desp-pending');if(d2)d2.textContent=fmtMoney(despPending);
-  var gr=document.getElementById('fin-graph-rec');if(gr)gr.textContent=fmtMoney(recTotal);
-  var gd=document.getElementById('fin-graph-desp');if(gd)gd.textContent=fmtMoney(despTotal);
-  var gs=document.getElementById('fin-graph-sal');if(gs)gs.textContent=fmtMoney(saldo);
+  document.getElementById('fin-margin').textContent=fmtPct(margem);
+  var r1=document.getElementById('fin-rec-note');if(r1)r1.textContent='Recebido '+fmtMoney(recPaid)+' · Pendente '+fmtMoney(recPending);
+  var d1=document.getElementById('fin-desp-note');if(d1)d1.textContent='Pago '+fmtMoney(despPaid)+' · Pendente '+fmtMoney(despPending);
+  var s1=document.getElementById('fin-sal-note');if(s1)s1.textContent=saldo>=0?'Resultado positivo do período':'Resultado negativo do período';
+  var m1=document.getElementById('fin-margin-note');if(m1)m1.textContent='Sobre as entradas do ano selecionado';
+  var salEl=document.getElementById('fin-sal');if(salEl)salEl.className='fin-card-kpi '+(saldo>=0?'positive':'negative');
+  var salNote=document.getElementById('fin-sal-note');if(salNote)salNote.className='fin-card-note '+(saldo>=0?'positive':'negative');
+  var marginEl=document.getElementById('fin-margin');if(marginEl)marginEl.className='fin-card-kpi '+(margem>=0?'neutral':'negative');
+  var marginNote=document.getElementById('fin-margin-note');if(marginNote)marginNote.className='fin-card-note '+(margem>=0?'neutral':'negative');
   var main=document.getElementById('fin-main-view');
-  var graph=document.getElementById('fin-graph-view');
-  if(main)main.classList.toggle('hidden',_finView==='graficos');
-  if(graph)graph.classList.toggle('hidden',_finView!=='graficos');
-  if(_finView==='graficos')return;
+  var cash=document.getElementById('fin-cash-view');
+  if(main)main.classList.toggle('hidden',_finView==='fluxo');
+  if(cash)cash.classList.toggle('hidden',_finView!=='fluxo');
+  if(_finView==='fluxo'){
+    var months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    var cashHead=document.getElementById('fin-cash-head');
+    var cashBody=document.getElementById('fin-cash-body');
+    var groups={
+      INCOME:{rows:{},total:new Array(12).fill(0),grand:0},
+      EXPENSE:{rows:{},total:new Array(12).fill(0),grand:0}
+    };
+    baseItems.forEach(function(f){
+      var type=f.type==='EXPENSE'?'EXPENSE':'INCOME';
+      var cat=normCat(f);
+      var idx=monthIndex(f.date);
+      if(!groups[type].rows[cat]){
+        groups[type].rows[cat]={meta:catMeta(type,cat),months:new Array(12).fill(0),total:0};
+      }
+      var val=parseFloat(f.value||0)||0;
+      groups[type].rows[cat].months[idx]+=val;
+      groups[type].rows[cat].total+=val;
+      groups[type].total[idx]+=val;
+      groups[type].grand+=val;
+    });
+    if(cashHead)cashHead.innerHTML='<tr><th>Descrição</th>'+months.map(function(m){return '<th>'+m+'</th>';}).join('')+'<th>Total do Ano</th></tr>';
+    if(cashBody){
+      if(baseItems.length===0){
+        cashBody.innerHTML='<tr><td colspan="14" class="fin-cash-empty">Nenhum dado disponível no período.</td></tr>';
+      }else{
+        var sectionHtml='';
+        [['INCOME','ENTRADAS','income'],['EXPENSE','SAÍDAS','expense']].forEach(function(section){
+          var type=section[0],label=section[1],klass=section[2];
+          var rows=Object.keys(groups[type].rows).sort(function(a,b){return groups[type].rows[b].total-groups[type].rows[a].total;});
+          sectionHtml+='<tr class="fin-cash-section '+klass+'"><td colspan="14">'+label+'</td></tr>';
+          if(rows.length===0){
+            sectionHtml+='<tr><td colspan="14" class="fin-cash-empty">Nenhum lançamento em '+label.toLowerCase()+'.</td></tr>';
+          }else{
+            rows.forEach(function(key){
+              var row=groups[type].rows[key];
+              sectionHtml+='<tr><td><div class="fin-cash-label"><span class="fin-cash-icon">'+row.meta.icon+'</span><span>'+esc(row.meta.label)+'</span></div></td>'+
+                row.months.map(function(v){return '<td>'+fmtTableMoney(v)+'</td>';}).join('')+
+                '<td style="font-weight:800">'+fmtTableMoney(row.total)+'</td></tr>';
+            });
+          }
+          sectionHtml+='<tr class="fin-cash-total '+klass+'"><td>TOTAL DE '+label+'</td>'+
+            groups[type].total.map(function(v){return '<td>'+fmtTableMoney(v)+'</td>';}).join('')+
+            '<td>'+fmtTableMoney(groups[type].grand)+'</td></tr>';
+        });
+        var balanceByMonth=months.map(function(_,idx){return groups.INCOME.total[idx]-groups.EXPENSE.total[idx];});
+        var marginByMonth=months.map(function(_,idx){return groups.INCOME.total[idx]?((balanceByMonth[idx]/groups.INCOME.total[idx])*100):0;});
+        sectionHtml+='<tr class="fin-cash-balance"><td>SALDO LÍQUIDO DO PERÍODO</td>'+
+          balanceByMonth.map(function(v){return '<td class="'+(v<0?'fin-cash-neg':'')+'">'+fmtTableMoney(v)+'</td>';}).join('')+
+          '<td class="'+(saldo<0?'fin-cash-neg':'')+'">'+fmtTableMoney(saldo)+'</td></tr>';
+        sectionHtml+='<tr class="fin-cash-margin"><td>% LUCRATIVIDADE / PREJUÍZO</td>'+
+          marginByMonth.map(function(v){return '<td class="'+(v<0?'fin-cash-neg':'')+'">'+fmtPct(v)+'</td>';}).join('')+
+          '<td class="'+(margem<0?'fin-cash-neg':'')+'">'+fmtPct(margem)+'</td></tr>';
+        cashBody.innerHTML=sectionHtml;
+      }
+    }
+    return;
+  }
   var tbody=document.getElementById('fin-tbody');
-  if(items.length===0){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--dm)">Nenhum lan\u00e7amento no per\u00edodo/filtros</td></tr>';return;}
+  if(items.length===0){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--dm)">Nenhum lançamento no período/filtros</td></tr>';return;}
   tbody.innerHTML=items.map(function(f){
     var isInc=f.type==='INCOME';
     var cat=normCat(f);
@@ -3530,12 +3673,13 @@ function renderFin(){
     var statusClass=status==='PAID'?'paid':status==='EXEMPT'?'exempt':'pending';
     var statusLabel=status==='PAID'?'Pago':status==='EXEMPT'?'Isento':'Pendente';
     var statusClick=status==='PENDING'?' onclick="payFin(\''+f.id+'\')"':'';
+    var meta=catMeta(isInc?'INCOME':'EXPENSE',cat);
     return '<tr>'+
       '<td>'+fmtDate(f.date)+'</td>'+
-      '<td><span class="fin-flow '+(isInc?'in':'out')+'">'+(isInc?'&#8593;':'&#8595;')+'</span></td>'+
-      '<td><div style="font-weight:600">'+esc(f.desc||'-')+'</div><div style="font-size:10px;color:var(--dm)">'+esc(f.method||'-')+'</div></td>'+
+      '<td><span class="fin-flow '+(isInc?'in':'out')+'">'+(isInc?'&#8595;':'&#8599;')+'</span></td>'+
+      '<td><div class="fin-list-meta"><div class="fin-list-title">'+esc(f.desc||'-')+'</div><div class="fin-list-sub">'+esc(f.method||meta.label||'-')+'</div></div></td>'+
       '<td style="font-weight:700;color:'+(isInc?'var(--gn)':'var(--rd)')+'">'+(isInc?'':'-')+fmtMoney(parseFloat(f.value||0))+'</td>'+
-      '<td style="text-transform:capitalize">'+esc(cat)+'</td>'+
+      '<td style="text-transform:capitalize">'+esc(meta.label)+'</td>'+
       '<td><span class="fin-status '+statusClass+'"'+statusClick+'>'+statusLabel+'</span></td>'+
     '</tr>';
   }).join('');
