@@ -3498,9 +3498,12 @@ function renderFin(){
     return String(dt.getFullYear());
   }
   function monthIndex(d){
-    if(typeof d==='string'&&/^\d{4}-\d{2}/.test(d))return Math.max(0,Math.min(11,parseInt(d.slice(5,7),10)-1));
+    if(typeof d==='string'&&/^\d{4}-\d{2}/.test(d)){
+      var monthNum=parseInt(d.slice(5,7),10);
+      return monthNum>=1&&monthNum<=12?monthNum-1:-1;
+    }
     var dt=new Date(d);
-    return isNaN(dt.getTime())?0:dt.getMonth();
+    return isNaN(dt.getTime())?-1:dt.getMonth();
   }
   function normCat(f){
     return ((f&&f.cat)||finDefaultCategory((f&&f.type)||'INCOME')||'outros').toLowerCase();
@@ -3590,7 +3593,7 @@ function renderFin(){
   var despPending=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PENDING';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var saldo=recPaid-despPaid;
   var marginPct=recPaid?((saldo/recPaid)*100):0;
-  var cashItems=baseItems.filter(function(f){return (f.status||'').toUpperCase()==='PAID';});
+  var paidItems=baseItems.filter(function(f){return (f.status||'').toUpperCase()==='PAID';});
   document.getElementById('fin-rec').textContent=fmtMoney(recTotal);
   document.getElementById('fin-desp').textContent=fmtMoney(despTotal);
   document.getElementById('fin-sal').textContent=fmtMoney(saldo);
@@ -3616,10 +3619,11 @@ function renderFin(){
       INCOME:{rows:{},total:new Array(12).fill(0),grand:0},
       EXPENSE:{rows:{},total:new Array(12).fill(0),grand:0}
     };
-    cashItems.forEach(function(f){
+    paidItems.forEach(function(f){
       var type=f.type==='EXPENSE'?'EXPENSE':'INCOME';
       var cat=normCat(f);
       var idx=monthIndex(f.date);
+      if(idx<0)return;
       if(!groups[type].rows[cat]){
         groups[type].rows[cat]={meta:catMeta(type,cat),months:new Array(12).fill(0),total:0};
       }
@@ -3631,7 +3635,7 @@ function renderFin(){
     });
     if(cashHead)cashHead.innerHTML='<tr><th>Descrição</th>'+months.map(function(m){return '<th>'+esc(m)+'</th>';}).join('')+'<th>Total do Ano</th></tr>';
     if(cashBody){
-      if(cashItems.length===0){
+      if(paidItems.length===0){
         cashBody.innerHTML='<tr><td colspan="'+cashColspan+'" class="fin-cash-empty">Nenhum dado disponível no período.</td></tr>';
       }else{
         var sectionHtml='';
