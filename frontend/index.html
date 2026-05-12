@@ -3970,15 +3970,15 @@ function showSc(which){SC.forEach(function(id){var el=document.getElementById(id
 function hideAllSc(){SC.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('hidden');});}
 function aMsg(id,txt,t){var el=document.getElementById(id);if(!el)return;el.innerHTML='<div class="a-'+(t==='e'?'err':'ok')+'">'+(t==='e'?'&#10007;':'&#10003;')+' '+txt+'</div>';}
 function ensurePlan(){
-  var p=(localStorage.getItem('cal_plan')||_curPlan||(_curUser&&_curUser.plan)||'').trim();
-  if(!p)p=DEFAULT_PLAN;
-  _curPlan=p;
-  localStorage.setItem('cal_plan',p);
+  var plan=(localStorage.getItem('cal_plan')||_curPlan||(_curUser&&_curUser.plan)||'').trim();
+  if(!plan)plan=DEFAULT_PLAN;
+  _curPlan=plan;
+  localStorage.setItem('cal_plan',plan);
   if(_curUser){
-    if(!_curUser.plan)_curUser.plan=p;
+    if(!_curUser.plan)_curUser.plan=plan;
     localStorage.setItem('cal_user',JSON.stringify(_curUser));
   }
-  return p;
+  return plan;
 }
 
 function doLogin(){
