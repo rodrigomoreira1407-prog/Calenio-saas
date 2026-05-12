@@ -3589,26 +3589,27 @@ function renderFin(){
   var despPaid=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PAID';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var despPending=baseItems.filter(function(f){return f.type==='EXPENSE'&&f.status==='PENDING';}).reduce(function(s,f){return s+parseFloat(f.value||0);},0);
   var saldo=recPaid-despPaid;
-  var margem=recPaid?((saldo/recPaid)*100):0;
+  var marginPct=recPaid?((saldo/recPaid)*100):0;
   var cashItems=baseItems.filter(function(f){return (f.status||'').toUpperCase()==='PAID';});
   document.getElementById('fin-rec').textContent=fmtMoney(recTotal);
   document.getElementById('fin-desp').textContent=fmtMoney(despTotal);
   document.getElementById('fin-sal').textContent=fmtMoney(saldo);
-  document.getElementById('fin-margin').textContent=fmtPct(margem);
+  document.getElementById('fin-margin').textContent=fmtPct(marginPct);
   var r1=document.getElementById('fin-rec-note');if(r1)r1.textContent='Recebido '+fmtMoney(recPaid)+' · Pendente '+fmtMoney(recPending);
   var d1=document.getElementById('fin-desp-note');if(d1)d1.textContent='Pago '+fmtMoney(despPaid)+' · Pendente '+fmtMoney(despPending);
   var s1=document.getElementById('fin-sal-note');if(s1)s1.textContent='Recebido - despesas pagas';
   var m1=document.getElementById('fin-margin-note');if(m1)m1.textContent='Sobre as entradas do período';
   var salEl=document.getElementById('fin-sal');if(salEl)salEl.className='fin-card-kpi '+(saldo>=0?'positive':'negative');
   var salNote=document.getElementById('fin-sal-note');if(salNote)salNote.className='fin-card-note '+(saldo>=0?'positive':'negative');
-  var marginEl=document.getElementById('fin-margin');if(marginEl)marginEl.className='fin-card-kpi '+(margem>=0?'neutral':'negative');
-  var marginNote=document.getElementById('fin-margin-note');if(marginNote)marginNote.className='fin-card-note '+(margem>=0?'neutral':'negative');
+  var marginEl=document.getElementById('fin-margin');if(marginEl)marginEl.className='fin-card-kpi '+(marginPct>=0?'neutral':'negative');
+  var marginNote=document.getElementById('fin-margin-note');if(marginNote)marginNote.className='fin-card-note '+(marginPct>=0?'neutral':'negative');
   var main=document.getElementById('fin-main-view');
   var cash=document.getElementById('fin-cash-view');
   if(main)main.classList.toggle('hidden',_finView==='fluxo');
   if(cash)cash.classList.toggle('hidden',_finView!=='fluxo');
   if(_finView==='fluxo'){
     var months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    var cashColspan=months.length+2;
     var cashHead=document.getElementById('fin-cash-head');
     var cashBody=document.getElementById('fin-cash-body');
     var groups={
@@ -3628,18 +3629,18 @@ function renderFin(){
       groups[type].total[idx]+=val;
       groups[type].grand+=val;
     });
-    if(cashHead)cashHead.innerHTML='<tr><th>Descrição</th>'+months.map(function(m){return '<th>'+m+'</th>';}).join('')+'<th>Total do Ano</th></tr>';
+    if(cashHead)cashHead.innerHTML='<tr><th>Descrição</th>'+months.map(function(m){return '<th>'+esc(m)+'</th>';}).join('')+'<th>Total do Ano</th></tr>';
     if(cashBody){
       if(cashItems.length===0){
-        cashBody.innerHTML='<tr><td colspan="14" class="fin-cash-empty">Nenhum dado disponível no período.</td></tr>';
+        cashBody.innerHTML='<tr><td colspan="'+cashColspan+'" class="fin-cash-empty">Nenhum dado disponível no período.</td></tr>';
       }else{
         var sectionHtml='';
         [['INCOME','ENTRADAS','income'],['EXPENSE','SAÍDAS','expense']].forEach(function(section){
           var type=section[0],label=section[1],klass=section[2];
           var rows=Object.keys(groups[type].rows).sort(function(a,b){return groups[type].rows[b].total-groups[type].rows[a].total;});
-          sectionHtml+='<tr class="fin-cash-section '+klass+'"><td colspan="14">'+label+'</td></tr>';
+          sectionHtml+='<tr class="fin-cash-section '+klass+'"><td colspan="'+cashColspan+'">'+label+'</td></tr>';
           if(rows.length===0){
-            sectionHtml+='<tr><td colspan="14" class="fin-cash-empty">Nenhum lançamento em '+label.toLowerCase()+'.</td></tr>';
+            sectionHtml+='<tr><td colspan="'+cashColspan+'" class="fin-cash-empty">Nenhum lançamento em '+label.toLowerCase()+'.</td></tr>';
           }else{
             rows.forEach(function(key){
               var row=groups[type].rows[key];
@@ -3659,7 +3660,7 @@ function renderFin(){
           '<td class="'+(saldo<0?'fin-cash-neg':'')+'">'+fmtTableMoney(saldo)+'</td></tr>';
         sectionHtml+='<tr class="fin-cash-margin"><td>% LUCRATIVIDADE / PREJUÍZO</td>'+
           marginByMonth.map(function(v){return '<td class="'+(v<0?'fin-cash-neg':'')+'">'+fmtPct(v)+'</td>';}).join('')+
-          '<td class="'+(margem<0?'fin-cash-neg':'')+'">'+fmtPct(margem)+'</td></tr>';
+          '<td class="'+(marginPct<0?'fin-cash-neg':'')+'">'+fmtPct(marginPct)+'</td></tr>';
         cashBody.innerHTML=sectionHtml;
       }
     }
